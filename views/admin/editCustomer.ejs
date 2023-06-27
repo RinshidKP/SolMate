@@ -1,0 +1,114 @@
+<%-include("./layout/header")%>
+    <div class="col-10">
+      <div class="container py-5 h-100" style="height: 500px">
+        <div class="row d-flex justify-content-center align-items-start h-100">
+          <div class="col-lg-8 col-xl-6">
+            <div class="card rounded-3">
+              <div
+                class="card-body shadow px-5 p-md-5"
+                style="background-color: whitesmoke; border-radius: 5px"
+              >
+                <h1 class="mb-4 pb-2 pb-md-0 mb-md-5 px-md-2 text-center">
+                  Sign UP
+                </h1>
+
+                <form action="/admin/customer/edit?id=<%=user._id%>"  method="post" class="px-md-2">
+                  <hr />
+
+                  <div class="row mb-4 mt-5">
+                    <div class="col-md-4">
+                      <label class="form-label pt-2" for="form3Example1q"
+                        >Enter Your Name</label
+                      >
+                    </div>
+                    <div class="col-md-8">
+                      <input
+                        type="text"
+                        id="name"
+                        class="form-control"
+                        name="fname"
+                        placeholder="Enter Your Name"
+                        required
+                        value="<%=user.name%>"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="row mb-4">
+                    <div class="col-md-4">
+                      <label class="form-label pt-2" for="form3Example1q"
+                        >Enter Username</label
+                      >
+                    </div>
+                    <div class="col-md-8">
+                      <input
+                        type="text"
+                        id="form3Example1q username"
+                        class="form-control"
+                        name="username"
+                        placeholder="Enter Your Username"
+                        required
+                        value="<%=user.username%>"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="row mb-4">
+                    <div class="col-md-4">
+                      <label class="form-label pt-2" for="form3Example1q"
+                        >Enter Your Email</label
+                      >
+                    </div>
+                    <div class="col-md-8">
+                      <input
+                        type="text"
+                        id="email"
+                        class="form-control"
+                        name="email"
+                        placeholder="Enter Your Email"
+                        required
+                        value="<%=user.email%>"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="d-flex justify-content-center">
+                    <p class="bg-alert text-danger" id="error-field">
+                      <%=message %>
+                    </p>
+                  </div>
+                  <div
+                    class="form-group d-flex justify-content-start container"
+                  >
+                    <div class="col-4">
+                      <label for="exampleSelect" class="form-label"
+                        >Access</label
+                      >
+                    </div>
+                    <div class="col-4">
+                      <select class="form-control" name="isAccess" id="exampleSelect">
+                        <option value="true"<% if(user.isAccess){%> selected <% } %> >Allowed</option>
+                        <option value="false"<% if(!user.isAccess){%> selected <% } %> >Denied</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="d-flex justify-content-center mt-4">
+                    <button
+                      type="submit"
+                      style="background-color: #f07c3a; width: 200px"
+                      class="btn align-items-center p-2"
+                    >
+                      Update
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%-include("./layout/footer.ejs")%>

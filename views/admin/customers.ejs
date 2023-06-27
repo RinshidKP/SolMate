@@ -1,0 +1,28 @@
+<%-include("./layout/header")%>
+
+    <div class="col-10 m-5">
+        <div class="table-scrollable d-flex justify-content-center align-items-center ">
+            <table class="table table-secondary table-striped " >
+                <tr>
+                  <th>sl.no</th>
+                  <th>username</th>
+                  <th>email</th>
+                  <th>edit</th>
+                  
+                </tr>
+                <% for(i=0;i< user.length;i++){%>
+                  <tr>
+                      <td><%=i+1 %></td>
+                      <td><%=user[i].username %> </td>
+                      <td><%=user[i].email %></td>
+                      <td><a href="/admin/customer/edit?id=<%=user[i]._id%>">  <button type="button" class="btn btn-success">Edit User</button></a></td>             
+                  </tr>
+                <%}%>
+            </table>
+        </div>
+      
+    </div>
+      
+</section>
+
+<%-include("./layout/footer.ejs")%>

@@ -1,0 +1,57 @@
+
+<%-include("./layouts/header.ejs")%>
+    
+    
+<section class="h-100 h-custom ">
+
+    
+    <div class="container py-5 h-100 mt-5"  style="height: 500px;">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-lg-8 col-xl-6">
+          <div class="card rounded-3">
+            <div class="card-body shadow p-5 p-md-5" style="background-color:whitesmoke; border-radius: 5px;">
+              <h1 class="mb-4 pb-2 pb-md-0 mb-md-5 px-md-2 text-center ">Sign in</h1>
+  
+              <form action="/login" method="post" class="px-md-2 mt-5 m-5">
+                <hr>
+                
+                <div class="row mb-4 mt-5">
+                    <div class="col-md-4">
+                        <label class="form-label pt-2 mt-5" for="form3Example1q">Enter Username</label>
+                      </div>
+                      <div class="col-md-8">
+                        <input type="text" id="form3Example1q" class="form-control mt-5" name="username" placeholder="Enter Username" />
+                      </div>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                      <label class="form-label pt-2 mt-3" for="form3Example1q">Enter Password</label>
+                    </div>
+                    <div class="col-md-8">
+                      <input type="password" id="form3Example1q" class="form-control password mt-3" name="password" placeholder="Enter Your Password" />
+                    </div>
+                  </div>
+
+                  
+                  <div class="d-flex justify-content-center container">
+                      <p class="mt-5 ">Dont Have an Account click here to <a style="text-decoration: none;" href="/signup">Create an Account</a> </p>
+                  </div>
+                    <div>
+                        <div class="form-check">
+                            <input class="form-check-input border-2" type="checkbox" value="" id="flexCheckDefault" />
+                            <label class="form-check-label" for="flexCheckDefault">Keep me signed in</label>
+                        </div>
+                     </div>
+                <div class="d-flex justify-content-center">
+                    <button type="submit" style="background-color: #F07C3A;width: 200px;" class="btn align-items-center p-2 mt-5">Sign Up</button>
+                </div>
+                </div>
+              
+              </form>
+            </div>
+        </div>      
+    </div>          
+</section>
+</body>
+</html>

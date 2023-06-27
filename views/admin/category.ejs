@@ -1,0 +1,40 @@
+<%-include("./layout/header")%>
+
+    <div class="col-10 ">
+        <div class="table-scrollable d-flex justify-content-center align-items-center ">
+          <table class="table table-light table-striped table-boadered table-responsive m-5 ">
+            <thead>
+              <tr>
+                <th>Category Name</th>
+                <th colspan="3" >Sub Category</th>
+                <th>Edit</th>
+              </tr>
+            </thead>
+        
+            <tbody>
+              <% categories.forEach((category, i) => { %>
+                <tr>
+                  <td><%= category.name %></td>
+                  <% if (category.sub.length > 0) { %>
+                    <% category.sub.forEach((sub, j) => { %>
+                      <td><%= sub %></td>   
+                    <% }) %>
+                  <% } else { %>
+                    <td colspan="3"></td>
+                  <% } %>
+                  <td>
+                    <a href="/admin/category/edit?id=<%= category._id %>">
+                      <button type="button" style="background-color: #88C8BC;" class="btn ">Edit</button>
+                    </a>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+  </div>
+</section>
+
+<%-include("./layout/footer.ejs")%>
