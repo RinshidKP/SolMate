@@ -1,0 +1,278 @@
+<%-include("./layout/header.ejs")%>
+
+  <div id="page" class="w-100 mb-4">
+    <div class="colorlib-product m-5">
+      <div class="container-fluid">
+        <div class="row row-pb-lg product-detail-wrap">
+          <div class="col-sm-8">
+            <div class="owl-carousel ">
+              <div id="product-carousel" class="carousel slide " data-ride="carousel">
+                <div class="carousel-inner w-75">
+                  <% products.image.forEach((image, index)=> { %>
+
+                    <div class=" carousel-item <%= index === 0 ? 'active' : '' %>">
+                      <div class="product-entry border">
+                        <a href="#" class="prod-img">
+                          <img src="<%= image %>" class="img-fluid zoom image-fluid" alt="Product Image" />
+                        </a>
+                      </div>
+                    </div>
+                    <% }) %>
+                </div>
+
+                <!-- Controls -->
+                <a class="carousel-control-prev" href="#product-carousel" role="button" data-slide="prev"
+                  style="position: absolute; top: 50%; left: -30px; transform: translateY(-50%);">
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#product-carousel" role="button" data-slide="next"
+                  style="position: absolute; top: 50%; right: -30px; transform: translateY(-50%);">
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="sr-only">Next</span>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-4 ">
+            <div class="product-desc">
+              <div class="block-26 ">
+                <h3 class="text-retro" >Product Name</h3>
+                <p class="combo-class">
+                  <%=products.name%>
+                </p>
+
+
+              </div>
+              <div>
+                <h3 class="text-retro">Category</h3>
+                <% for (let i=0; i < categories.length; i++) { %>
+                  <% let category=categories[i]; if (products.category==category._id) { %>
+                    <h3 class="combo-class">
+                      <%= category.name %>
+                    </h3>
+                    <% } %>
+                      <% } %>
+              </div>
+              <h3 class="text-retro">Price</h3>
+                      <p class="price combo-class">
+                        <span>&#36;<%=products.price%></span>
+                        <span class="rate ">
+                          <i class="icon-star-full"></i>
+                          <i class="icon-star-full"></i>
+                          <i class="icon-star-full"></i>
+                          <i class="icon-star-full"></i>
+                          <i class="icon-star-half"></i>
+                          (74 &#9733;&#9733;&#9733;&#9733;&#9734;)
+                        </span>
+                      </p>
+                      <div class="blurb">
+                        <h3>About</h3>
+                      <p>
+                        <%=products.blurb%>
+                      </p>
+                      </div>
+                      <div class="size-wrap">
+                        <div class="block-26 mb-2">
+                          <h4 class="text-retro">Size</h4>
+
+                          <div class="variant-buttons">
+                            <select name="variant-option" class="form-control form-control-sm" style="width: 25%;"
+                              id="variant-select">
+                              <% for (let size in products.sizes) { %>
+                                <% if (!isNaN(size) && Number(products.sizes[size]) !==0) { %>
+                                  <option value="<%= size %>">
+                                    <%= size %>
+                                  </option>
+                                  <% } %>
+                                    <% } %>
+                            </select>
+                          </div>
+
+
+                        </div>
+                        <div class="block-26 mb-2 fs-5">
+                          <h4>
+                            <span class="text-retro">
+                              color
+                            </span>
+                            <span class="combo-class">
+                              <%=products.color%>                              
+                            </span>
+
+                          </h4>
+                          
+                         
+
+
+                        </div>
+                      </div>
+                      <div class="input-group mb-4 mt-3">
+                        <span class="input-group-btn">
+                          <button type="button" class="quantity-left-minus btn btn-dark" data-type="minus"
+                            data-field="">
+                            <i class="fas fa-minus"></i>
+                          </button>
+                        </span>
+                        <span class="col-sm-3">
+                          <input type="number" id="quantity" name="quantity" class="form-control input-number d-block "
+                            value="1" min="1" max="100" />
+                        </span>
+                        <span class="input-group-btn">
+                          <button type="button" class="quantity-right-plus btn btn-dark d-block" data-type="plus"
+                            data-field=""> 
+                            <i class="fas fa-plus"></i>
+                          </button>
+                        </span>
+                        <span class="ml-2">
+                          <p class="addtocart">
+                            <a onclick="addToCart()" class="btn btn-dark btn-addtocart"><i
+                                class="icon-shopping-cart"></i> Add to Cart</a>
+                          </p>
+                        </span>
+                      </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="row">
+              <div class="col-md-12 pills">
+                <div class="bd-example bd-example-tabs">
+                  <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                    <li class="nav-item">
+                      <a class="nav-link active" id="pills-description-tab" data-toggle="pill" href="#pills-description"
+                        role="tab" aria-controls="pills-description" aria-expanded="true">Description</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" id="pills-review-tab" data-toggle="pill" href="#pills-review" role="tab"
+                        aria-controls="pills-review" aria-expanded="true">Review</a>
+                    </li>
+                  </ul>
+
+                  <div class="tab-content" id="pills-tabContent">
+                    <div class="tab-pane border fade show active" id="pills-description" role="tabpanel"
+                      aria-labelledby="pills-description-tab">
+                      <p>
+                        Even the all-powerful Pointing has no control about the
+                        blind texts it is an almost unorthographic life One day
+                        however a small line of blind text by the name of Lorem
+                        Ipsum decided to leave for the far World of Grammar.
+                      </p>
+                      <p>
+                        When she reached the first hills of the Italic Mountains,
+                        she had a last view back on the skyline of her hometown
+                        Bookmarksgrove, the headline of Alphabet Village and the
+                        subline of her own road, the Line Lane. Pityful a rethoric
+                        question ran over her cheek, then she continued her way.
+                      </p>
+                      <ul>
+                        <li>The Big Oxmox advised her not to do so</li>
+                        <li>Because there were thousands of bad Commas</li>
+                        <li>Wild Question Marks and devious Semikoli</li>
+                        <li>She packed her seven versalia</li>
+                        <li>tial into the belt and made herself on the way.</li>
+                      </ul>
+                    </div>
+
+                    <div class="tab-pane border fade" id="pills-review" role="tabpanel"
+                      aria-labelledby="pills-review-tab">
+                      <div class="row">
+                        <div class="col-md-12">
+                          <h3 class="head">23 Reviews</h3>
+                          <div class="review">
+                            <div class="user-img" style="background-image: url(images/person1.jpg)"></div>
+                            <div class="desc">
+                              <h4>
+                                <span class="text-left">Jacob Webb</span>
+                                <span class="text-right">14 March 2018</span>
+                              </h4>
+                              <p class="star">
+                                <span>
+                                  <i class="icon-star-full"></i>
+                                  <i class="icon-star-full"></i>
+                                  <i class="icon-star-full"></i>
+                                  <i class="icon-star-half"></i>
+                                  <i class="icon-star-empty"></i>
+                                </span>
+                                <span class="text-right"><a href="#" class="reply"><i class="icon-reply"></i></a></span>
+                              </p>
+                              <p>
+                                When she reached the first hills of the Italic
+                                Mountains, she had a last view back on the skyline
+                                of her hometown Bookmarksgrov
+                              </p>
+                            </div>
+                          </div>
+                          <div class="review">
+                            <div class="user-img" style="background-image: url(images/person2.jpg)"></div>
+                            <div class="desc">
+                              <h4>
+                                <span class="text-left">Jacob Webb</span>
+                                <span class="text-right">14 March 2018</span>
+                              </h4>
+                              <p class="star">
+                                <span>
+                                  <i class="icon-star-full"></i>
+                                  <i class="icon-star-full"></i>
+                                  <i class="icon-star-full"></i>
+                                  <i class="icon-star-half"></i>
+                                  <i class="icon-star-empty"></i>
+                                </span>
+                                <span class="text-right"><a href="#" class="reply"><i class="icon-reply"></i></a></span>
+                              </p>
+                              <p>
+                                When she reached the first hills of the Italic
+                                Mountains, she had a last view back on the skyline
+                                of her hometown Bookmarksgrov
+                              </p>
+                            </div>
+                          </div>
+                          <div class="review">
+                            <div class="user-img" style="background-image: url(images/person3.jpg)"></div>
+                            <div class="desc">
+                              <h4>
+                                <span class="text-left">Jacob Webb</span>
+                                <span class="text-right">14 March 2018</span>
+                              </h4>
+                              <p class="star">
+                                <span>
+                                  <i class="icon-star-full"></i>
+                                  <i class="icon-star-full"></i>
+                                  <i class="icon-star-full"></i>
+                                  <i class="icon-star-half"></i>
+                                  <i class="icon-star-empty"></i>
+                                </span>
+                                <span class="text-right"><a href="#" class="reply"><i class="icon-reply"></i></a></span>
+                              </p>
+                              <p>
+                                When she reached the first hills of the Italic
+                                Mountains, she had a last view back on the skyline
+                                of her hometown Bookmarksgrov
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    function addToCart() {
+      const quantity = document.getElementById("quantity").value;
+      const selectBox = document.getElementById('variant-select');
+      const selectedValue = selectBox.value;
+
+      console.log(quantity);
+      window.location.href = `/cart/add?quantity=${quantity}&productId=<%= products._id%>&selectedSize=${selectedValue}`
+    }
+  </script>
+  <%- include("./layout/footer.ejs") %>

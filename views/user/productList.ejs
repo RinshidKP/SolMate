@@ -7,11 +7,11 @@
       <div id="product-carousel" class="carousel slide" data-ride="carousel">
         <div class="carousel-inner border">
           <div class="carousel-item active">
-            <img class="w-100 h-100" src="<%= products.image[0] %>" alt="Image">
+            <img class="w-100 h-100 zoom" src="<%= products.image[0] %>" alt="Image">
           </div>
           <% for(let i = 1; i < products.image.length; i++) { %>
           <div class="carousel-item">
-            <img class="w-100 h-100" src="<%= products.image[i] %>" alt="Image">
+            <img class="w-100 h-100 zoom" src="<%= products.image[i] %>" alt="Image">
           </div>
           <% } %>
         </div>
@@ -26,7 +26,7 @@
       </div>
     </div>
 
-    <div class="col-lg-7 pb-5 ml-5">
+    <div class="col-lg-7  ">
       <h3 class="font-weight-semi-bold"><%= products.name %></h3>
       <div class="d-flex mb-3">
         <div class="text-primary mr-2">
@@ -47,40 +47,43 @@
       <div class="d-flex align-items-center mb-4 pt-2">
         <div class="input-group quantity mr-3" style="width: 130px;">
           <div class="input-group-btn">
-            <button class="btn btn-primary btn-minus">
+            <button class="btn btn-dark btn-minus mx-1">
               <i class="fa fa-minus"></i>
             </button>
           </div>
-          <input type="text" class="form-control bg-secondary text-center" value="1">
+          <input type="text" id="quantity" class="form-control bg-secondary text-center" value="1">
           <div class="input-group-btn">
-            <button class="btn btn-primary btn-plus">
+            <button class="btn btn-dark btn-plus mx-1">
               <i class="fa fa-plus"></i>
             </button>
           </div>
         </div>
-        <button class="btn btn-primary px-3"><i class="fa fa-shopping-cart mr-1"></i> Add To Cart</button>
+        <button onclick="addToCart()" class="btn btn-dark px-3 ms-3"><i class="fa fa-shopping-cart mr-1"></i> Add To Cart</button>
+        <script>
+          function addToCart(){
+              const quantity = document.getElementById("quantity").value;
+              console.log(quantity);
+              window.location.href = `/cart/add?quantity=${quantity}&productId=<%= products._id%>`
+          }
+      </script>
       </div>
-
     </div>
   </div>
   <div class="row px-xl-5">
     <div class="col">
       <div class="nav nav-tabs justify-content-center border-secondary mb-4">
         <a class="nav-item nav-link active" data-toggle="tab" href="#tab-pane-1">Description</a>
-
         <a class="nav-item nav-link" data-toggle="tab" href="#tab-pane-2">Reviews (0)</a>
       </div>
       <div class="tab-content">
         <div class="tab-pane fade show active" id="tab-pane-1">
           <h4 class="mb-3">Product Description</h4>
           <%= products.description %>
-
         </div>
         <div class="tab-pane fade" id="tab-pane-2">
           <div class="row">
             <div class="col-md-6">
               <h4 class="mb-4">0 review for "<%= products.name %>"</h4>
-
             </div>
           </div>
         </div>
@@ -88,14 +91,46 @@
     </div>
   </div>
 </div>
-<!-- Shop Detail End -->
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<!-- Shop Detail End -->
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/elevatezoom/3.0.8/jquery.elevatezoom.min.js"></script> 
+
+
 
 <script>
-  // Initialize the carousel
-  $(document).ready(function () {
-    $('#product-carousel').carousel();
+  $(document).ready(function() {
+    $('.zoom').elevateZoom({
+      zoomWindowWidth: 200, 
+      zoomWindowHeight: 200
+    });
+  });
+</script> -->
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+  
+  // $(document).ready(function() {
+  //  $('.zoom').elevateZoom({
+  //     zoomWindowWidth: 200, 
+  //     zoomWindowHeight: 200
+  //      });
+  
+  //   // Initialize the carousel
+  // });
+  
+  $(document).ready(function() {
+    $('.carousel').carousel();
+    // Sidebar Toggle
+    $("#sidebarToggle").click(function() {
+      $("#sidebar").toggleClass("active");
+    });
+    $(window).resize(function() {
+      if ($(window).width() > 991) {
+        $("#sidebar").removeClass("active");
+      }
+    });
   });
 </script>
+
+<%- include("./layout/footer.ejs") %>

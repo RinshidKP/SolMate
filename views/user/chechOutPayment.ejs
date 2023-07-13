@@ -1,0 +1,211 @@
+<%- include("./layout/header.ejs") %>
+<style>
+  /* Add custom styles as per your requirements */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+.row {
+  margin-left: -15px;
+  margin-right: -15px;
+}
+
+.col-lg-8 {
+  flex-basis: 66.66%;
+  max-width: 66.66%;
+}
+
+.col-lg-4 {
+  flex-basis: 33.33%;
+  max-width: 33.33%;
+}
+
+.checkout__form {
+  margin-bottom: 30px;
+}
+
+.checkout__form h4 {
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 30px;
+}
+
+.cardx {
+  border: none;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.cardx:hover {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.card-title {
+  margin-bottom: 0;
+}
+
+.checkout__order {
+  background-color: #f8f8f8;
+  padding: 30px;
+}
+
+.checkout__order h4 {
+  margin-bottom: 20px;
+}
+
+.checkout_order_products {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.checkout_order_subtotal,
+.checkout_order_total {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.site-btn {
+  display: inline-block;
+  background-color: #4caf50;
+  color: #ffffff;
+  padding: 12px 30px;
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.site-btn:hover {
+  background-color: #45a049;
+}
+
+</style>
+<section class="checkout spad mt-5 mb-5">
+  <div class="container">
+    <!-- <div class="row">
+        <div class="col-lg-12">
+            <h6><span class="icon_tag_alt"></span> Have a coupon? <a href="#">Click here</a> to enter your code
+            </h6>
+        </div>
+    </div> -->
+    <div class="checkout__form mt-5 mb-5">
+      <h4>Billing Details</h4>
+      <form action="/checkout" class="mt-5 mb-5" method="post">
+        <div class="row">
+          <div class="col-lg-8 col-md-6 mt-5 mb-5">
+            <div class="form-group">
+              <div class="row">
+                <div class="card-deck d-flex flex-wrap">
+                  <div id="cod-card" class="cardx card mb-4" style="min-width: 15rem; max-height: 4rem;">
+                    <div class="card-body" role="button">
+                      <h5 class="card-title">
+                        <input id="cod" value="cod" name="payment" type="radio">
+                        <label for="cod">Cash On Delivery</label>
+                      </h5>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row mt-5 mb-5">
+                <div class="card-deck d-flex flex-wrap">
+                  <div id="Online-card" class="cardx card mb-4" style="min-width: 15rem; max-height: 4rem;">
+                    <div class="card-body" role="button">
+                      <h5 class="card-title">
+                        <input id="Online" value="online" name="payment" type="radio">
+                        <label for="Online">Online Payment</label>
+                      </h5>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <input type="hidden" id="<%= addressId %>" name="addressId" value="<%= addressId %>">
+          <input type="hidden" name="method" value="<%=method%>">
+          <div class="col-lg-4 col-md-6 mt-5 mb-5">
+            <div class="checkout__order">
+              <h4>Your Order</h4>
+              <div class="checkout_order_products">Products <span>Total</span></div>
+              <ul>
+                <% for(let i=0;i<cart.products.length;i++){ %>
+                <li>Product Total<%= productList[i].productName %> <span>$<%= cart.totalPrice %></span></li>
+                <% } %>
+                <li>Shipping<%if(method==='fast'){%><span> $40</span> <%}else{%><span> $0</span><%}%></li>
+              </ul>
+              <input type="hidden" name="totalPrice" value="<%= cart.totalPrice %>">
+              <div class="checkout_order_total">Total <span>$<% if (method === 'fast') { %><%= cart.totalPrice + 40 %><% } else { %><%= cart.totalPrice %><% } %></span></div>
+
+
+              <button type="submit" class="site-btn rounded">PLACE ORDER</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+  <script>
+      $(document).ready(function () {
+          // $('input:radio').change(function () {//Clicking input radio
+          //     var radioClicked = $(this).attr('id');
+          //     unclickRadio();
+          //     removeActive();
+          //     clickRadio(radioClicked);
+          //     makeActive(radioClicked);
+          // });
+          $(".cardx").click(function () {//Clicking the card
+              var inputElement = $(this).find('input[type=radio]').attr('id');
+              console.log(inputElement);
+              btnShow();
+              unclickRadio();
+              removeActive();
+              makeActive(inputElement);
+              clickRadio(inputElement);
+          });
+      });
+
+      function btnShow() {
+          $("#address-btn").css("display", "block");
+      }
+
+      function unclickRadio() {
+          $("input:radio").prop("checked", false);
+      }
+
+      function clickRadio(inputElement) {
+          $("#" + inputElement).prop("checked", true);
+      }
+
+      function removeActive() {
+          $(".card").removeClass("active");
+      }
+
+      function makeActive(element) {
+          $("#" + element + "-card").addClass("active");
+      }
+  </script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Your existing JavaScript code
+
+  function proceedToPayment() {
+    // Handle payment logic here and redirect to the payment page
+    window.location.href = "/payment"; // Replace with your payment page URL
+  }
+</script>
+
+<%- include("./layout/footer.ejs") %>

@@ -1,5 +1,5 @@
 <%-include("./layout/header")%>
-    <div class="col-9 mx-5">
+    <div class="col-9 col-md-9 col-sm-9 mx-5 container">
       <div class="container py-5 mt-5" style="height: 500px">
         <div class="row d-flex justify-content-center align-items-center h-100">
           <div class="col-lg-8 col-xl-6">
@@ -9,6 +9,7 @@
                 id="form"
                 method="post"
                 class="px-md-2 mt-5 m-5"
+                enctype="multipart/form-data"
               >
                 <div class="row mb-4 mt-5">
                   <div class="col-md-4">
@@ -30,19 +31,21 @@
 
                 <div class="row mb-4">
                   <div class="col-md-4">
-                    <label class="form-label pt-2" for="form3Example1q"
+                    <!-- <label class="form-label pt-2" for="form3Example1q"
                       >Enter Sub Categories</label
-                    >
+                    > -->
+                    <label for="">Choose Category Image</label>
                   </div>
                   <div class="col-md-8">
-                    <input
+                    <!-- <input
                       type="text"
                       id="form3Example1q username"
                       class="form-control"
                       name="sub"
                       placeholder="Enter Sub Categories"
                       required
-                    />
+                    /> -->
+                    <input type="file" name="image" class="form-control form-control-file">
                   </div>
                 </div>
 

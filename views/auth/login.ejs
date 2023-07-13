@@ -35,16 +35,22 @@
 
                   
                   <div class="d-flex justify-content-center container">
-                      <p class="mt-5 ">Dont Have an Account click here to <a style="text-decoration: none;" href="/signup">Create an Account</a> </p>
+                    <p class="mt-5 ">Dont Have an Account click here to <a style="text-decoration: none;" href="/signup"> Create an Account</a> </p>
                   </div>
+                    <div class="d-flex justify-content-center">
+                      <p class="text-danger"><%=message%></p>
+                    </div>
                     <div>
-                        <div class="form-check">
+                        <div class="form-check d-flex justify-content-between">
+                          <div>
                             <input class="form-check-input border-2" type="checkbox" value="" id="flexCheckDefault" />
                             <label class="form-check-label" for="flexCheckDefault">Keep me signed in</label>
+                          </div>
+                             <a style="text-decoration: none;" href="/signin/forgot">Forgot password</a>
                         </div>
-                     </div>
-                <div class="d-flex justify-content-center">
-                    <button type="submit" style="background-color: #F07C3A;width: 200px;" class="btn align-items-center p-2 mt-5">Sign Up</button>
+                      </div>
+                      <div class="d-flex justify-content-center">
+                    <button type="submit" style="background-color: #F07C3A;width: 200px;" class="btn align-items-center p-2 mt-5">Sign In</button>
                 </div>
                 </div>
               

@@ -1,128 +1,250 @@
 const category = require("../../models/categoryModel");
+const productModel = require("../../models/productModel");
 const product = require("../../models/productModel");
-const multipleimages = require("../../utilities/uploadImage");
+const {multipleimages,deleteImage} = require("../../utilities/uploadImage");
 
+const loadAddProduct = async (req, res) => {
+  try {
+    const categories = await category.find();
 
-const loadAddProduct = async (req,res) => {
-    try {
-        const categories= await category.find()
-        res.render('admin/addProduct',{message:null,category:categories})
-    } catch (error) {
-        console.log(error);
+    res.render("admin/addProduct", { message: null, category: categories });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const addProduct = async (req, res) => {
+  try {
+    const name = req.body.name;
+    let price = req.body.price;
+    const blurb = req.body.blurb;
+    const color = req.body.color;
+    const description = req.body.description;
+    const category = req.body.category;
+    let size6 = req.body.size6;
+    let size7 = req.body.size7;
+    let size8 = req.body.size8;
+    let size9 = req.body.size9;
+    let size10 = req.body.size10;
+    let size11 = req.body.size11;
+    let size12 = req.body.size12;
+    let size13 = req.body.size13;
+    let size14 = req.body.size14;
+    let size15 = req.body.size15;
+
+    price = parseInt(price);
+    size6 = parseInt(size6);
+    size7 = parseInt(size7);
+    size8 = parseInt(size8);
+    size9 = parseInt(size9);
+    size10 = parseInt(size10);
+    size11 = parseInt(size11);
+    size12 = parseInt(size12);
+    size13 = parseInt(size13);
+    size14 = parseInt(size14);
+    size15 = parseInt(size15);
+
+    let stocks=size6+size7+size8+size9+size10+size11+size12+size13+size14+size15
+    const images = req.files.image;
+    const urlList = await multipleimages(images);
+
+    const newProducts = new product({
+      name: name,
+      category: category,
+      price: price,
+      blurb: blurb,
+      description: description,
+      color: color,
+      sizes: {
+        6: size6 || 0,
+        7: size7 || 0,
+        8: size8 || 0,
+        9: size9 || 0,
+        10: size10 || 0,
+        11: size11 || 0,
+        12: size12 || 0,
+        13: size13 || 0,
+        14: size14 || 0,
+        15: size15 || 0,
+      },
+      stock:stocks,
+      image: urlList,
+    });
+    await newProducts.save();
+    res.redirect("/admin/product");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const loadProduct = async (req, res) => {
+  try {
+    const currentPage = parseInt(req.query.page) || 1; 
+    const itemsPerPage = 5; 
+    const skip = (currentPage - 1) * itemsPerPage;
+    const limit = itemsPerPage;
+    let search = "";
+    if (req.query.search) {
+        search = req.query.search;
     }
-}
+    const productData = await productModel.find()
+      .skip(skip)
+      .limit(limit);
+    
+      // const productData = await productModel
+      // .find({
+      //   isAdmin: false,
+      //   $or: [
+      //     { email: { $regex: new RegExp(search, "i") } },
+      //     { username: { $regex: new RegExp(search, "i") } },
+      //   ],
+      // })
+      // .skip(skip)
+      // .limit(limit);
 
-const addProduct = async (req,res) => {
-    try {
-        const name = req.body.name;
-        const category = req.body.category;
-        let stock = req.body.stock;
-        let price = req.body.price;
-        const blurb = req.body.blurb;
-        const color = req.body.color;
-        const size = req.body.size;
-        const description = req.body.description;
+    const totalProduct = await productModel.countDocuments(); 
 
-        price = parseFloat(price)
-        stock = parseInt(stock)
+    const totalPages = Math.ceil(totalProduct / itemsPerPage);
 
-        // const images = req.files['image[]'];
-        const images = req.files.image
+    const startIndex = skip + 0;
+    const stock = await product.find()
+    const categories = await category.find();
+    res.render("admin/product", { 
+      stock: stock,
+      categories ,
+      currentPage,
+      totalPages,
+      startIndex,
+      endIndex: skip + productData.length,});
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-        // console.log(images);
+const loadEditProduct = async (req, res) => {
+  try {
+    const id = req.query.id;
+    const stock = await product.findOne({ _id: id }).populate("category");
+    const categories = await category.find();
+    res.render("admin/editProduct.ejs", { stock: stock, category: categories });
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-        const urlList = await multipleimages(images);
-        // console.log(urlList);
+const updateProduct = async (req, res) => {
+  try {
+    const id = req.query.id;
+    const name = req.body.name;
+    const category = req.body.category;
+    let price = req.body.price;
+    const color = req.body.color;
+    const blurb = req.body.blurb;
+    const description = req.body.description;
 
-        const newProducts = new product({
-            name:name,
-            category:category,
-            price:price,
-            blurb:blurb,
-            description:description,
-            color:color,
-            sizes:size,
-            stock:stock,
-            image:urlList
-        })
-        await newProducts.save();
-        res.redirect('/admin/product')
-        
-    } catch (error) {
-        console.log(error);
+    let size6 = req.body.size6;
+    let size7 = req.body.size7;
+    let size8 = req.body.size8;
+    let size9 = req.body.size9;
+    let size10 = req.body.size10;
+    let size11 = req.body.size11;
+    let size12 = req.body.size12;
+    let size13 = req.body.size13;
+    let size14 = req.body.size14;
+    let size15 = req.body.size15;
+
+    price = parseInt(price);
+    size6 = parseInt(size6);
+    size7 = parseInt(size7);
+    size8 = parseInt(size8);
+    size9 = parseInt(size9);
+    size10 = parseInt(size10);
+    size11 = parseInt(size11);
+    size12 = parseInt(size12);
+    size13 = parseInt(size13);
+    size14 = parseInt(size14);
+    size15 = parseInt(size15);
+
+    let stocks=size6+size7+size8+size9+size10+size11+size12+size13+size14+size15
+    let images = false
+
+    if (req.files && req.files.image) {
+      images = Array.isArray(req.files.image) ? req.files.image : [req.files.image];
     }
-}
-
-
-
-const loadProduct = async (req,res) => {
-    try {
-        const stock = await product.find()
-        
-        res.render('admin/product',{stock:stock})
-    } catch (error) {
-        console.log(error);
+    const urlList = await multipleimages(images);
+    if (Array.isArray(urlList) && urlList.length > 0) {
+      await product.findByIdAndUpdate(id, {
+        $push: { image: { $each: urlList }}
+      });
     }
-}
 
-const loadEditProduct = async (req,res)=> {
-    try {
-        const id = req.query.id;
-        const stock = await product.findOne({_id:id})
-        const categories = await category.find()
-        res.render('admin/editProduct',{stock:stock,category:categories});
-    } catch (error) {
-        console.log(error);
+    await product.findByIdAndUpdate(id, {
+      $set: {
+        name: name,
+        category: category,
+        price: price,
+        stock: stocks,
+        sizes: {
+          6: size6 || 0,
+          7: size7 || 0,
+          8: size8 || 0,
+          9: size9 || 0,
+          10: size10 || 0,
+          11: size11 || 0,
+          12: size12 || 0,
+          13: size13 || 0,
+          14: size14 || 0,
+          15: size15 || 0,
+        },
+        color: color,
+        blurb: blurb,
+        description: description,
+      },
+    });
+    res.redirect("/admin/product");
+  } catch (error) {
+    console.log(error);
+  }
+};
+const deleteProduct = async (req, res) => {
+  try {
+    const { id, active } = req.query;
+
+    // console.log(id);
+    if (active == "true") {
+      await product.findByIdAndUpdate(id, { $set: { isActive: false } });
+      res.redirect("/admin/product");
+    } else if (active == "false") {
+      await product.findByIdAndUpdate(id, { $set: { isActive: true } });
+      res.redirect("/admin/product");
     }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const deleteProductImage = async (req,res)=>{
+  try {
+    const {id,imageUrl}=req.query;
+    stockData = await productModel.findById(id)
+    console.log(imageUrl);
+    await deleteImage(imageUrl)
+    productModel.findOneAndUpdate(
+      { _id: id },
+      { $pull: { image: imageUrl } },
+      { new: true }
+    )
+  } catch (error) {
+    console.log(error)
+  }
 }
-
-const updateProduct = async (req,res)=>{
-    try {
-        const id = req.query.id;
-        const name = req.body.name;
-        const category = req.body.category;
-        const price = req.body.price;
-        const stock = req.body.stock;
-        const sizes = req.body.size;
-        const color = req.body.color;
-        const blurb = req.body.blurb;
-        const description = req.body.description;
-        await product.findByIdAndUpdate(id,{$set:{
-            name:name,
-            category:category,
-            price:price,
-            stock:stock,
-            sizes:sizes,
-            color:color,
-            blurb:blurb,
-            description:description
-        }})
-        res.redirect('/admin/product');
-    } catch (error) {
-        console.log(error);
-    }
-}
-const deleteProduct = async (req, res)=>{
-    try {
-        const id = req.query.id;
-
-        // console.log(id);
-        
-        await product.deleteOne({_id: id});
-        res.redirect('/admin/product');
-        
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-
 
 module.exports = {
-    addProduct,
-    loadProduct,
-    loadAddProduct,
-    loadEditProduct,
-    updateProduct,
-    deleteProduct,
-}
+  addProduct,
+  loadProduct,
+  loadAddProduct,
+  loadEditProduct,
+  updateProduct,
+  deleteProduct,
+  deleteProductImage,
+};

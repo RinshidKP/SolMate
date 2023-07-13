@@ -1,28 +1,80 @@
-<%-include("./layout/header")%>
+<%-include("./layout/header.ejs")%>
 
-    <div class="col-10 m-5">
-        <div class="table-scrollable d-flex justify-content-center align-items-center ">
-            <table class="table table-secondary table-striped " >
-                <tr>
-                  <th>sl.no</th>
-                  <th>username</th>
-                  <th>email</th>
-                  <th>edit</th>
-                  
-                </tr>
-                <% for(i=0;i< user.length;i++){%>
-                  <tr>
-                      <td><%=i+1 %></td>
-                      <td><%=user[i].username %> </td>
-                      <td><%=user[i].email %></td>
-                      <td><a href="/admin/customer/edit?id=<%=user[i]._id%>">  <button type="button" class="btn btn-success">Edit User</button></a></td>             
-                  </tr>
-                <%}%>
-            </table>
-        </div>
-      
-    </div>
-      
-</section>
+<div class="col-10 m-5">
+  <div class="input-group mt-5 mb-5">
+    <input type="search" name="search" class="form-control" placeholder="Search">
+    <button type="submit" class="btn btn-dark">Search</button>
+  </div>
+  <div class="table-scrollable d-flex justify-content-center align-items-center">
+    <table class="table table-primary table-striped">
+      <tr>
+        <th>sl.no</th>
+        <th>username</th>
+        <th>Date Joined</th>
+        <th>email</th>
+        <th>status</th>
+        <th>Allow/Deny</th>
+      </tr>
 
-<%-include("./layout/footer.ejs")%>
+      <% for (let i = startIndex; i < endIndex && i < user.length; i++) { %>
+        <form method="post" action="/admin/customer/edit?id=<%= user[i]._id %>">
+          <tr>
+            <td><%= i + 1 %></td>
+            <td><%= user[i].username %></td>
+            <td>
+              <%= user[i].created.toLocaleDateString('en-US', {
+                month: 'long',
+                day: 'numeric',
+                year: 'numeric'
+              }) %>
+            </td>
+            <td><%= user[i].email %></td>
+            <td class="text-<% if (user[i].isAccess) { %>success<% } else { %>danger<% } %>">
+              <% if (user[i].isAccess) { %>Allowed<% } else { %>Disabled<% } %>
+            </td>
+            <input type="hidden" name="isAccess" value="<% if (user[i].isAccess) { %>false<% } else { %>true<% } %>">
+            <td>
+              <button type="submit" class="btn btn-<% if (user[i].isAccess) { %>danger<% } else { %>success<% } %>">
+                <% if (user[i].isAccess) { %>Deny<% } else { %>Allow<% } %>
+              </button>
+            </td>
+          </tr>
+        </form>
+      <% } %>
+    </table>
+  </div>
+
+  <div class="col-12 pb-1">
+    <nav aria-label="Page navigation">
+      <ul class="pagination justify-content-center">
+        <% if (totalPages > 1) { %>
+          <% if (currentPage > 1) { %>
+            <li class="page-item">
+              <a class="page-link" href="/admin/customer?page=<%= currentPage - 1 %>">&laquo; Previous</a>
+            </li>
+          <% } %>
+        
+          <% for (let i = 1; i <= totalPages; i++) { %>
+            <% if (i === currentPage) { %>
+              <li class="page-item active">
+                <a class="page-link" href="/admin/customer?page=<%= i %>"><%= i %></a>
+              </li>
+            <% } else { %>
+              <li class="page-item">
+                <a class="page-link" href="/admin/customer?page=<%= i %>"><%= i %></a>
+              </li>
+            <% } %>
+          <% } %>
+        
+          <% if (currentPage < totalPages) { %>
+            <li class="page-item">
+              <a class="page-link" href="/admin/customer?page=<%= currentPage + 1 %>">Next &raquo;</a>
+            </li>
+          <% } %>
+        <% } %>
+      </ul>
+    </nav>
+  </div>
+</div>
+
+<%- include("./layout/footer.ejs") %>

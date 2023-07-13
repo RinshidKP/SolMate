@@ -1,0 +1,135 @@
+</div>
+   <!-- Make sure to include jQuery and Bootstrap JavaScript libraries -->
+   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+   <script>
+     $(document).ready(function() {
+       $('.dropdown-toggle').dropdown();
+     });
+   </script>
+
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/elevatezoom/3.0.8/jquery.elevatezoom.min.js"></script> 
+
+
+
+<script>
+  // $(document).ready(function() {
+  //   $('.zoom').elevateZoom({
+  //     zoomWindowWidth: 100, 
+  //     zoomWindowHeight: 100
+  //   });
+  // });
+
+  $(document).ready(function() {
+  $('.zoom').mouseenter(function() {
+    $(this).elevateZoom({
+      zoomWindowWidth: 250, 
+      zoomWindowHeight: 250
+    });
+  }).mouseleave(function() {
+    $(this).removeData('elevateZoom');
+  });
+});
+
+
+
+
+  $(document).ready(function() {
+  $('.variant-btn').click(function() {
+    $('.variant-btn').removeClass('active');
+    $(this).addClass('active');
+    
+    // Get the selected variant
+    var selectedVariant = $(this).data('variant');
+    
+    // Perform any further actions based on the selected variant
+    console.log('Selected variant:', selectedVariant);
+  });
+});
+
+</script>
+<!-- <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> -->
+
+<script>
+    // Attach event listeners to the variant buttons
+    var variantButtons = document.querySelectorAll('.variant-btn');
+  variantButtons.forEach(function(button) {
+    button.addEventListener('click', function() {
+      selectVariant(this);
+    });
+  });
+
+   // Function to handle variant button click
+   function selectVariant(variant) {
+    // Remove the "active" class from all variant buttons
+    variantButtons.forEach(function(button) {
+      button.classList.remove('active');
+    });
+
+    // Add the "active" class to the clicked variant button
+    variant.classList.add('active');
+
+    // Get the selected variant value from the data attribute
+    var variantValue = variant.getAttribute('data-variant');
+
+    // Perform any necessary actions based on the selected variant
+    console.log('Selected variant:', variantValue);
+    // You can update other parts of the page, trigger AJAX requests, or perform any other desired actions
+  }
+
+</script>
+
+
+ <script>
+  // Function to handle the quantity decrement
+  function decrementQuantity() {
+    var quantityInput = document.getElementById('quantity');
+    var currentQuantity = parseInt(quantityInput.value);
+
+    if (currentQuantity > 1) {
+      quantityInput.value = currentQuantity - 1;
+    }
+  }
+
+  // Function to handle the quantity increment
+  function incrementQuantity() {
+    var quantityInput = document.getElementById('quantity');
+    var currentQuantity = parseInt(quantityInput.value);
+
+    if (currentQuantity < 100) {
+      quantityInput.value = currentQuantity + 1;
+    }
+  }
+
+
+  // Attach event listeners to the buttons
+  document.querySelector('.quantity-left-minus').addEventListener('click', decrementQuantity);
+  document.querySelector('.quantity-right-plus').addEventListener('click', incrementQuantity);
+  document.querySelector('.btn-addtocart').addEventListener('click', addToCart);
+
+
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<!-- Bootstrap and other scripts -->
+<script src="https://kit.fontawesome.com/5caf998115.js" crossorigin="anonymous"></script>
+<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-p6ts1mDUsa8Ex4R+nss9quK8hOuvFZnSM3o/z4YsHhm4m4n/qDTxjs0Vfylu9tS5" crossorigin="anonymous"></script>
+
+</body>
+    
+<footer class="bg-light py-3 down">
+    <div class="container">
+        <!-- Footer section for the profile page -->
+        <p>&copy; 2023 SolMate. All rights reserved.</p>
+        <!-- Add any additional footer elements here -->
+    </div>
+</footer>
+</html>

@@ -7,12 +7,13 @@
     
     <div class="container py-5 h-100 mt-5"  style="height: 500px;">
       <div class="row d-flex justify-content-center align-items-center h-100">
+        <p class="alert alert-info text-center mt-4">We have sent an email to your account. Please verify your email to continue...</p>
         <div class="col-lg-8 col-xl-6">
           <div class="card rounded-3">
             <div class="card-body shadow p-5 p-md-5" style="background-color:   rgb(236, 184, 101); border-radius: 5px;">
               <h1 class="mb-4 pb-2 pb-md-0 mb-md-5 px-md-2 text-center ">OTP</h1>
   
-              <form action="/otp" method="post" class="px-md-2 mt-5 m-5">
+              <form action="<%=localAction%>" method="post" class="px-md-2 mt-5 m-5">
                 <div class="d-flex justify-content-center">
                     <p class="text-secondary">Enter One Time PasssWord to Continue</p>
                 </div>

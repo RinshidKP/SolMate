@@ -1,33 +1,21 @@
 const category = require("../../models/categoryModel");
-
+const product = require("../../models/productModel");
+const imagesUrl = require("../../utilities/uploadImage");
 
 const addCategory = async (req, res) => {
+
   try {
     const name = req.body.name.toLowerCase();
-    const sub = req.body.sub.toLowerCase();
+    const images = req.files.image
 
     const categoryData = await category.findOne({ name: name });
-
     if (categoryData) {
-      // console.log(categoryData);
-      // console.log('hi');
-      if(!sub){
         res.render("admin/category", { message: "Category Already Exits" });
-      }else{
-        await category.findOneAndUpdate(
-          { name:  name },
-          { $addToSet: { sub: sub } },
-          { upsert: true, new: true }
-        );
-        res.redirect("/admin/category");
-      }
     } else {
-      if(!sub){
-        sub=[]
-      }
+      const url = await imagesUrl(images);
       const newCategory = new category({
         name: name,
-        sub: [sub],
+        image:url
       });
       await newCategory.save();
       res.redirect("/admin/category");
@@ -35,52 +23,61 @@ const addCategory = async (req, res) => {
   } catch (error) {
     console.log(error);
   }
+  
 };
 
-
-
-const loadAddCategory = (req,res)=>{
+const loadAddCategory = (req, res) => {
   try {
-    res.render('admin/addCategory',{message:null})
+    res.render("admin/addCategory", { message: null });
   } catch (error) {
     console.log(error);
   }
-}
+};
 
-const loadEditCategory = async (req,res)=>{
+const loadEditCategory = async (req, res) => {
   try {
-    const id = req.query.id
-    const categoryData = await category.findOne({_id:id})
-    res.render('admin/editCategory',{category:categoryData})
+    const id = req.query.id;
+    const categoryData = await category.findOne({ _id: id });
+    res.render("admin/editCategory", { category: categoryData });
   } catch (error) {
     console.log(error);
   }
-}
+};
 
-const editCategory =async (req,res)=>{
+const editCategory = async (req, res) => {
   try {
-    const id =req.query.id
+    const id = req.query.id;
     const name = req.body.name;
-    const sub = req.body.sub;
-    await category.findByIdAndUpdate(id,{$set:{name:name,sub:sub}})
-    res.redirect('/admin/category')
+    await category.findByIdAndUpdate(id, { $set: { name: name } });
+    res.redirect("/admin/category");
   } catch (error) {
     console.log(error);
   }
-}
+};
 
-const loadCategory = async (req,res)=>{
-    try {
-      const totalCategoriesCount = await category.aggregate([
-      { $unwind: "$sub" }
-    ]);
-
-      const categories = await category.find();
-        res.render('admin/category',{categories,message:null})
-    } catch (error) {
-        
+const loadCategory = async (req, res) => {
+  try {
+    const categories = await category.find();
+    const productValue = [];
+    for (let i = 0; i < categories.length; i++) {
+      productValue[i] = await product.findOne({ category: categories[i]._id});
     }
-}
+    console.log(productValue);
+    res.render("admin/category", { categories:categories , productValue });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const deleteCategory = async (req, res) => {
+  try {
+    const id = req.query.id;
+    await category.findOneAndDelete({ _id: id });
+    res.redirect("/admin/category");
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 module.exports = {
   addCategory,
@@ -88,4 +85,5 @@ module.exports = {
   loadAddCategory,
   loadEditCategory,
   editCategory,
+  deleteCategory,
 };

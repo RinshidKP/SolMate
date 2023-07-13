@@ -1,76 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <!-- zoom -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- elevateZoom -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/elevatezoom/3.0.8/jquery.elevatezoom.min.js"></script>
 
-    <%-include("./layout/header.ejs")%>
-    
-    
-    <section class="h-100 h-custom ">
 
-        
-        <div class="container py-5 h-100 mt-5"  style="height: 500px;">
-          <div class="row d-flex justify-content-center align-items-center h-100">
-            <div class="col-lg-8 col-xl-6">
-              <div class="card rounded-3">
-                <div class="card-body shadow p-5 p-md-5" style="background-color:whitesmoke; border-radius: 5px;">
-                  <h1 class="mb-4 pb-2 pb-md-0 mb-md-5 px-md-2 text-center ">Sign UP</h1>
-      
-                  <form class="px-md-2 mt-5 m-5">
-                    <hr>
-                    
-                    <div class="row mb-4 mt-5">
-                        <div class="col-md-4">
-                            <label class="form-label pt-2" for="form3Example1q">Enter Your Name</label>
-                          </div>
-                          <div class="col-md-8">
-                            <input type="text" id="form3Example1q" class="form-control" name="name" placeholder="Enter Your Name" />
-                          </div>
-                    </div>
+    <script
+      src="https://kit.fontawesome.com/5caf998115.js"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <!-- <div class="container text-secondary">
+            <a class="navbar-brand" href="/">SolMate</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon text-dark"></span>
+            </button>
+        </div> -->
+      <div class="container">
+        <a class="navbar-brand logo mx-3" href="/user/home">SolMate</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      </div>
 
-                    <div class="row mb-4">
-                      <div class="col-md-4">
-                        <label class="form-label pt-2" for="form3Example1q">Enter Username</label>
-                      </div>
-                      <div class="col-md-8">
-                        <input type="text" id="form3Example1q" class="form-control" name="username" placeholder="Enter Your Username" />
-                      </div>
-                    </div>
-                  
-                    <div class="row mb-4">
-                      <div class="col-md-4">
-                        <label class="form-label pt-2" for="form3Example1q">Enter Your Email</label>
-                      </div>
-                      <div class="col-md-8">
-                        <input type="text" id="form3Example1q" class="form-control" name="email" placeholder="Enter Your Email" />
-                      </div>
-                    </div>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <!-- Navbar brand -->
+        <a class="navbar-brand mt-2 mt-lg-0" href="#"> Signup </a>
+        <!-- Left links -->
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="#">Cart</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#"
+              ><i class="fa-solid fa-user-hair"></i
+            ></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">profile</a>
+          </li>
+        </ul>
+        <!-- Left links -->
+      </div>
+    </nav>
+    <style>
+      /*set a border on the images to prevent shifting*/
+      #gallery_01 img {
+        border: 2px solid white;
+      }
+      /*Change the colour*/
+      .active img {
+        border: 2px solid #333 !important;
+      }
 
-                    <div class="row mb-4">
-                        <div class="col-md-4">
-                          <label class="form-label pt-2" for="form3Example1q">Enter Password</label>
-                        </div>
-                        <div class="col-md-8">
-                          <input type="password" id="form3Example1q" class="form-control password" name="password" placeholder="Enter Your Password" />
-                        </div>
-                      </div>
+      .clearfix {
+        display: block;
+        width: 100%;
+        float: left;
+      }
 
-                      <div class="row mb-4">
-                        <div class="col-md-4">
-                          <label class="form-label pt-2" for="form3Example1q">Repeat Password</label>
-                        </div>
-                        <div class="col-md-8">
-                          <input type="password" id="form3Example1q" class="form-control password" name="cpassword" placeholder="Repeat Your Password" />
-                        </div>
-                      </div>
-                      <div class="d-flex justify-content-center container">
-                          <p class="">Have an Account Already click here to <a style="text-decoration: none;" href="">Login</a> </p>
-                      </div>
-                      <div class="d-flex justify-content-center">
-                        <button type="button" style="background-color: #F07C3A;width: 200px;" class="btn align-items-center p-2">Sign Up</button>
-                    </div>
-                    </div>
-                  
-                  </form>
-                </div>
-            </div>      
-        </div>          
-    </section>
-</body>
+      .zoom-left {
+        max-width: 412px;
+      }
+    </style>
+  </body>
 </html>

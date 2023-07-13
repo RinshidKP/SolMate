@@ -1,0 +1,185 @@
+<%- include("./layout/header.ejs") %>
+
+  <div class="container-fluid address px-5">
+    <p class="h3 font-weight-normal d-flex justify-content-center mb-5 mt-4">Choose your shipping address</p>
+    <div class="container-fluid">
+      <div class="row">
+        <% if(address) { %>
+        <form class="col-md-7 col-sm-12">
+          <div class="form-group">
+            <div class="row row-cols-1 row-cols-md-2 g-4">
+              <% if(contact) { %>
+              <div id="<%= contact._id %>-card" class="col">
+                <div class="card mb-4 cardx">
+                  <div class="card-body">
+                    <h5 class="card-title">
+                      <input id="<%= contact._id %>" type="radio" class="form-check-input">
+                      <label for="<%= contact._id %>" class="form-check-label">
+                        <%= contact.type %>
+                      </label>
+                    </h5>
+                    <p class="card-text">
+                      <%= contact.phonenumber %>,<br>
+                      <%= contact.buildingName %>, <%= contact.street %>, <br>
+                      <%= contact.city %>, <%= contact.state %>, <br>
+                      <%= contact.country %>, <br>
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <% } %>
+              <input type="hidden" name="method" value="<%=method%>">
+              <% if(main) { %>
+              <div id="<%= main._id %>-card" class="col">
+                <div class="card mb-4 cardx">
+                  <div class="card-body">
+                    <h5 class="card-title">
+                      <input id="<%= main._id %>" type="radio" class="form-check-input">
+                      <label for="<%= main._id %>" class="form-check-label">
+                        <%= main.type %>
+                      </label>
+                    </h5>
+                    <p class="card-text">
+                      <%= main.phonenumber %>,<br>
+                      <%= main.buildingName %>, <%= main.street %>, <br>
+                      <%= main.city %>, <%= main.state %>, <br>
+                      <%= main.country %>, <br>
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <% } %>
+
+              <% if(secondary) { %>
+              <% secondary.forEach((s, i) => { %>
+              <div id="<%= s._id %>-card" class="col">
+                <div class="card mb-4 cardx">
+                  <div class="card-body">
+                    <h5 class="card-title">
+                      <input id="<%= s._id %>" type="radio" class="form-check-input">
+                      <label for="<%= s._id %>" class="form-check-label">
+                        <%= s.type %> <%= i+1 %>
+                      </label>
+                    </h5>
+                    <p class="card-text">
+                      <%= s.phonenumber %>,<br>
+                      <%= s.buildingName %>, <%= s.street %>, <br>
+                      <%= s.city %>, <%= s.state %>, <br>
+                      <%= s.country %>, <br>
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <% }) %>
+              <% } %>
+            </div>
+          </div>
+          <div class="col d-flex justify-content-center mt-3 mb-4">
+            <a onclick="selectAddress('<%= session %>','<%=method%>')" id="address-btn" style="display: none;" class="btn btn-dark text-light">Continue</a>
+          </div>
+        </form>
+        <% } %>
+
+        <div class="col-md-5 col-sm-12">
+          <div class="d-flex justify-content-center mb-4">
+            <div class="card">
+              <div class="card-header bg-light py-4">
+                <h4 class="mb-0">Contact Address</h4>
+                <p class="mb-0">We can contact you here</p>
+              </div>
+              <div class="card-body">
+                <form action="/checkout/addAddress" method="post">
+                  <div class="mb-3">
+                    <label for="building" class="form-label">Building Name</label>
+                    <input type="text" class="form-control" id="building" name="building" required>
+                  </div>
+                  <div class="mb-3">
+                    <label for="street" class="form-label">Street</label>
+                    <input type="text" class="form-control" id="street" name="street" required>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-5 mb-3">
+                      <label for="city" class="form-label">City</label>
+                      <input type="text" class="form-control" id="city" name="city" required>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                      <label for="state" class="form-label">State</label>
+                      <input type="text" class="form-control" id="state" name="state" required>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                      <label for="pincode" class="form-label">Pincode</label>
+                      <input type="text" class="form-control" id="pincode" name="pincode" pattern="^\d{6}$" required>
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <label for="country" class="form-label">Country</label>
+                    <input type="text" class="form-control" id="country" name="country" required>
+                  </div>
+                  <div class="mb-3">
+                    <label for="phone" class="form-label">Phone Number</label>
+                    <input type="number" class="form-control" id="phone" name="phone" pattern="^\d{10}$" required>
+                  </div>
+                  <input type="hidden" name="type" value="secondary">
+                  <div class="col-12 d-flex justify-content-end align-items-center">
+                    <button type="submit" class="btn btn-secondary">Add Address</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/js/bootstrap.bundle.min.js"></script>
+  <script>
+    let inputElement;
+    $(document).ready(function () {
+        // $('input:radio').change(function () {//Clicking input radio
+        //     var radioClicked = $(this).attr('id');
+        //     unclickRadio();
+        //     removeActive();
+        //     clickRadio(radioClicked);
+        //     makeActive(radioClicked);
+        // });
+        $(".cardx").click(function () {//Clicking the card
+            inputElement = $(this).find('input[type=radio]').attr('id');
+            console.log(inputElement);
+            btnShow();
+            unclickRadio();
+            removeActive();
+            makeActive(inputElement);
+            clickRadio(inputElement);
+        });
+    });
+
+    function selectAddress(id,method){
+        window.location.href= `/checkout?addressId=${inputElement}&userId=${id}&method=${method
+        }`
+        console.log('userid',id);
+    }
+
+    function btnShow() {
+        $("#address-btn").css("display", "block");
+    }
+
+    function unclickRadio() {
+        $("input:radio").prop("checked", false);
+    }
+
+    function clickRadio(inputElement) {
+        $("#" + inputElement).prop("checked", true);
+    }
+
+    function removeActive() {
+        $(".card").removeClass("active");
+    }
+
+    function makeActive(element) {
+        $("#" + element + "-card").addClass("active");
+    }
+</script>
+
+<%-include("./layout/footer.ejs")%>

@@ -1,42 +1,18 @@
+
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 const speakeasy = require("speakeasy");
 const userModel = require("../../models/userModel");
 
-const hashPassword = async (password) => {
+const secretHash = async (password) => {
   try {
-    const hashpassword = await bcrypt.hash(password, 10);
+    const hashpassword = await bcrypt.hash(password,10);
     return hashpassword;
   } catch (error) {
     console.log(error);
   }
 };
 
-const mailStructure = async (savedUser) => {
-  const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 465,
-    secure: true,
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-    tls: {
-      rejectUnauthorized: false,
-    },
-  });
-
-  var message = {
-    from: process.env.EMAIL_USER,
-    to: savedUser.email,
-    subject: "Verify Your Mail",
-    text: "Hello Dear",
-    html: `<p>To verify your <b>SolMate</b> account <a href="http://localhost:${process.env.PORT}/signup/success/?id=${savedUser._id}">click here<a></p>`,
-  };
-
-  const info = await transporter.sendMail(message);
-  console.log("message send : ", info.messageId);
-};
 
 const loadSignup = (req, res) => {
   try {
@@ -52,25 +28,7 @@ const loadlogin = (req, res) => {
     console.log(error);
   }
 };
-const verifyEmail = (req, res) => {
-  try {
-    res.render("auth/verifyEmail", { message: null });
-  } catch (error) {
-    console.log(error);
-  }
-};
 
-const emailVerification = async (req, res) => {
-  try {
-    userId = req.query.id;
-    await userModel.findByIdAndUpdate(req.query.id, {
-      $set: { isVerified: true },
-    });
-    res.redirect("/login");
-  } catch (error) {
-    console.log(error);
-  }
-};
 
 const createUser = async (req, res) => {
   try {
@@ -89,17 +47,28 @@ const createUser = async (req, res) => {
       if (existingUser) {
         res.render("auth/signup", { message: "Username Already Exists" });
       } else {
-        const sPass = await hashPassword(password);
-
+        const sPass = await secretHash(password);
+        
         const newUser = new userModel({
           name: name,
           username: username,
           email: email,
           password: sPass,
         });
+        
+        const otpHash = await sendOtp(newUser);
+        // res.cookie("otpHash", secret.base32, option);
+        const option = {
+          maxAge: 300000,
+          httpOnly: true,
+        };
+        res.cookie('otpHash', otpHash, { maxAge: 120000, httpOnly: true }); 
+        const User=userData._id;
+        res.cookie('newUser', User, { maxAge: 120000, httpOnly: true }); 
+        
         const savedUser = await newUser.save();
-        await mailStructure(savedUser);
-        res.render("auth/verifyEmail");
+        // await mailStructure(savedUser);
+        res.redirect("/otp");
       }
     }
   } catch (error) {
@@ -109,61 +78,144 @@ const createUser = async (req, res) => {
 
 const otpVerify = async (req, res) => {
   try {
-    const secret = req.cookies["otpHash"];
-    const enteredOtp = req.body.otp;
-    const validateOtp = speakeasy.totp.verify({
-      secret: secret,
-      encoding: "base32",
-      token: enteredOtp,
-      digits: 6,
-    });
+    const otpHash = req.cookies.otpHash;
+    const validateOtp = await bcrypt.compare(req.body.otp,otpHash)
+    console.log(validateOtp);
     
     if(validateOtp){
-      res.render("auth/otpAuth");
+       await userModel.findByIdAndUpdate(req.cookies.newUser,{isVerified:true})
+      res.redirect("/login");
+    }else{
+      res.send("validation failed")
     }
   } catch (error) {
     console.log(error);
   }
 };
 
-const otpGenerate = () => {
-  const secret = speakeasy.generateSecret({ length: 20 });
-      console.log(secret);
-  const code = speakeasy.totp({
-    secret: secret.base32,
-    encoding: "base32",
-    digits: 6,
-    step: 300,
-  });
-  console.log(code);
-  return { code, secret };
-};
+const otpGenerate = async () => {
+  try {
+    const digits = "0123456789";
+          let OTP =  '';
+          for(let i=0;i<4;i++){
+            OTP += digits[Math.floor(Math.random() * 10)];
+        }
+        const secret = await secretHash(OTP);
+        // console.log(secret);
+        return {secret, OTP}
+  } catch (error) {
+    console.error(error);
+  }
+  };
 
 const sendOtp = async (user) => {
+try {
   const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
-    port: 465,
-    secure: true,
+    port: 587,
+    secure: false,
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
     },
-    tls: {
-      rejectUnauthorized: false,
-    },
+    requireTLS:true
   });
 
-  const otpCode = otpGenerate();
+  const otpCode = await otpGenerate();
+  // console.log(otpCode.secret);
 
   const info = await transporter.sendMail({
     from: process.env.EMAIL_USER,
     to: user.email,
     subject: "OTP Verification",
     text: "Please Dont Share This Code With Others",
-    html: `<p>Your OTP is <b>${otpCode.code}</b></p>`,
+    html: `<!DOCTYPE html>
+    <html lang="en">
+    
+    <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Verify Your Email - SolMate</title>
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/css/bootstrap.min.css">
+      <style>
+        body {
+          background-color: #f8f9fa;
+          font-family: Arial, sans-serif;
+        }
+    
+        .container {
+          max-width: 500px;
+          margin: 0 auto;
+          padding: 20px;
+        }
+    
+        .bg-light {
+          background-color: #ffffff;
+          border: 1px solid #e0e0e0;
+          padding: 20px;
+        }
+    
+        h1 {
+          font-size: 24px;
+          color: #333333;
+          margin-top: 0;
+          margin-bottom: 30px;
+        }
+    
+        p {
+          font-size: 16px;
+          color: #555555;
+          line-height: 1.5;
+          margin-bottom: 20px;
+        }
+    
+        .text-center {
+          text-align: center;
+        }
+    
+        .mt-4 {
+          margin-top: 20px;
+        }
+    
+        .mb-4 {
+          margin-bottom: 20px;
+        }
+    
+        .rounded {
+          border-radius: 6px;
+        }
+    
+        .company-info {
+          font-size: 14px;
+          color: #999999;
+          margin-top: 40px;
+        }
+      </style>
+    </head>
+    
+    <body>
+      <div class="container">
+        <div class="bg-light rounded">
+          <h1 class="text-center">SolMate</h1>
+          <p>Dear ${user.name},</p>
+          <p>Thank you for signing up with SolMate! To complete your registration, please enter the following One-Time Password (OTP) on our website:</p>
+          <h2 class="text-center mt-4">Your OTP: <b>${otpCode.OTP}</b></h2>
+          <p>If you did not sign up for an account with SolMate, please disregard this email.</p>
+          <p>Thank you for choosing SolMate. We look forward to providing you with the latest footwear styles and trends!</p>
+        </div>
+        <div class="text-center company-info">
+          <p>Company Inc, 3 Abbey Road, San Francisco CA 94102</p>
+        </div>
+      </div>
+    </body>
+    
+    </html>
+    `
   });
 
   return otpCode.secret;
+} catch (error) {
+    console.log(error);
+}
 };
 
 const loginVerify = async (req, res) => {
@@ -171,7 +223,6 @@ const loginVerify = async (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
     const userData = await userModel.findOne({ username: username });
-    const email = userData.email;
 
     if (userData) {
       const passMath = await bcrypt.compare(password, userData.password);
@@ -180,16 +231,22 @@ const loginVerify = async (req, res) => {
           req.session.admin_id = userData._id;
           res.redirect("/admin/dashboard");
         } else {
-          if (userData.isVerified && userData.isAccess) {
-            const option = {
-              maxAge: 3000 * 60,
-              httpOnly: true,
-            };
-            const secret = await sendOtp(userData);
-            res.cookie("otpHash", secret.base32, option);
-            res.render("auth/otpAuth");
+          if(!userData.isVerified){
+            let otpHash = await sendOtp(userData)
+            // req.session.secret=otpHash;
+            res.cookie('otpHash', otpHash, { maxAge: 120000, httpOnly: true }); 
+            const newUser=userData._id;
+            res.cookie('newUser', newUser, { maxAge: 120000, httpOnly: true }); 
+            res.render('auth/otpAuth',{localAction:"/otp"})
           }else{
-            res.render('auth/login',{message:"Access Denied"})
+            if (userData.isAccess) {   
+              req.session.user_id=userData._id
+              req.session.user_name=userData.name
+              console.log(req.session);      
+              res.redirect("/user");
+            }else{
+              res.render('auth/login',{message:"Access Denied"})
+            }
           }
         }
       }else{
@@ -202,13 +259,167 @@ const loginVerify = async (req, res) => {
     console.log(error);
   }
 };
+
+const logout=(req,res)=>{
+  try {
+      
+      req.session.user_id = null;
+      res.redirect('/login');
+
+  } catch (error) {
+      console.log(error);
+  }
+}
+
+const loadOtp = (req,res)=>{
+  try {
+    res.render('auth/otpAuth',{localAction:"/otp"})
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+const loadForgot = async (req,res)=>{
+  try {
+    res.render('auth/forgotPassword',{message:null})
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+const loadChangePassword = async (req,res)=>{
+  try {
+    res.render('auth/updatePassword',{localAction:"/forgot/submited",message:null})
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+const otpPasswordChange = async (req, res) => {
+  try {
+    const otpHash = req.cookies.otpHash;
+    // otpSecret=otpSecret
+    const otp = req.body.otp
+    // otp = otp.toString()
+    // console.log( otpSecret);
+    // console.log(typeof otp);
+    
+    const validateOtp = await bcrypt.compare(otp,otpHash)
+    console.log(validateOtp);
+    
+    if(validateOtp){
+      res.redirect("/forgot/submit");
+    }else{
+      res.send("validation failed")
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const forgotPassword = async (req,res)=>{
+  try {
+    const email = req.body.email;
+    const userData = await userModel.findOne({email:email})
+
+    if(userData){
+      let otpHash = await sendOtp(userData)
+      // otp = otp.toString()
+      // console.log(otp);
+      // req.session.secret = otp.secret
+      // const otpHash = await secretHash(otp)
+      // console.log(otpHash);
+      // const otpHash = await bcrypt.hash(otp, 10);
+      res.cookie('otpHash', otpHash, { maxAge: 120000, httpOnly: true }); 
+        res.cookie('userId',userData._id,{httpOnly:true})
+        res.render('auth/otpAuth',{localAction:"/forgot/submit"});
+    }else{
+        res.render('auth/forgotPassword',{message:"Incorrect Email Address"})
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+
+const changePassword = async (req,res)=>{
+  try {
+    const password = req.body.password
+    console.log(password);
+    const userId = req.cookies['userId']
+    const sPass = await secretHash(password)
+    await userModel.findByIdAndUpdate(userId,{$set:{
+      password:sPass
+    }})
+    res.redirect('/login')
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('Internal server error');
+  }
+}
+
 module.exports = {
   loadSignup,
   loadlogin,
-  verifyEmail,
   createUser,
-  hashPassword,
-  emailVerification,
+  secretHash,
   otpVerify,
   loginVerify,
+  loadOtp,
+  logout,
+  loadForgot,
+  forgotPassword,
+  otpPasswordChange,
+  changePassword,
+  loadChangePassword
 };
+
+
+// const verifyEmail = (req, res) => {
+//   try {
+//     res.render("auth/verifyEmail", { message: null });
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
+// const emailVerification = async (req, res) => {
+//   try {
+//     userId = req.query.id;
+//     await userModel.findByIdAndUpdate(req.query.id, {
+//       $set: { isVerified: true },
+//     });
+//     res.redirect("/login");
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
+// const mailStructure = async (savedUser) => {
+//   try {
+//     const transporter = nodemailer.createTransport({
+//       host: "smtp.gmail.com",
+//       port: 587,
+//       secure: false,
+//       requireTLS:true,
+//       auth: {
+//         user: process.env.EMAIL_USER,
+//         pass: process.env.EMAIL_PASS,
+//       },
+//     });
+  
+//     var message = {
+//       from: process.env.EMAIL_USER,
+//       to: savedUser.email,
+//       subject: "Verify Your Mail",
+//       text: "Hello Dear",
+//       html: `<p>To verify your <b>SolMate</b> account <a href="http://localhost:${process.env.PORT}/signup/success/?id=${savedUser._id}">click here<a></p>`,
+//     };
+  
+//     const info = await transporter.sendMail(message);
+//     console.log("message send : ", info.messageId);
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };

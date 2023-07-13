@@ -20,7 +20,7 @@
                         <label class="form-label pt-2" for="form3Example1q">Enter Your Name</label>
                       </div>
                       <div class="col-md-8">
-                        <input type="text" id="name" class="form-control" name="fname" placeholder="Enter Your Name" required />
+                        <input type="text" id="name" class="form-control  inputField" name="fname" pattern=".*\S+.*" placeholder="Enter Your Name" required />
                       </div>
                 </div>
 
@@ -29,7 +29,7 @@
                     <label class="form-label pt-2" for="form3Example1q">Enter Username</label>
                   </div>
                   <div class="col-md-8">
-                    <input type="text" id="form3Example1q username" class="form-control" name="username" placeholder="Enter Your Username" required />
+                    <input type="text" id="form3Example1q username" class="form-control inputField" pattern=".*\S+.*" name="username" placeholder="Enter Your Username" required />
                   </div>
                 </div>
               
@@ -38,7 +38,7 @@
                     <label class="form-label pt-2" for="form3Example1q">Enter Your Email</label>
                   </div>
                   <div class="col-md-8">
-                    <input type="text" id="email" class="form-control" name="email" placeholder="Enter Your Email" required />
+                    <input type="text" id="email" class="form-control inputField" name="email" pattern=".*\S+.*" placeholder="Enter Your Email" required />
                   </div>
                 </div>
 
@@ -47,7 +47,7 @@
                       <label class="form-label pt-2" for="form3Example1q">Enter Password</label>
                     </div>
                     <div class="col-md-8">
-                      <input type="password" id="password" class="form-control password" name="password" placeholder="Enter Your Password" required />
+                      <input type="password" id="password" class="form-control inputField password" pattern=".*\S+.*" name="password" placeholder="Enter Your Password" required />
                     </div>
                   </div>
 
@@ -56,17 +56,17 @@
                       <label class="form-label pt-2" for="form3Example1q">Repeat Password</label>
                     </div>
                     <div class="col-md-8">
-                      <input type="password" id="cpassword" class="form-control password" name="cpassword" placeholder="Repeat Your Password" required />
+                      <input type="password" id="cpassword" class="form-control inputField password" pattern=".*\S+.*" name="cpassword" placeholder="Repeat Your Password" required />
                     </div>
                   </div>
                   <div class="d-flex justify-content-center">
                     <p class="bg-alert text-danger" id="error-field"><%=message %></p>
                   </div>
                   <div class="d-flex justify-content-center container">
-                      <p class="">Have an Account Already click here to <a style="text-decoration: none;" href="/login">Login</a> </p>
+                      <p class="">Have an Account Already click here to  <a style="text-decoration: none;" href="/login">Login</a> </p>
                   </div>
                   <div class="d-flex justify-content-center">
-                    <button type="submit" style="background-color: #F07C3A;width: 200px;" class="btn align-items-center p-2">Sign Up</button>
+                    <button type="submit" onclick="removeSpaces()" style="background-color: #F07C3A;width: 200px;" class="btn align-items-center p-2">Sign Up</button>
                 </div>
                 </div>
               
@@ -75,6 +75,18 @@
         </div>      
     </div>          
 </section>
+<script>
+
+    function removeSpaces() {
+      const inputFields = document.getElementsByClassName('inputField');
+      for (let i = 0; i < inputFields.length; i++) {
+        const inputField = inputFields[i];
+        const trimmedValue = inputField.value.replace(/\s+/g, '');
+        inputField.value = trimmedValue;
+      }
+    }
+
+</script>
 <script>
   const form = document.getElementById('form');
   const email = document.getElementById('email');

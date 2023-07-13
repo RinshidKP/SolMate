@@ -6,9 +6,9 @@ const categorySchema = new schema ({
         type: String,
         required:true
     },
-    sub:{
-        type:Array,
-        required:true
+    image:{
+        type:String,
+        required:true,
     },
 })
 

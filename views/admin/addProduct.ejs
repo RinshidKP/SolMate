@@ -1,173 +1,242 @@
 <%-include("./layout/header")%>
 
-    <div class="col-9 mx-5">
-      <div class="container py-5 " style="height: 500px">
-        <div class="row d-flex justify-content-center align-items-center h-100">
-          <div class="col-lg-8 col-xl-6">
-            <div class="card rounded-3">
-              <form
-                action="/admin/product/add"
-                id="form"
-                method="post"
-                class="px-md-2 m-4"
-                enctype="multipart/form-data"
-              >
-                <div class="d-flex justify-content-start text-secondary">
-                  <h4>Product Information</h4>
-                </div>
-                <hr />
-
-                <div class="row mb-4">
-                  <div>
-                    <label class="form-label" for="name">Product Name</label>
-                    <input
-                      type="text"
-                      id="name"
-                      class="form-control"
-                      name="name"
-                      value=""
-                      placeholder="Enter Product Name"
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div class="row mb-4">
-                  <div class="col-md-4 form-group">
-                    <div class="form-group">
-                      <label for="exampleSelect" class="form-label"
-                        >Category</label
-                      >
-                      <select class="form-control" name="category" id="exampleSelect">
-                        <% category.forEach((category)=>{ %>
-                        <option
-                          value="<%= category._id %>"
-                          class="bg-secondary text-white"
-                        >
-                          <%= category.name%>
-                        </option>
-                        <%})%>
-                      </select>
-                    </div>
-                  </div>
-                  
-                  <div class="col-md-4 form-group">
-                    <label class="form-label" for="form3Example1q">
-                      Quantity</label
-                    >
-                    <input
-                      type="number"
-                      class="form-control"
-                      name="stock"                      
-                      placeholder="0"
-                      min="0"
-                      required
-                    />
-                  </div>
-
-                  <div class="col-md-4 form-group">
-                    <label class="form-label" for="form3Example1q">
-                      Sales price</label
-                    >
-                    <input
-                      type="number"
-                      id=""
-                      class="form-control"
-                      name="price"
-                      min="0"
-                      pattern="^\d+\.\d{2}$"
-                      placeholder="0.00"
-                      required
-                    />
-                  </div>
-
-                  <div class="col-12 mt-2 form-group">
-                    <label class="form-label" for="">Blurb</label>
-                    <textarea
-                      name="blurb"
-                      id=""
-                      cols="30"
-                      placeholder="Write a Short Description Here"
-                      class="form-control resize-none rounded"
-                      rows="2"
-                      required
-                    ></textarea>
-                  </div>
-                  <!-- outside -->
-                  <div class="col-md-6 form-group mt-2">
-                    <div class="form-group">
-                      <label for="exampleSelect" class="form-label"
-                        >Color Varients</label
-                      ><input
-                        type="text"
-                        class="form-control"
-                        name="color"
-                        placeholder="red green black blue while"
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div class="col-md-6 form-group mt-2">
-                    <label class="form-label" for="form3Example1q">
-                      Sizes Available</label
-                    >
-                    <input
-                      type="text"
-                      id=""
-                      class="form-control"
-                      name="size"
-                      placeholder="8 9  10 11 12"
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div class="col-12 mb-4 mt-1 form-group">
-                  <label class="form-label" for="">Description</label>
-                  <textarea
-                    name="description"
-                    id=""
-                    cols="30"
-                    placeholder="Write Product Description Here"
-                    class="form-control resize-none rounded"
-                    rows="2"
-                    required
-                  ></textarea>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="">Upload Photos</label>
-                  <input
-                    name="image"
-                    class="form-control form-control-file"
-                    type="file"
-                    required
-                    multiple="multiple"
-                  />
-                  <!-- <input class="form-control form-control-sm" name="image" style="box-shadow: none;" type="file" id="formFileMultiple" multiple> -->
-                </div>
-
-                <!-- <div class="d-flex justify-content-center">
-                  <p class="bg-alert text-danger" id="error-field">
-                    <%=message %>
-                  </p>
-                </div> -->
-
-                <div class="d-flex justify-content-center mt-2">
-                  <button
-                    type="submit"
-                    style="background-color: #81a642; width: 200px"
-                    class="btn align-items-center p-2"
-                  >
-                    Add Product
-                  </button>
-                </div>
-              </form>
+<div class="container">
+  <div class="row justify-content-center mt-5">
+    <div class="col-lg-8 col-xl-6">
+      <div class="card rounded-3">
+        <div class="card-body">
+          <form
+            action="/admin/product/add"
+            id="form"
+            method="post"
+            class="px-md-2 m-4"
+            enctype="multipart/form-data"
+          >
+            <div class="d-flex justify-content-start text-secondary">
+              <h4>Product Information</h4>
             </div>
-          </div>
+            <hr />
+
+            <div class="mb-4">
+              <label class="form-label" for="name">Product Name</label>
+              <input
+                type="text"
+                id="name"
+                class="form-control"
+                name="name"
+                value=""
+                placeholder="Enter Product Name"
+                required
+              />
+            </div>
+
+            <div class="row mb-4">
+              <div class=" col-4">
+                <div class=" form-group">
+                  <label for="exampleSelect" class="form-label">Category</label>
+                  <select
+                    class="form-control"
+                    name="category"
+                    id="exampleSelect"
+                  >
+                    <% category.forEach((category) => { %>
+                    <option
+                      value="<%= category._id %>"
+                      class="bg-secondary text-white"
+                    >
+                      <%= category.name %>
+                    </option>
+                    <% }) %>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group col-4">
+                <label class="form-label" for="form3Example1q"
+                  >Sales price</label
+                >
+                <input
+                  type="number"
+                  id=""
+                  class="form-control"
+                  name="price"
+                  min="0"
+                  pattern="^\d+\.\d{2}$"
+                  placeholder="0.00"
+                  required
+                />
+              </div>
+
+              <div class="form-group col-4">
+                <label for="exampleSelect" class="form-label">Color</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="color"
+                  placeholder="red green blue"
+                  required
+                />
+              </div>
+            </div>
+            <div class="col-md-12 form-group text-center">
+              <div class="row">
+                <div class="col">
+                  <label for="size-6" class="form-label">Size 6:</label>
+                  <input
+                    type="number"
+                    id="size-6"
+                    name="size6"
+                    value="0"
+                    class="form-control mb-3"
+                  />
+                </div>
+                <div class="col">
+                  <label for="size-7" class="form-label">Size 7:</label>
+                  <input
+                    type="number"
+                    id="size-7"
+                    name="size7"
+                    value="0"
+                    class="form-control mb-3"
+                  />
+                </div>
+                <div class="col">
+                  <label for="size-8" class="form-label">Size 8:</label>
+                  <input
+                    type="number"
+                    id="size-8"
+                    name="size8"
+                    value="0"
+                    class="form-control mb-3"
+                  />
+                </div>
+                <div class="col">
+                  <label for="size-9" class="form-label">Size 9:</label>
+                  <input
+                    type="number"
+                    id="size-9"
+                    name="size9"
+                    value="0"
+                    class="form-control mb-3"
+                  />
+                </div>
+                <div class="col">
+                  <label for="size-10" class="form-label">Size 10:</label>
+                  <input
+                    type="number"
+                    id="size-10"
+                    name="size10"
+                    value="0"
+                    class="form-control mb-3"
+                  />
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col">
+                  <label for="size-11" class="form-label">Size 11:</label>
+                  <input
+                    type="number"
+                    id="size-11"
+                    name="size11"
+                    value="0"
+                    class="form-control mb-3"
+                  />
+                </div>
+                <div class="col">
+                  <label for="size-12" class="form-label">Size 12:</label>
+                  <input
+                    type="number"
+                    id="size-12"
+                    name="size12"
+                    value="0"
+                    class="form-control mb-3"
+                  />
+                </div>
+                <div class="col">
+                  <label for="size-13" class="form-label">Size 13:</label>
+                  <input
+                    type="number"
+                    id="size-13"
+                    name="size13"
+                    value="0"
+                    class="form-control mb-3"
+                  />
+                </div>
+                <div class="col">
+                  <label for="size-14" class="form-label">Size 14:</label>
+                  <input
+                    type="number"
+                    id="size-14"
+                    name="size14"
+                    value="0"
+                    class="form-control mb-3"
+                  />
+                </div>
+                <div class="col">
+                  <label for="size-15" class="form-label">Size 15:</label>
+                  <input
+                    type="number"
+                    id="size-15"
+                    name="size15"
+                    value="0"
+                    class="form-control mb-3"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-12 form-group">
+              <label class="form-label" for="">Blurb</label>
+              <textarea
+                name="blurb"
+                id=""
+                cols="30"
+                placeholder="Write a Short Description Here"
+                class="form-control resize-none rounded"
+                rows="2"
+                required
+              ></textarea>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="">Description</label>
+              <textarea
+                name="description"
+                id=""
+                cols="30"
+                placeholder="Write Product Description Here"
+                class="form-control resize-none rounded"
+                rows="2"
+                required
+              ></textarea>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="">Upload Photos</label>
+              <input
+                name="image"
+                class="form-control form-control-file"
+                type="file"
+                required
+                multiple="multiple"
+              />
+            </div>
+
+            <div class="d-flex justify-content-center mt-2">
+              <button
+                type="submit"
+                style="background-color: #81a642; width: 200px"
+                class="btn align-items-center p-2"
+              >
+                Add Product 
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
   </div>
-</section>
+</div>
 
 <%-include("./layout/footer.ejs")%>
