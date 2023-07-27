@@ -1,0 +1,110 @@
+<%-include("./layout/header.ejs")%>
+<div class="container-fluid d-flex gap-4" >
+        
+
+    <div style="overflow-y: auto;" class="w-100 d-flex align-items-center align-items-center">
+
+        <div class="col-lg-12">
+            <div class="card mt-4">
+            <div class="card-header bg-light py-4 ">
+                <h4 class="mb-0">#Order Details</h4>
+                <p class="mb-0"><%= order._id %></p>
+            </div>
+            <div class="card-body ">
+
+                <section>
+                    
+                    
+                   
+                    <div class="card mx-3">
+                        <div class="card-header">
+                            Order details<br><small>Your order items</small>
+                        </div>
+                     <div class="card-body" style="overflow: auto;">
+                        <table class="table text-center table-light ">
+                            <colgroup>
+                                <col width="100" />
+                                <col />
+                                <col width="1" />
+                                <col />
+                                <col width="100" />
+                                <col />
+                                <col width="1" />
+                                <col />
+        
+                            </colgroup>
+                            <thead class="bg-primary text-dark">
+                                <tr>
+                                    <th class="first">Image</th>
+                                    <th class="text-center font-weight-500" >Product</th>
+                                    <th class="text-center  font-weight-500" >Price</th>
+                                    <th class="text-center  font-weight-500" >Size</th>
+                                    <th class="text-center  font-weight-500">Qty</th>
+                                    <th class="text-start  font-weight-500">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-bordered">
+                                <% for( let i=0; i < products.length; i++ ) { %>
+                                    <% const sizes = order.items[i].sizes %>
+                                        <% for (const [size, quantity] of sizes.entries() ) { %>
+                                         
+                                   
+
+                                    <tr class="bg-light">
+                                        <td class="product-thumbnail text-start">
+                                            <a href="#"><img
+                                                    src="<%=products[i].productId.image[0].url%>"
+                                                    alt="..." class="img-fluid" width="60vw"></a>
+                                        </td>
+                                        <td class="text-center" style="font-size: 1.2vw;">
+                                            <b href="#" class="text-dark ">
+                                                <%=products[i].productId.name %>
+                                            </b>
+                                        </td>
+                                        <td class="text-center text-dark" style="font-size: 1vw;">
+                                            <%=products[i].productId.price %>
+                                        </td>
+                                        <td class="text-center" style="font-size: 1.2vw;"><%= size %></td>
+                                        <td class="text-center" style="font-size: 1vw;"><span><%=quantity %></span>
+                                        </td>
+                                        <td id="totalPrice"
+                                            class="product-subtotal text-start" style="font-size: 1vw;">
+                                            <span>$<%=(quantity * products[i].productId.price).toFixed(2) %></span>
+                                        </td>
+                                    </tr>
+                                    <% } %>
+                                    <% } %>                                 
+                            </tbody>
+                        </table>
+                    </div>
+                  </div>
+                  <div class="card m-3">
+                    <div class="card-header">
+                        Shipping Address
+                    </div>
+                    <div class="card-body">
+
+                        <%= address.phonenumber %>,<br>
+                      <%= address.buildingName %>, <%= address.street %>, <br>
+                      <%= address.city %>, <%= address.state %>, <br>
+                      <%= address.country %>, <br>
+
+                    </div>
+                  </div>
+                  <div class="card m-3">
+                    <div class="card-header">
+                        Payment Mode
+                    </div>
+                    <div class="card-body">
+                        <% if(order.payment_method == "cod"){ %> Cash On Delivery <% } %>
+                    </div>
+                  </div>
+                 </div>
+                </section>
+            </div>
+            </div>
+            </div >
+            
+               
+            </div>           
+            <%- include("./layout/footer.ejs") %>

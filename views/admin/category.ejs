@@ -16,7 +16,7 @@
           <% for (let i = 0; i < categories.length; i++) { %>
             <tr>
               <td>
-                <img src="<%= categories[i].image %>" height="50" width="50" alt="">
+                <img src="<%= categories[i].image[0].url %>" height="50" width="50" alt="">
               </td>
               <td><%= categories[i].name %></td>
               <td>

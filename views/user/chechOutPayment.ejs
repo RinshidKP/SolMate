@@ -29,7 +29,10 @@
 .checkout__form h4 {
   margin-bottom: 20px;
 }
-
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f8f8f8;
+  }
 .form-group {
   margin-bottom: 30px;
 }
@@ -90,15 +93,26 @@
 </style>
 <section class="checkout spad mt-5 mb-5">
   <div class="container">
-    <!-- <div class="row">
-        <div class="col-lg-12">
-            <h6><span class="icon_tag_alt"></span> Have a coupon? <a href="#">Click here</a> to enter your code
-            </h6>
-        </div>
-    </div> -->
     <div class="checkout__form mt-5 mb-5">
-      <h4>Billing Details</h4>
-      <form action="/checkout" class="mt-5 mb-5" method="post">
+
+      
+      <div class=" row m-5">
+        <div class="col-lg-8">
+          <h4>Billing Details</h4>
+        </div>
+        <div class="col-4 ">
+          <form class="mb-30" id="couponForm">
+            <div class="input-group">
+              <input type="text" id="couponName" pattern="^(?!.*\s)[^\s]+(?<!\s)$" class="form-control border-0 form-control-sm text-dark font-weight-bold" style="box-shadow: none;background-color: #f5f5f5;" placeholder="Coupon Code" required>
+              <div class="input-group-append ">
+                <button type="submit"  class="btn btn-sm btn-dark" >Apply Coupon</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      
+      <form  class="mt-5 mb-5" >
         <div class="row">
           <div class="col-lg-8 col-md-6 mt-5 mb-5">
             <div class="form-group">
@@ -114,6 +128,7 @@
                   </div>
                 </div>
               </div>
+              
               <div class="row mt-5 mb-5">
                 <div class="card-deck d-flex flex-wrap">
                   <div id="Online-card" class="cardx card mb-4" style="min-width: 15rem; max-height: 4rem;">
@@ -128,23 +143,51 @@
               </div>
             </div>
           </div>
-          <input type="hidden" id="<%= addressId %>" name="addressId" value="<%= addressId %>">
-          <input type="hidden" name="method" value="<%=method%>">
+          <input type="hidden" id="addressId" name="addressId" value="<%= addressId %>">
           <div class="col-lg-4 col-md-6 mt-5 mb-5">
+            <div  >
+              <h4> <u>Shipping Methods</u> </h4>
+            </div>
+            <div class="row">
+              <div class="col">
+                <div class="card-body shadow rounded mb-5">
+                  <div class="form-check">
+                    <input onchange="addShipping('0','<%=cart.totalPrice%>')" class="form-check-input" type="radio"
+                      name="shippingOption" id="normalShipping" value="normal" checked>
+                    <label class="form-check-label" for="normalShipping">
+                      Normal 
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                <div class="card-body shadow rounded mb-5">
+                  <div class="form-check">
+                    <input onchange="addShipping('40','<%=cart.totalPrice%>')" class="form-check-input" type="radio"
+                      name="shippingOption" id="fastShipping" value="fast">
+                    <label class="form-check-label" for="fastShipping">
+                      Fast 
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
             <div class="checkout__order">
               <h4>Your Order</h4>
-              <div class="checkout_order_products">Products <span>Total</span></div>
+              <div class="checkout_order_products">Products <span>Total </span></div>
               <ul>
-                <% for(let i=0;i<cart.products.length;i++){ %>
-                <li>Product Total<%= productList[i].productName %> <span>$<%= cart.totalPrice %></span></li>
-                <% } %>
-                <li>Shipping<%if(method==='fast'){%><span> $40</span> <%}else{%><span> $0</span><%}%></li>
+                <li>
+                  <h6 class="font-weight-medium"><span>shipping  </span>$<span id="shippingPrice">0</span></>
+                  </li>
+                  <li>
+                  <h6 class="font-weight-medium"><span>Coupon  </span>$<span class="couponShow" >0</span></>
+                </li>
+                <input type="hidden" name="session" value="<%=session%>">
               </ul>
               <input type="hidden" name="totalPrice" value="<%= cart.totalPrice %>">
-              <div class="checkout_order_total">Total <span>$<% if (method === 'fast') { %><%= cart.totalPrice + 40 %><% } else { %><%= cart.totalPrice %><% } %></span></div>
-
-
-              <button type="submit" class="site-btn rounded">PLACE ORDER</button>
+              <div id="totalCart" class="checkout_order_total">Total <span>$<span id="totalPriceValue"><%= cart.totalPrice %></span></span></div>
+              <button type="button" onclick="placeorder()" class="site-btn rounded">PLACE ORDER</button>
             </div>
           </div>
         </div>
@@ -153,21 +196,18 @@
   </div>
 </section>
 
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.3/axios.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 
   <script>
       $(document).ready(function () {
-          // $('input:radio').change(function () {//Clicking input radio
-          //     var radioClicked = $(this).attr('id');
-          //     unclickRadio();
-          //     removeActive();
-          //     clickRadio(radioClicked);
-          //     makeActive(radioClicked);
-          // });
+        
+   
           $(".cardx").click(function () {//Clicking the card
               var inputElement = $(this).find('input[type=radio]').attr('id');
-              console.log(inputElement);
+              // console.log(inputElement);
               btnShow();
               unclickRadio();
               removeActive();
@@ -195,17 +235,232 @@
       function makeActive(element) {
           $("#" + element + "-card").addClass("active");
       }
-  </script>
+      
+    function addShipping(shippingCost, totalPrice) {
+    const selectedOption = document.querySelector('input[name="shippingOption"]:checked').value;
+    console.log("Selected shipping option:", selectedOption);
+
+    // Update shipping price
+    const shippingPriceElement = document.getElementById('shippingPrice');
+    shippingPriceElement.textContent = shippingCost;
+
+    // Update total cart price
+    const couponShowElement = document.querySelector('.couponShow');
+    const couponText = couponShowElement.textContent;
+    console.log(couponText)
+
+    const totalPriceElement = document.getElementById('totalPriceValue');
+    const newTotalPrice = parseFloat(totalPrice) + parseFloat(shippingCost)-parseFloat(couponText);
+    totalPriceElement.textContent = newTotalPrice;
+  }
+
+
+
+  //coupon form
+  const couponForm = document.getElementById('couponForm');
+
+        couponForm.addEventListener('submit',(e)=>{
+            e.preventDefault();
+
+            const coupon = document.getElementById('couponName');
+            const addressId = document.getElementById('addressId');
+            // "<%= addressId %>"
+            const selectedOption = document.querySelector('input[name="shippingOption"]:checked').value;
+            // console.log(addressId.value);
+            axios({
+                method: "post",
+                url: "/admin/coupon/apply",
+                data: {
+                    couponName: coupon.value,
+                    addressId: "<%= addressId %>",
+                    totalPrice: '<%= cart.totalPrice %>',
+                    selectedOption:selectedOption,
+                }
+            })
+            .then((result)=>{
+                // console.log(result);
+                if(result.data.response == false){
+                    Swal.fire({
+                    icon: "warning",
+                    title: "Invalid coupon",
+                    })
+                    document.querySelector('.couponShow').innerHTML= `${0}`;
+                    document.querySelector('.couponShow').removeAttribute("id");
+                    document.getElementById('totalprice').innerHTML= `${'<%= cart.cartPrice %>'}`;
+                }else if(result.data.response == "min"){
+
+                    Swal.fire({
+                        icon: "warning",
+                        title: "You can't apply this coupon",
+                    })
+
+                }else{
+                    console.log(result.data.coupon.discount);
+                    document.querySelector('.couponShow').innerHTML= `${result.data.coupon.discount}`;
+                    document.querySelector('.couponShow').setAttribute("id",result.data.coupon._id);
+                    // document.getElementById('totalPriceValue').innerHTML= `$${('<%= cart.cartPrice %>'- result.data.coupon.discount)}`;
+                    const totalPriceElement = document.getElementById('totalPriceValue');
+                    const currentTotalPrice = parseFloat(totalPriceElement.textContent); // Get the numeric value from the element
+
+                    const newTotalPrice = currentTotalPrice - parseFloat(result.data.coupon.discount);
+                    totalPriceElement.textContent = newTotalPrice;
+                }
+            })
+        })
+
+
+        function placeorder(){
+            const payment = document.querySelector('input[name="payment"]:checked').value;
+            // const addressId = document.getElementById('addressId').value;
+            const couponId = document.querySelector('.couponShow').id;
+            console.log(payment);
+        if(payment=="online"){
+            handleOnlinePayment()
+            // console.log("sdl");
+        }
+        else{
+            axios({
+              method: "post",
+              url: '/checkout',
+              data: {
+                payment: payment,
+                  addressId: "<%= addressId %>",
+                couponId: couponId,
+                totalPrice: '<%= cart.totalPrice %>'
+              }
+            })
+            .then((result)=>{
+              if(result.data.response){
+                location.href=`/order/success?orderId=${result.data.orderId}`;
+              }
+            })
+          }
+        }          
+        function handleOnlinePayment(){
+            const payment = document.querySelector('input[name="payment"]:checked').value;  
+            // const addressId = document.getElementById('addressId').value;
+            let couponId = document.querySelector('.couponShow').id;
+            if(!couponId){
+              couponId=null;
+            }
+            const selectedOption = document.querySelector('input[name="shippingOption"]:checked').value;
+          
+            $.ajax({
+              url: "/create-order",
+              method: "post",
+              data: {
+                shippingOption:selectedOption,
+                couponId:couponId,
+                addressId: "<%= addressId %>",
+                totalPrice: '<%= cart.totalPrice %>',
+              },
+                success: function(res){
+                    if(res.success){
+                        var options = {
+                            "key": ""+res.key_id+"",
+                            "amount": ""+res.amount+"",
+                            "currency": "INR",
+                            "name": "SolMate",
+                            "image": "https://dummyimage.com/",
+                            "order_id": ""+res.order_id+"",
+                            "handler": function(response){
+                                // alert("payment Succeeded");
+                                // alert(response.razorpay_payment_id);
+
+                                axios({
+                                method: "post",
+                                url: '/checkout',
+                                data: {
+                                  payment: payment,
+                                  addressId: "<%= addressId %>",
+                                  couponId: couponId,
+                                  totalPrice: '<%= cart.totalPrice %>'
+                                }  
+                              })
+                              .then((result)=>{
+                                  if(result.data.response){
+                                    location.href=`/order/success?orderId=${result.data.orderId}`;
+                                  }
+                                })
+
+                            },
+                            "prefill": {
+                                "name": ""+res.name+"",
+                                "email": ""+res.email+""
+                            },
+                            "theme": {
+                                "color": "#7fad39"
+                            }
+                        };
+                        var razorpayObject = new Razorpay(options);
+                        razorpayObject.on('payment.failed', function (response){
+                                alert("Payment Failed");
+                        });
+                        razorpayObject.open();
+                    }
+                }
+            })
+        }
+        // function handleOnlinePayment() {
+        //   // console.log("why isnt this working")
+        //   // const session = document.getSelector('session');
+        //   // const payment = document.querySelector('input[name="payment"]:checked').value;
+        //   // const addressId = document.getElementById('addressId').value;
+        //   const couponId = document.querySelector('.couponShow').id;
+        //   const selectedOption = document.querySelector('input[name="shippingOption"]:checked').value;
+        //   const totalPriceElement = document.getElementById('totalPriceValue');
+        //   const currentTotalPrice = parseFloat(totalPriceElement.textContent);
+        //   $.ajax({
+        //       url: "/create-order",
+        //       method: "post",
+        //       data: {
+        //         shippingOption:selectedOption,
+        //         couponId:couponId,
+        //         totalPrice: currentTotalPrice,
+        //         addressId: "<%= addressId %>",
+        //         totalPrice: '<%= cart.totalPrice %>',
+        //       },
+        //     })
+        //     .then((res) => {
+        //       console.log(res.amount);
+        //     // Open the Razorpay payment popup
+        //     const options = {
+        //       key: res.key_id,
+        //       amount: res.amount ,
+        //       currency: 'INR', 
+        //       name: 'SolMate',
+        //       description: 'Payment for Order',
+        //       order_id: res.order_id,
+        //       handler: function (response) {
+        //         // Handle the payment success response
+        //         alert("Payment Succeeded");
+
+        //         window.location.href = '/order/success?orderId=' + orderId;
+        //       },
+        //       prefill: {
+        //         email: 'customer@example.com',
+        //         contact: 'Customer Contact Number',
+        //       },
+        //     };
+        //       const razorpayInstance = new Razorpay(options);
+        //       razorpayInstance.open();
+        //     })
+        //     .catch((error) => {
+        //       console.error('Error creating Razorpay order:', error);
+        //     });
+        // }
+          
+          </script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/js/bootstrap.bundle.min.js"></script>
 <script>
   // Your existing JavaScript code
 
-  function proceedToPayment() {
-    // Handle payment logic here and redirect to the payment page
-    window.location.href = "/payment"; // Replace with your payment page URL
-  }
+  // function proceedToPayment() {
+  //   // Handle payment logic here and redirect to the payment page
+  //   window.location.href = "/payment"; // Replace with your payment page URL
+  // }
 </script>
 
 <%- include("./layout/footer.ejs") %>

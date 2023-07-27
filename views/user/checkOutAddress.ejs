@@ -28,7 +28,7 @@
                 </div>
               </div>
               <% } %>
-              <input type="hidden" name="method" value="<%=method%>">
+
               <% if(main) { %>
               <div id="<%= main._id %>-card" class="col">
                 <div class="card mb-4 cardx">
@@ -75,7 +75,7 @@
             </div>
           </div>
           <div class="col d-flex justify-content-center mt-3 mb-4">
-            <a onclick="selectAddress('<%= session %>','<%=method%>')" id="address-btn" style="display: none;" class="btn btn-dark text-light">Continue</a>
+            <a onclick="selectAddress('<%= session %>')" id="address-btn" style="display: none;" class="btn btn-dark text-light">Continue</a>
           </div>
         </form>
         <% } %>
@@ -137,13 +137,7 @@
   <script>
     let inputElement;
     $(document).ready(function () {
-        // $('input:radio').change(function () {//Clicking input radio
-        //     var radioClicked = $(this).attr('id');
-        //     unclickRadio();
-        //     removeActive();
-        //     clickRadio(radioClicked);
-        //     makeActive(radioClicked);
-        // });
+
         $(".cardx").click(function () {//Clicking the card
             inputElement = $(this).find('input[type=radio]').attr('id');
             console.log(inputElement);
@@ -156,9 +150,8 @@
     });
 
     function selectAddress(id,method){
-        window.location.href= `/checkout?addressId=${inputElement}&userId=${id}&method=${method
-        }`
-        console.log('userid',id);
+        window.location.href= `/checkout?addressId=${inputElement}&userId=${id}`
+        // console.log('userid',id);
     }
 
     function btnShow() {

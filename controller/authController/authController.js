@@ -1,7 +1,7 @@
 
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
-const speakeasy = require("speakeasy");
+// const speakeasy = require("speakeasy");
 const userModel = require("../../models/userModel");
 
 const secretHash = async (password) => {
@@ -23,7 +23,8 @@ const loadSignup = (req, res) => {
 };
 const loadlogin = (req, res) => {
   try {
-    res.render("auth/login", { message: null });
+    const oldRoute = req.query.oldRoute;
+    res.render("auth/login", { message: null,oldRoute });
   } catch (error) {
     console.log(error);
   }
@@ -62,11 +63,11 @@ const createUser = async (req, res) => {
           maxAge: 300000,
           httpOnly: true,
         };
+        const savedUser = await newUser.save();
         res.cookie('otpHash', otpHash, { maxAge: 120000, httpOnly: true }); 
-        const User=userData._id;
+        const User=savedUser._id;
         res.cookie('newUser', User, { maxAge: 120000, httpOnly: true }); 
         
-        const savedUser = await newUser.save();
         // await mailStructure(savedUser);
         res.redirect("/otp");
       }
@@ -242,8 +243,14 @@ const loginVerify = async (req, res) => {
             if (userData.isAccess) {   
               req.session.user_id=userData._id
               req.session.user_name=userData.name
-              console.log(req.session);      
-              res.redirect("/user");
+              // console.log(req.session);
+              console.log("am old route "+req.body.oldRoute);
+              const newRoute = req.body.oldRoute
+              if(newRoute){
+                res.redirect(`/product/shop?id=${newRoute}`)
+              } else {
+                res.redirect("/user");
+              }  
             }else{
               res.render('auth/login',{message:"Access Denied"})
             }

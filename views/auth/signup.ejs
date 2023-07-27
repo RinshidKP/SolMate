@@ -1,79 +1,143 @@
 
 <%-include("./layouts/header.ejs")%>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+  }
+  section {
+    height: 100vh;
+  }
+  .container {
+    height: 100%;
+  }
+  .card {
+    border-radius: 10px;
+  }
+  .card-body {
+    background-color: #ffffff;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  h1 {
+    font-size: 36px;
+    font-weight: bold;
+    text-align: center;
+    color: #333333;
+  }
+  form {
+    margin-top: 30px;
+    padding: 20px;
+  }
+  label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333333;
+  }
+  input[type="text"],
+  input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    margin-top: 5px;
+  }
+  .error-field {
+    font-size: 14px;
+    color: #FF0000;
+    text-align: center;
+    margin-top: 10px;
+    display: none;
+  }
+  .form-link {
+    text-align: center;
+    margin-top: 20px;
+  }
+  .form-link a {
+    text-decoration: none;
+    color: #007BFF;
+  }
+  .btn {
+    display: block;
+    margin: 0 auto;
+    background-color: #F07C3A;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  .btn:hover {
+    background-color: #E06228;
+  }
+</style>    
     
-    
-<section class="h-100 h-custom ">
-
-    
-    <div class="container py-5 h-100 mt-5"  style="height: 500px;">
-      <div class="row d-flex justify-content-center align-items-center h-100">
-        <div class="col-lg-8 col-xl-6">
-          <div class="card rounded-3">
-            <div class="card-body shadow p-5 p-md-5" style="background-color:whitesmoke; border-radius: 5px;">
-              <h1 class="mb-4 pb-2 pb-md-0 mb-md-5 px-md-2 text-center ">Sign UP</h1>
-  
-              <form action="/signup" id="form" method="post" class="px-md-2 mt-5 m-5">
-                <hr>
-                
-                <div class="row mb-4 mt-5">
-                    <div class="col-md-4">
-                        <label class="form-label pt-2" for="form3Example1q">Enter Your Name</label>
-                      </div>
-                      <div class="col-md-8">
-                        <input type="text" id="name" class="form-control  inputField" name="fname" pattern=".*\S+.*" placeholder="Enter Your Name" required />
-                      </div>
+<section class="h-100 h-custom">
+  <div class="container py-5 h-100 mt-5">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-lg-8 col-xl-6">
+        <div class="card rounded-3">
+          <div class="card-body shadow p-5 p-md-5">
+            <h1 class="mb-4">Sign Up</h1>
+            <form action="/signup" id="form" method="post">
+              <hr>
+              <div class="row mb-4 mt-5">
+                <div class="col-md-4">
+                  <label for="name">Enter Your Name</label>
                 </div>
-
-                <div class="row mb-4">
-                  <div class="col-md-4">
-                    <label class="form-label pt-2" for="form3Example1q">Enter Username</label>
-                  </div>
-                  <div class="col-md-8">
-                    <input type="text" id="form3Example1q username" class="form-control inputField" pattern=".*\S+.*" name="username" placeholder="Enter Your Username" required />
-                  </div>
+                <div class="col-md-8">
+                  <input type="text" id="name" class="form-control inputField" name="fname" pattern=".*\S+.*" placeholder="Enter Your Name" required>
                 </div>
-              
-                <div class="row mb-4">
-                  <div class="col-md-4">
-                    <label class="form-label pt-2" for="form3Example1q">Enter Your Email</label>
-                  </div>
-                  <div class="col-md-8">
-                    <input type="text" id="email" class="form-control inputField" name="email" pattern=".*\S+.*" placeholder="Enter Your Email" required />
-                  </div>
+              </div>
+              <div class="row mb-4">
+                <div class="col-md-4">
+                  <label for="username">Enter Username</label>
                 </div>
-
-                <div class="row mb-4">
-                    <div class="col-md-4">
-                      <label class="form-label pt-2" for="form3Example1q">Enter Password</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input type="password" id="password" class="form-control inputField password" pattern=".*\S+.*" name="password" placeholder="Enter Your Password" required />
-                    </div>
-                  </div>
-
-                  <div class="row mb-4">
-                    <div class="col-md-4">
-                      <label class="form-label pt-2" for="form3Example1q">Repeat Password</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input type="password" id="cpassword" class="form-control inputField password" pattern=".*\S+.*" name="cpassword" placeholder="Repeat Your Password" required />
-                    </div>
-                  </div>
-                  <div class="d-flex justify-content-center">
-                    <p class="bg-alert text-danger" id="error-field"><%=message %></p>
-                  </div>
-                  <div class="d-flex justify-content-center container">
-                      <p class="">Have an Account Already click here to  <a style="text-decoration: none;" href="/login">Login</a> </p>
-                  </div>
-                  <div class="d-flex justify-content-center">
-                    <button type="submit" onclick="removeSpaces()" style="background-color: #F07C3A;width: 200px;" class="btn align-items-center p-2">Sign Up</button>
+                <div class="col-md-8">
+                  <input type="text" id="username" class="form-control inputField" pattern=".*\S+.*" name="username" placeholder="Enter Your Username" required>
                 </div>
+              </div>
+              <div class="row mb-4">
+                <div class="col-md-4">
+                  <label for="email">Enter Your Email</label>
                 </div>
-              
-              </form>
-            </div>
-        </div>      
-    </div>          
+                <div class="col-md-8">
+                  <input type="text" id="email" class="form-control inputField" name="email" pattern=".*\S+.*" placeholder="Enter Your Email" required>
+                </div>
+              </div>
+              <div class="row mb-4">
+                <div class="col-md-4">
+                  <label for="password">Enter Password</label>
+                </div>
+                <div class="col-md-8">
+                  <input type="password" id="password" class="form-control inputField password" pattern=".*\S+.*" name="password" placeholder="Enter Your Password" required>
+                </div>
+              </div>
+              <div class="row mb-4">
+                <div class="col-md-4">
+                  <label for="cpassword">Repeat Password</label>
+                </div>
+                <div class="col-md-8">
+                  <input type="password" id="cpassword" class="form-control inputField password" pattern=".*\S+.*" name="cpassword" placeholder="Repeat Your Password" required>
+                </div>
+              </div>
+              <div class="error-field" id="error-field"></div>
+              <div class="form-link">
+                <p>Have an Account Already? Click here to <a href="/login">Login</a></p>
+              </div>
+              <div class="d-flex justify-content-center">
+                <button type="submit" onclick="removeSpaces()" class="btn">Sign Up</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 <script>
 

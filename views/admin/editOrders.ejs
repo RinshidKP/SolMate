@@ -80,16 +80,22 @@
                                     <th class="first">Image</th>
                                     <th class="text-center font-weight-500" >Product</th>
                                     <th class="text-center  font-weight-500" >Price</th>
+                                    <th class="text-center  font-weight-500" >Size</th>
                                     <th class="text-center  font-weight-500">Qty</th>
                                     <th class="text-start  font-weight-500">Total</th>
                                 </tr>
                             </thead>
                             <tbody class="table-bordered">
                                 <% for( let i=0; i < products.length; i++ ) { %>
+                                    <% const sizes = order.items[i].sizes %>
+                                        <% for (const [size, quantity] of sizes.entries() ) { %>
+                                         
+                                   
+
                                     <tr class="bg-light">
                                         <td class="product-thumbnail text-start">
                                             <a href="#"><img
-                                                    src="<%=products[i].productId.image[0] %>"
+                                                    src="<%=products[i].productId.image[0].url%>"
                                                     alt="..." class="img-fluid" width="60vw"></a>
                                         </td>
                                         <td class="text-center" style="font-size: 1.2vw;">
@@ -100,14 +106,16 @@
                                         <td class="text-center text-dark" style="font-size: 1vw;">
                                             <%=products[i].productId.price %>
                                         </td>
-                                        <td class="text-center" style="font-size: 1vw;"><span><%=products[i].quantity %></span>
+                                        <td class="text-center" style="font-size: 1.2vw;"><%= size %></td>
+                                        <td class="text-center" style="font-size: 1vw;"><span><%=quantity %></span>
                                         </td>
                                         <td id="totalPrice"
-                                            class="product-subtotal text-center" style="font-size: 1vw;">
-                                            <span>$<%=(products[i].quantity * products[i].productId.price).toFixed(2) %></span>
+                                            class="product-subtotal text-start" style="font-size: 1vw;">
+                                            <span>$<%=(quantity * products[i].productId.price).toFixed(2) %></span>
                                         </td>
                                     </tr>
                                     <% } %>
+                                    <% } %>                                 
                             </tbody>
                         </table>
                     </div>

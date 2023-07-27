@@ -9,7 +9,7 @@
             <div class="d-flex justify-content-start text-secondary">
               <h4>Edit Product Information</h4>
             </div>
-            <hr />
+            <hr>
 
               <div class="mb-2">
                 <label class="form-label" for="name">Product Name</label>
@@ -118,7 +118,7 @@
               <div class="form-group">
                 <label class="form-label" for="">Upload Photos</label>
                 <input
-                  name=""
+                  name="image"
                   class="form-control form-control-file"
                   type="file"
                   multiple="multiple"
@@ -136,18 +136,20 @@
         </div>
       </div>
       <div class="col-lg-6 col-xl-6">
+      <%if(stock.image){%>
         <div id="imageCards" class="row">
           <% for (let i = 0; i < stock.image.length; i++) { %>
             <div class="col-4 col-md-4 col-lg-4 col-xl-4 m-2">
               <div class="card" style="width: 100%;">
-                <img src="<%= stock.image[i] %>" class="card-img-top" alt="Image">
+                <img src="<%= stock.image[i].url %>" class="card-img-top" alt="Image">
                 <div class="card-body d-flex justify-content-between">
-                  <a href="#" class="btn btn-sm btn-success fs-6">Update</a>
-                  <a href="/admin/product/delete/image?id=<%=stock._id%>&imageUrl=<%= stock.image[i] %>" class="btn btn-sm btn-danger fs-<%= i < 2 ? '6' : 'md-6 fs-lg-6 fs-xl-6' %>">Delete</a>
+                  <!-- <a href="#" class="btn btn-sm btn-success fs-6">Update</a> -->
+                  <a href="/admin/product/delete/image?id=<%=stock._id%>&publicId=<%= stock.image[i].public_id %>" class="btn btn-sm btn-danger fs-<%= i < 2 ? '6' : 'md-6 fs-lg-6 fs-xl-6' %>">Delete</a>
                 </div>
               </div>
             </div>
           <% } %>
+      <% } %>
         </div>
       </div>
       

@@ -1,0 +1,41 @@
+<%- include("./layout/header") %>
+
+<div class="container-fluid vh-100 " style="background-color: #EDF1F5;">
+    <div class="row gap-4 ">
+      <div class="col-12" style="overflow-y: auto;">
+        <div class="table-responsive">
+          <table class="table table-light table-striped mt-2">
+            <thead>
+              <tr>
+                <th>sl.no</th>
+                <th>Coupon Name</th>
+                <th>Discount</th>
+                <th>Expiry Date</th>
+                <th>Status</th>
+                <th>Edit</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% coupons.forEach((coupon, i) => { %>
+              <tr>
+                <td><%= i + 1 %></td>
+                <td><%= coupon.name %></td>
+                <td><%= coupon.discount %></td>
+                <td><%= coupon.expiryDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }); %></td>
+                <% if (coupon.isActive) { %>
+                <td><span class="text-success">Active</span></td>
+                <% } else { %>
+                <td><span class="text-danger">Disabled</span></td>
+                <% } %>
+                <td><a href="/admin/coupon/edit?id=<%= coupon._id %>"><button type="button" class="btn btn-success">Edit</button></a></td>
+              </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+  <%- include("./layout/footer.ejs") %>

@@ -28,7 +28,7 @@
     }
     #sidebar {
       transition: transform 0.3s ease-in-out;
-      height: 87vh;
+      height: 100vh;
     }
     #sidebar.active {
       transform: translateX(-100%);
@@ -36,7 +36,7 @@
   </style>
 </head>
 
-<body style="background: #bccd9e;">
+<body style="background: #f7f7d6;">
   <div class="bg-light">
     <div class="d-flex">
       <div class="col-2 bg-light d-flex justify-content-center custom-heading align-items-center">
@@ -71,8 +71,8 @@
 
   <section>
     <div class="d-flex shadow-lg">
-      <div class="col-2">
-        <div class="d-flex flex-column justify-content-between bg-light " id="sidebar">
+      <div class="col-2 ">
+        <div class="d-flex flex-column justify-content-between bg-light  " style=" position: sticky; top: 0;" id="sidebar">
           <div class=" container col-auto bg-light col-12 overflow-auto">
             <ul class="nav nav-pills flex-column mt-2 mt-sm-0" id="menu">
               <li class="nav-item my-sm-1 my-2">
@@ -127,12 +127,28 @@
                   <span class="ms-2 d-none d-sm-inline">Customers</span>
                 </a>
               </li>
-              <hr class="text-dark d-none d-sm-block my-3" />
+              <!-- <hr class="text-dark d-none d-sm-block my-3" />
               <li class="nav-item my-sm-1 my-2">
                 <a href="/admin/coupons" class="nav-link text-dark text-center text-sm-start" aria-current="page">
                   <i class="fa-solid fa-rug"></i>
                   <span class="ms-2 d-none d-sm-inline">Coupons</span>
                 </a>
+              </li> -->
+              <hr class="text-dark d-none d-sm-block my-3" />
+              <li class="nav-item my-sm-1 my-2">
+                <a href="#couponmenu" data-bs-toggle="collapse" class="nav-link text-dark text-center text-sm-start" aria-current="page">
+                  <i class="fa fa-table"></i>
+                  <span class="ms-2 d-none d-sm-inline">Coupons</span>
+                  <i class="fa fa-caret-down"></i>
+                </a>
+                <ul class="nav collapse ms-1 flex-column" id="couponmenu" data-bs-parent="#menu">
+                  <li class="nav-item">
+                    <a class="nav-link text-dark" href="/admin/coupons" aria-current="page">Coupons</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link text-dark" href="/admin/coupons/add" aria-current="page">Add Coupons</a>
+                  </li>
+                </ul>
               </li>
               <hr class="text-dark d-none d-sm-block my-3" />
 

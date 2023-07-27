@@ -1,6 +1,6 @@
 const category = require("../../models/categoryModel");
-const productModel = require("../../models/productModel");
-const product = require("../../models/productModel");
+// const productModel = require("../../models/productModel");
+const Product = require("../../models/productModel");
 const {multipleimages,deleteImage} = require("../../utilities/uploadImage");
 
 const loadAddProduct = async (req, res) => {
@@ -48,7 +48,7 @@ const addProduct = async (req, res) => {
     const images = req.files.image;
     const urlList = await multipleimages(images);
 
-    const newProducts = new product({
+    const newProducts = new Product({
       name: name,
       category: category,
       price: price,
@@ -87,11 +87,11 @@ const loadProduct = async (req, res) => {
     if (req.query.search) {
         search = req.query.search;
     }
-    const productData = await productModel.find()
+    const productData = await Product.find()
       .skip(skip)
       .limit(limit);
     
-      // const productData = await productModel
+      // const productData = await Product
       // .find({
       //   isAdmin: false,
       //   $or: [
@@ -102,12 +102,12 @@ const loadProduct = async (req, res) => {
       // .skip(skip)
       // .limit(limit);
 
-    const totalProduct = await productModel.countDocuments(); 
+    const totalProduct = await Product.countDocuments(); 
 
     const totalPages = Math.ceil(totalProduct / itemsPerPage);
 
     const startIndex = skip + 0;
-    const stock = await product.find()
+    const stock = await Product.find()
     const categories = await category.find();
     res.render("admin/product", { 
       stock: stock,
@@ -124,7 +124,7 @@ const loadProduct = async (req, res) => {
 const loadEditProduct = async (req, res) => {
   try {
     const id = req.query.id;
-    const stock = await product.findOne({ _id: id }).populate("category");
+    const stock = await Product.findOne({ _id: id }).populate("category");
     const categories = await category.find();
     res.render("admin/editProduct.ejs", { stock: stock, category: categories });
   } catch (error) {
@@ -173,12 +173,12 @@ const updateProduct = async (req, res) => {
     }
     const urlList = await multipleimages(images);
     if (Array.isArray(urlList) && urlList.length > 0) {
-      await product.findByIdAndUpdate(id, {
+      await Product.findByIdAndUpdate(id, {
         $push: { image: { $each: urlList }}
       });
     }
 
-    await product.findByIdAndUpdate(id, {
+    await Product.findByIdAndUpdate(id, {
       $set: {
         name: name,
         category: category,
@@ -212,10 +212,10 @@ const deleteProduct = async (req, res) => {
 
     // console.log(id);
     if (active == "true") {
-      await product.findByIdAndUpdate(id, { $set: { isActive: false } });
+      await Product.findByIdAndUpdate(id, { $set: { isActive: false } });
       res.redirect("/admin/product");
     } else if (active == "false") {
-      await product.findByIdAndUpdate(id, { $set: { isActive: true } });
+      await Product.findByIdAndUpdate(id, { $set: { isActive: true } });
       res.redirect("/admin/product");
     }
   } catch (error) {
@@ -225,15 +225,14 @@ const deleteProduct = async (req, res) => {
 
 const deleteProductImage = async (req,res)=>{
   try {
-    const {id,imageUrl}=req.query;
-    stockData = await productModel.findById(id)
-    console.log(imageUrl);
-    await deleteImage(imageUrl)
-    productModel.findOneAndUpdate(
-      { _id: id },
-      { $pull: { image: imageUrl } },
-      { new: true }
-    )
+    const {id,publicId}=req.query;
+    console.log(publicId);
+    await Product.updateOne(
+    { _id:id,"image.public_id": publicId},
+      { $pull:{"image": { public_id : publicId}} },
+      )
+      await deleteImage(publicId)
+      res.redirect('/admin/product')
   } catch (error) {
     console.log(error)
   }

@@ -1,4 +1,4 @@
-const Order = require('../../models/orderSchema');
+const Order = require('../../models/orderModel');
 const Product = require('../../models/productModel');
 const loadOrder = async (req,res)=>{
     try {
@@ -39,7 +39,27 @@ const cancelOrder = async (req, res) => {
     }
   }
 
+  const viewDetails = async (req,res)=>{
+    try {
+      const session = req.session.user_id;
+      const order = await Order.findOne({user:session}).populate([
+        { path: "user" },
+        { path: "address" },
+        { path: "items.productId" },
+      ]);
+      // console.log(order);
+      const products = order.items;
+      const address = order.address;
+      res.render('user/orderDetails',{session,name: req.session.name,order,products,address})
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+
 module.exports={
     loadOrder,
-    cancelOrder
+    cancelOrder,
+    viewDetails
 }

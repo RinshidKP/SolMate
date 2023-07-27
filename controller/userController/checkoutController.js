@@ -1,19 +1,17 @@
-
 const Address = require("../../models/addressModel");
 const User = require("../../models/userModel");
 const Cart = require('../../models/cartModel');
-const Order = require('../../models/orderSchema');
-const { findOneAndDelete } = require("../../models/categoryModel");
-// const Category = require('../../models/categoryModel')
-// const Product = require('../../models/productModel')
+const Order = require('../../models/orderModel');
+const Product = require('../../models/productModel')
+const Coupon = require('../../models/couponModel')
+
+const Razorpay = require('razorpay');
 
 const loadCheckOutAddress = async (req, res) => {
   try {
     const session = req.session.user_id;
     const userData = await User.findOne({ _id: session });
     const address = await Address.find({ user: session });
-
-      const method = req.query.method;
 
     const contactAddress = await Address.findOne({
       user: session,
@@ -27,124 +25,268 @@ const loadCheckOutAddress = async (req, res) => {
 
     res.render("user/checkOutAddress", {
       session,
-      name:req.session.name,
+      name: req.session.name,
       user: userData,
       contact: contactAddress,
       main: mainAddress,
       secondary: secondaryAddress,
       address,
-      method,
     });
   } catch (error) {
     console.log(error);
   }
 };
 
-const addAddress = async (req,res)=>{
-    try {
-        // const session = req.session.user_id;
-        const userData = await User.findOne({_id:req.session.user_id})
-        const { 
-            building,
-            street, 
-            city,
-            state,
-            country,
-            type,
-        } = req.body;
+const addAddress = async (req, res) => {
+  try {
+    // const session = req.session.user_id;
+    const userData = await User.findOne({ _id: req.session.user_id })
+    const {
+      building,
+      street,
+      city,
+      state,
+      country,
+      type,
+    } = req.body;
 
     let pincode = parseInt(req.body.pincode);
     let phonenumber = parseInt(req.body.phone);
 
     const newAddress = new Address({
-        buildingName:building,
-        street,
-        city,
-        state,
-        pincode,
-        country,
-        phonenumber,
-        user: userData._id,
-        type,
+      buildingName: building,
+      street,
+      city,
+      state,
+      pincode,
+      country,
+      phonenumber,
+      user: userData._id,
+      type,
     })
 
     await newAddress.save();
-    // console.log(newAddress);
-        res.redirect("/checkout/address")
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-const checkoutProceed = async (req,res)=>{
-  try {
-    const session = req.session.user_id;
-    const addressId = req.query.addressId;
-    const method = req.query.method;
-    const address = await Address.findOne({_id:addressId})
-    const cart = await  Cart.findOne({userId:session})
-    const product = await  Cart.findOne({userId:session}).populate("products.productId");
-    const productList =[]
-    product.products.forEach((item)=>{
-      productList.push(item.productId)
-  })
-
-    console.log(method);
-
-    res.render('user/chechOutPayment',
-    {
-      session,
-      name:req.session.name,
-      address,
-      addressId,
-      cart,
-      productList,
-      method
-    })
+    res.redirect("/checkout/address")
   } catch (error) {
     console.log(error);
   }
 }
 
-const checkout = async (req, res)=>{
-  const userId = req.session.user_id;
+const checkoutProceed = async (req, res) => {
+  try {
+    const session = req.session.user_id;
+    const addressId = req.query.addressId;
+    const address = await Address.findOne({ _id: addressId })
+    const cart = await Cart.findOne({ userId: session })
+    const product = await Cart.findOne({ userId: session }).populate("products.productId");
+    const productList = []
+    product.products.forEach((item) => {
+      productList.push(item.productId)
+    })
+    res.render('user/chechOutPayment',
+      {
+        session,
+        name: req.session.name,
+        address,
+        addressId,
+        cart,
+        productList,
+      })
+  } catch (error) {
+    console.log(error);
+  }
+}
 
-  const cart = await Cart.findOne({userId:userId})
-  const cartItems= cart.products;
-  console.log(req.body);
-  const {
+const checkout = async (req, res) => {
+  try {
+    const userId = req.session.user_id;
+    console.log("Sorry Am Here Again");
+    const cart = await Cart.findOne({ userId: userId }).populate("products.productId");
+    const cartItems = cart.products;
+    const {
       payment,
       addressId,
-  } = req.body;
-  const sizes = cart.products.size;
-  const method =req.body.method;
-  let totalPrice = req.body.totalPrice;
-  if (method === 'fast') {
-    totalPrice = parseInt(totalPrice) + 40;
+      couponId
+    } = req.body;
+    const sizes = cart.products.size;
+    let value = 0
+    const method = req.body.shippingOption;
+    let totalPrice = req.body.totalPrice;
+    if (method === 'fast') {
+      totalPrice = parseInt(totalPrice) + 40;
+    }
+    let order;
+    if (couponId) {
+      const coupon = await Coupon.findById(couponId);
+      if (coupon) {
+        const discount = parseInt(coupon.discount)
+        const total = totalPrice - discount;
+        const newOrder = new Order({
+          user: userId,
+          address: addressId,
+          items: cartItems,
+          quantity: value,
+          total: total,
+          size: sizes,
+          delivery: method,
+          payment_method: payment,
+          payment_status: "pending",
+          order_status: "pending"
+        })
+        order = await newOrder.save()
+      }
+    } else {
+      const newOrder = new Order({
+        user: userId,
+        address: addressId,
+        items: cartItems,
+        quantity: value,
+        total: totalPrice,
+        size: sizes,
+        delivery: method,
+        payment_method: payment,
+        payment_status: "pending",
+        order_status: "pending"
+      })
+      order = await newOrder.save()
+    }
+
+    for (const item of cartItems) {
+      const product = await Product.findById(item.productId);
+      const sizes = item.sizes
+
+      for (let size of sizes.keys()) {
+
+        if (size in product.sizes) {
+          const currentSizeQuantity = product.sizes[size];
+          const qty = sizes.get(size)
+          const updatedSizeQuantity = currentSizeQuantity - qty;
+
+          if (updatedSizeQuantity >= 0) {
+            product.sizes[size] = updatedSizeQuantity;
+            await product.save();
+            await Product.findByIdAndUpdate(item.productId, {
+              $inc: {
+                stock: -qty
+              }
+            })
+          }
+        }
+      }
+    }
+    const orderId = order._id;
+    await Cart.findOneAndDelete({ userId: userId })
+    res.json({ response: true, orderId });
+  } catch (error) {
+    console.log(error);
   }
 
-  const newOrder = new Order({
-    user:userId,
-    address:addressId,
-    items:cartItems,
-    total:totalPrice,
-    size:sizes,
-    delivery:method,
-    payment_method:payment,
-    payment_status: "pending",
-    order_status: "pending"
-  })
-  await newOrder.save()
+}
 
-  await Cart.findOneAndDelete({userId:userId})
+const razorpay = new Razorpay({ 
+  key_id: process.env.KEY_ID, 
+  key_secret: process.env.KEY_SECRET
+ })
 
-  res.redirect('/user');
+const payOnline = async (req, res) => {
+  try {
+    console.log(")_( HI");
+    const userId = req.body.session;
 
+    const user = await User.findOne({userId: userId})
+   
+    const method = req.body.shippingOption;
+    let totalPrice = req.body.totalPrice;
+   
+    totalPrice *= 100;
+    const options = {
+      amount: totalPrice,
+      currency: "INR",
+      receipt: "rinshid26@gmail.com",
+      payment_capture:1
+    }
+
+    razorpay.orders.create(options,
+      (error,order)=>{
+        if(!error){
+          res.status(200).send({
+            success: true,
+            msg: 'Order Created',
+            order_id: order.id,
+            amount: totalPrice,
+            key_id: "rzp_test_5QHbkyMVqrLFY8",
+            name: user.username,
+            email: user.email,
+          })
+          
+        }else{
+          res.status(400).send({success: false, msg: "something went wrong!"});
+          console.log(error)
+        }
+    })
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({error: "something went wrong"});
+  }
+}
+
+const applyCoupon = async (req, res) => {
+  try {
+    const { couponName, addressId, totalPrice } = req.body;
+    const coupon = await Coupon.findOne({ name: couponName });
+
+    if (coupon) {
+
+      if (totalPrice >= coupon.minAmount) {
+  
+        // const address = await addressModel.findOne({_id: addressId})
+        // const cart = await Cart.findOne({userId: address.user});
+        // let productList = [];
+        // const product = await Cart
+        // .findOne({userId: address.user})
+        // .populate("items.productId");
+
+        // product.items.forEach((item)=>{
+        // productList.push(item.productId)
+        // })
+        res.json({ response: true, coupon: coupon })
+
+      } else {
+        res.json({ response: 'min' })
+      }
+    } else {
+      res.json({ response: false })
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+const orderSuccess = async (req, res) => {
+  try {
+
+    const order = await Order.findById(req.query.orderId).populate([
+      { path: "user" },
+      { path: "address" },
+      { path: "items.productId" },
+    ]);
+    const sizes = order.items.sizes
+    const user = order.user;
+    const address = order.address;
+    const products = order.items;
+    // console.log(typeof products);
+    res.render('user/success', { order, session: req.session.user_id, name: req.session.name,user,address,products })
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 module.exports = {
   loadCheckOutAddress,
   addAddress,
   checkoutProceed,
-  checkout
+  checkout,
+  applyCoupon,
+  orderSuccess,
+  payOnline,
 };

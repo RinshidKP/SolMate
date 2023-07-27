@@ -1,0 +1,157 @@
+<%- include("./layout/header.ejs") %>
+<style>
+       .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .card {
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background-color: #fff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+    }
+
+    .card h1 {
+      margin: 0;
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+    }
+
+    .card h1 .text-primary {
+      color: #007bff;
+      border: 2px solid #007bff;
+      padding: 4px 10px;
+      border-radius: 4px;
+      margin-right: 10px;
+    }
+
+    .invoice h5 {
+      font-size: 20px;
+      margin-bottom: 15px;
+    }
+
+    .invoice .font-weight-bold {
+      font-weight: bold;
+    }
+
+    .invoice .table {
+      margin-bottom: 0;
+    }
+
+    .invoice .table td {
+      padding: 8px 12px;
+    }
+
+    .product img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .totals {
+      margin-top: 20px;
+    }
+
+    .footer {
+      background-color: #f2f2f2;
+    }
+
+    .footer a {
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    /* Responsive Styles */
+    @media screen and (max-width: 767px) {
+      .card {
+        padding: 10px;
+      }
+      .product td {
+        display: block;
+        width: 100%;
+        text-align: center;
+      }
+    }
+</style>
+<div class="container mt-5 mb-5">
+    <div class="row d-flex justify-content-center">
+      <div class="col-md-8">
+        <div class="card">
+          <h1 class="m-0 display-5 font-weight-semi-bold"><span class="text-secondary font-weight-bold border px-3 mr-1">SolMate</span></h1>
+          <div class="invoice p-5">
+            <h5>Your Order Confirmed!</h5>
+            <span class="font-weight-bold d-block mt-4">Hy <%=user.name%></span>
+            <span>Your order has been confirmed and will be shipped in the next two weeks!</span>
+            <div class="payment border-top mt-3 mb-3 border-bottom table-responsive">
+              <!-- Payment info (if applicable) -->
+            </div>
+            <div class="product border-bottom table-responsive">
+              <table class="table table-borderless">
+                <tbody class="table-bordered">
+                    <% for( let i=0; i < products.length; i++ ) { %>
+                        <% const sizes = order.items[i].sizes %>
+                            <% for (const [size, quantity] of sizes.entries() ) { %>
+                             
+                       
+
+                        <tr class="bg-light">
+                            <td class="product-thumbnail text-start">
+                                <a href="#"><img
+                                        src="<%=products[i].productId.image[0].url%>"
+                                        alt="..." class="img-fluid" width="60vw"></a>
+                            </td>
+                            <td class="text-center" style="font-size: 1.2vw;">
+                                <b href="#" class="text-dark ">
+                                    <%=products[i].productId.name %>
+                                </b>
+                            </td>
+                            <td class="text-center text-dark" style="font-size: 1vw;">
+                                <%=products[i].productId.price %>
+                            </td>
+                            <td class="text-center" style="font-size: 1.2vw;"><%= size %></td>
+                            <td class="text-center" style="font-size: 1vw;"><span><%=quantity %></span>
+                            </td>
+                            <td id="totalPrice"
+                                class="product-subtotal text-start" style="font-size: 1vw;">
+                                <span>$<%=(quantity * products[i].productId.price).toFixed(2) %></span>
+                            </td>
+                        </tr>
+                        <% } %>
+                        <% } %>                                 
+                </tbody>
+              </table>
+            </div>
+            <div class="row d-flex justify-content-end">
+              <div class="col-md-5">
+                <table class="table table-borderless">
+                  <tbody class="totals">
+                    <tr class="border-top border-bottom">
+                      <td>
+                        <div class="text-left">
+                          <span class="font-weight-bold">Subtotal</span>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="text-right">
+                          <span class="font-weight-bold">$<%=order.total%></span>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <p class="font-weight-bold mb-0">Thanks for shopping with us!</p>
+            <span>SolMate</span>
+          </div>
+          <div class="d-flex justify-content-between footer p-3">
+            <span>SolMate <a href="/product">Continue Shopping</a></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<%- include("./layout/footer.ejs") %>

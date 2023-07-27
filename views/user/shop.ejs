@@ -1,51 +1,303 @@
-<%-include("./layout/header.ejs")%>
+<%- include("./layout/header.ejs") %>
+<style>
+  .fixed-sidebar {
+    position: sticky;
+    top: 0;
+    width: 23%;
+    /* Adjust the width as per your layout */
+  }
+
+  .range_container {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    margin: 0% auto;
+  }
+
+  .sliders_control {
+    position: relative;
+    min-height: 50px;
+  }
+
+  .form_control {
+    padding: 0;
+    margin: 0%;
+    position: relative;
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    font-size: 24px;
+    color: #635a5a;
+  }
+
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    pointer-events: all;
+    width: 24px;
+    height: 24px;
+    background-color: #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 0 1px #C6C6C6;
+    cursor: pointer;
+  }
+
+  input[type=range]::-moz-range-thumb {
+    -webkit-appearance: none;
+    pointer-events: all;
+    width: 24px;
+    height: 24px;
+    background-color: #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 0 1px #C6C6C6;
+    cursor: pointer;
+  }
+
+  input[type=range]::-webkit-slider-thumb:hover {
+    background: #f7f7f7;
+  }
+
+  input[type=range]::-webkit-slider-thumb:active {
+    box-shadow: inset 0 0 3px #387bbe, 0 0 9px #387bbe;
+    -webkit-box-shadow: inset 0 0 3px #387bbe, 0 0 9px #387bbe;
+  }
+
+  input[type="number"] {
+    color: #8a8383;
+    width: 50px;
+    height: 30px;
+    font-size: 20px;
+    border: none;
+  }
+
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button {
+    opacity: 1;
+  }
+
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 2px;
+    width: 100%;
+    position: absolute;
+    background-color: #C6C6C6;
+    pointer-events: none;
+  }
+
+  #fromSlider {
+    height: 0;
+    z-index: 1;
+  }
+
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Optionally hide the input track for all number inputs */
+  input[type="number"] {
+    overflow: hidden;
+  }
+</style>
 <!-- Shop Product Start -->
-<div class="col-lg-9 col-md-12 ">
-    <div class="row pb-3 d-flex justify-content-center ">
-        <div class="col-12 pb-1">
-            <!-- <div class="d-flex align-items-center justify-content-between mb-4">
-                <form action="">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Search by name" name="search">
-                        <div class="input-group-append">
-                            <span class="input-group-text bg-transparent text-primary">
-                                <i class="fa fa-search"></i>
-                            </span>
-                        </div>
-                    </div>
-            </div> -->
+<div class="container">
+  <div class="row">
+    <!-- Sidebar Start -->
+    <div class="col-md-3 fixed-sidebar mt-5 mb-5 ml-0 ">
+      <form class="mx-3 my-3" id="searchForm" method="GET">
+        <div class="input-group" style="width: fit-content;">
+          <input type="search" id="searchInput" name="search" class="form-control" placeholder="Search">
+          <button type="submit" class="btn btn-dark">Search</button>
         </div>
-   
-        <%products.forEach(item=>{%> 
-        
-          <div class="col-lg-3 col-md-3 col-sm-4 pb-1 ">
-            <div class="card product-item border-0 h-80 m-5">
-                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                    <img class="img-fluid w-100" src="<%=item.image[0]%>" alt="">
-                </div>
+      </form>
 
-                <div class="card-body border-left border-right text-center p-0 pt-3">
-                    <p class="text-dark" style="font-size: 1.2 vw;"><%=item.name%></p>
-
-                        <p class="text-dark" style="font-size: 1.2vw;">&#x20B9;<%=item.price%></h6><h6 class="text-muted ml-2"></p>
-                </div>
-                <div class="card-footer d-flex justify-content-between bg-light border">
-                    <a href="/product/shop?id=<%=item._id%>" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View</a>
-                    <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add</a>
-                </div>
+      <form method="get" class="mx-3 mt-3">
+        <u><span class="fs-3 u" disabled>Categories</span></u>
+        <div class="">
+          <%for(cat of categories){%>
+          <div>
+            <label>
+              <!-- <input type="radio" id="cat-<%=cat._id%>" name="filter" value="<%cat._id%>" class="filter"> <%=cat.name%> -->
+              <a class="fs-5 text-decoration-none text-dark" href="/product?selectedCat=<%=cat._id%>"><%=cat.name%></a>
+            </label>
+          </div>
+          <%}%>
             </div>
-        </div>
-        <%})%>
-  
+            <!-- <button type="button" onclick="getSelectedCategories()" class="btn btn-light">Apply Filters</button> -->
+          </form>  
+          <div class="card-sm rounded " style="background-color: #447490; width:fit-content;">
+            <div class="card-header d-flex justify-content-center fs-5">
+              <p>  Price  </p>
+            </div>
+            <div class="card-body range_container mt-3 ">
+              <div class="sliders_control">
+                  <input id="fromSlider" type="range" value="0" min="0" max="100"/>
+                  <input id="toSlider" type="range" value="100" min="0" max="100"/>
+              </div>
+              <div class="card-footer form_control mt-0">
+                  <div class="form_control_container ">
+                      <div class="form_control_container__time fs-6">Min</div>
+                      <input class="form_control_container__time__input" style="background-color: #447490;" type="number" id="fromInput" value="0" min="0" max="100"/>
+                  </div>
+                  <div class="form_control_container">
+                      <div class="form_control_container__time fs-6">Max</div>
+                      <input class="form_control_container__time__input" style="background-color: #447490;" type="number" id="toInput" value="100" min="0" max="100"/>
+                  </div>
+              </div>
+                  <button class="btn btn-sm btn-secondary" onclick="resetPage()" id="clearFiltersButton">Clear Filters</button>
+          </div>
+          </div>
     </div>
-
-  
+    <!-- Sidebar End -->
+    <div class="col-md-9 mb-5 mt-5">
+      <form id="productForm">
+        <div class="row" id="productContainer">
+          <% products.forEach(item => { %>
+          <div class="col-md-4 mb-4">
+            <div class="card">
+              <img src="<%= item.image[0].url %>" class="card-img-top" alt="">
+              <div class="card-body">
+                <h5 class="card-title"><%= item.name %></h5>
+                <p class="card-text">&#x20B9;<%= item.price %></p>
+                <a href="/product/shop?id=<%= item._id %>" class="fas fa-eye btn btn-dark mr-1">View</a>
+                <a href="" class="fas fa-shopping-cart btn btn-secondary">Add</a>
+              </div>
+            </div>
+          </div>
+          <% }) %>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 <!-- Shop Product End -->
-</div>
-</div>
-<!-- Shop End -->
-</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
 <script>
+  //   function submitForm() {
+  //       const searchInput = document.getElementById('searchInput');
+  //       const searchQuery = searchInput.value.trim(); // Get the search term and remove leading/trailing spaces
+
+  //       if (searchQuery !== '') {
+  //         const actionUrl = `/product?search=${encodeURIComponent(searchQuery)}`;
+  //         window.location.href = actionUrl; // Redirect to the updated action URL
+  //       }else{
+  //         const actionUrl = `/product?search=${""}`;
+  //         window.location.href = actionUrl; // Redirect to the updated action URL
+  //       }
+  //     }
+  //     function controlFromInput(fromSlider, fromInput, toInput, controlSlider) {
+  //     const [from, to] = getParsed(fromInput, toInput);
+  //     fillSlider(fromInput, toInput, '#C6C6C6', '#25daa5', controlSlider);
+
+  //     if (from > to) {
+  //         fromSlider.value = to;
+  //         fromInput.value = to;
+  //     } else {
+  //         fromSlider.value = from;
+  //     }
+  // }
+  function resetPage() {
+    window.location.href = 'http://localhost:3020/product';
+  }
+
+  function controlToInput(toSlider, fromInput, toInput, controlSlider) {
+    const [from, to] = getParsed(fromInput, toInput);
+    fillSlider(fromInput, toInput, '#C6C6C6', '#25daa5', controlSlider);
+    setToggleAccessible(toInput);
+    if (from <= to) {
+      toSlider.value = to;
+      toInput.value = to;
+    } else {
+      toInput.value = from;
+    }
+  }
+
+  function controlFromSlider(fromSlider, toSlider, fromInput) {
+    const [from, to] = getParsed(fromSlider, toSlider);
+    fillSlider(fromSlider, toSlider, '#C6C6C6', '#25daa5', toSlider);
+    if (from > to) {
+      fromSlider.value = to;
+      fromInput.value = to;
+    } else {
+      fromInput.value = from;
+    }
+  }
+
+  function controlToSlider(fromSlider, toSlider, toInput) {
+    const [from, to] = getParsed(fromSlider, toSlider);
+    fillSlider(fromSlider, toSlider, '#C6C6C6', '#25daa5', toSlider);
+    setToggleAccessible(toSlider);
+    if (from <= to) {
+      toSlider.value = to;
+      toInput.value = to;
+    } else {
+      toInput.value = from;
+      toSlider.value = from;
+    }
+  }
+
+  function getParsed(currentFrom, currentTo) {
+    const from = parseInt(currentFrom.value, 10);
+    const to = parseInt(currentTo.value, 10);
+    return [from, to];
+  }
+
+  function fillSlider(from, to, sliderColor, rangeColor, controlSlider) {
+    const rangeDistance = to.max - to.min;
+    const fromPosition = from.value - to.min;
+    const toPosition = to.value - to.min;
+    controlSlider.style.background = `linear-gradient(
+      to right,
+      ${sliderColor} 0%,
+      ${sliderColor} ${(fromPosition)/(rangeDistance)*100}%,
+      ${rangeColor} ${((fromPosition)/(rangeDistance))*100}%,
+      ${rangeColor} ${(toPosition)/(rangeDistance)*100}%, 
+      ${sliderColor} ${(toPosition)/(rangeDistance)*100}%, 
+      ${sliderColor} 100%)`;
+  }
+
+  function setToggleAccessible(currentTarget) {
+    const toSlider = document.querySelector('#toSlider');
+    if (Number(currentTarget.value) <= 0) {
+      toSlider.style.zIndex = 2;
+    } else {
+      toSlider.style.zIndex = 0;
+    }
+  }
+
+  const fromSlider = document.querySelector('#fromSlider');
+  const toSlider = document.querySelector('#toSlider');
+  const fromInput = document.querySelector('#fromInput');
+  const toInput = document.querySelector('#toInput');
+  fillSlider(fromSlider, toSlider, '#C6C6C6', '#25daa5', toSlider);
+  setToggleAccessible(toSlider);
+
+  fromSlider.oninput = () => controlFromSlider(fromSlider, toSlider, fromInput);
+  toSlider.oninput = () => controlToSlider(fromSlider, toSlider, toInput);
+  fromInput.oninput = () => controlFromInput(fromSlider, fromInput, toInput, toSlider);
+  toInput.oninput = () => controlToInput(toSlider, fromInput, toInput, toSlider);
 </script>
+
+<!-- observer -->
+<script>
+
+</script>
+
+<!-- <script>
+function getSelectedCategories() {
+  const selectedCat = document.querySelector('input[type="radio"]:checked');
+  if (selectedCat) {
+    const selectedCatId = selectedCat.id.split('-')[1];
+    const actionUrl = `/product?selectedCat=${selectedCatId}`;
+    window.location.href = actionUrl; // Redirect to the updated action URL
+  } else {
+    // No radio button is selected, handle the case accordingly
+    // For example, display an error message or perform a different action
+    console.log('No category selected.');
+  }
+}
+</script>   -->
 
 <%- include("./layout/footer.ejs") %>

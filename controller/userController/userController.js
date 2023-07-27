@@ -7,61 +7,7 @@ const addressModel = require("../../models/addressModel");
 
 
 
-const logout =(req,res)=>{
-  try {
-      
-      req.session.admin_id = null;
-      res.redirect('/login');
 
-  } catch (error) {
-      console.log(error);
-  }
-}
-const loadCustomer = async (req, res) => {
-  try {
-    const currentPage = parseInt(req.query.page) || 1; // Get the current page from the query parameter
-    const itemsPerPage = 10; // Adjust the number of items per page as needed
-
-    // Calculate the skip and limit values based on the current page and items per page
-    const skip = (currentPage - 1) * itemsPerPage;
-    const limit = itemsPerPage;
-    let search = "";
-    // Retrieve the paginated user data from the database
-    const userData = await User.find({ isAdmin: false,$or: [
-      { name: { $regex: new RegExp(search, 'i') } },
-      { email: { $regex: new RegExp(search, 'i') } }
-    ] })
-      .skip(skip)
-      .limit(limit);
-
-    const totalUsers = await User.countDocuments({ isAdmin: false }); // Get the total number of users
-
-    const totalPages = Math.ceil(totalUsers / itemsPerPage); // Calculate the total number of pages
-
-    const startIndex = skip + 0; // Calculate the start index for displaying sl.no
-
-    res.render("admin/customers", {
-      user: userData,
-      currentPage,
-      totalPages,
-      startIndex,
-      endIndex: skip + userData.length, // Calculate the end index for displaying sl.no
-    });
-  } catch (error) {
-    console.log(error);
-    // Handle error appropriately (e.g., display an error page or redirect to an error route)
-  }
-};
-
-const loadEditUser = async (req, res) => {
-  try {
-    const id = req.query.id;
-    const userData = await User.findOne({ _id: id });
-    res.render("admin/editCustomer", { message: null, user: userData });
-  } catch (error) {
-    console.log(error);
-  }
-};
 
 const loadhome = async (req, res) => {
   try {
@@ -95,20 +41,50 @@ const loadProduct = async (req, res) => {
     const totalPages = Math.ceil(totalProduct / itemsPerPage);
 
     const startIndex = skip + 0;
-    const stock = await Product.find();
     const categories = await category.find();
-
-    const products = await Product.find();
-    const session = req.session.user_id;
-    res.render("user/shop", {
-      session,
-      products,
-      name: req.session.user_name,
-      currentPage,
-      totalPages,
-      startIndex,
-      endIndex: skip + productData.length,
+    let search ="";
+    search = req.query.search;
+    const selectedCat = req.query.selectedCat;
+    let minamount = 0;
+    let maxamount =  100;
+    console.log(req.query);
+    if(req.query.toValue||req.query.fromValue){
+       minamount = req.query.fromValue;
+       maxamount =  req.query.toValue;
+    }
+    let products = await Product.find({
+      $or: [
+        { name: { $regex: new RegExp(search, 'gi') } },
+        { color: { $regex: new RegExp(search, 'gi') } }
+      ],
+      $and:[
+        {price: {$gt:minamount}},
+        {price: {$lt: maxamount}},
+      ]
     });
+
+    let filteredProducts = products
+    if(selectedCat){
+      filteredProducts = null;
+      filteredProducts = products.filter(product=>product.category===selectedCat)
+    }
+
+    
+    const session = req.session.user_id;
+    if (req.xhr || req.headers.accept.indexOf('json') > -1) {
+      res.json({ products: filteredProducts });
+    }else{
+      res.render("user/shop", {
+        session,
+        products:filteredProducts,
+        categories,
+        name: req.session.user_name,
+        currentPage,
+        totalPages,
+        startIndex,
+        endIndex: skip + productData.length,
+      });
+    }
   } catch (error) {
     console.log(error);
   }
@@ -132,16 +108,6 @@ const viewProduct = async (req, res) => {
   }
 };
 
-const updateUser = async (req, res) => {
-  try {
-    let access = req.body.isAccess;
-    const id = req.query.id;
-    await User.findByIdAndUpdate(id, { $set: { isAccess: access } });
-    res.redirect("/admin/customer");
-  } catch (error) {
-    console.log(error);
-  }
-};
 
 const loadProfile = async (req, res) => {
   try {
@@ -371,9 +337,6 @@ const deleteAddress = async (req, res) => {
 };
 
 module.exports = {
-  loadCustomer,
-  loadEditUser,
-  updateUser,
   loadhome,
   loadProduct,
   viewProduct,
@@ -389,5 +352,4 @@ module.exports = {
   loadEditAddress,
   saveEditAddress,
   deleteAddress,
-  logout,
 };

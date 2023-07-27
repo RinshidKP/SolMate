@@ -1,6 +1,6 @@
 const category = require("../../models/categoryModel");
 const product = require("../../models/productModel");
-const imagesUrl = require("../../utilities/uploadImage");
+const {multipleimages,deleteImage} = require("../../utilities/uploadImage");
 
 const addCategory = async (req, res) => {
 
@@ -12,7 +12,7 @@ const addCategory = async (req, res) => {
     if (categoryData) {
         res.render("admin/category", { message: "Category Already Exits" });
     } else {
-      const url = await imagesUrl(images);
+      const url = await multipleimages(images);
       const newCategory = new category({
         name: name,
         image:url
@@ -48,7 +48,12 @@ const editCategory = async (req, res) => {
   try {
     const id = req.query.id;
     const name = req.body.name;
-    await category.findByIdAndUpdate(id, { $set: { name: name } });
+    const images = req.files.image
+    const url = await multipleimages(images);
+    await category.findByIdAndUpdate(id, { $set: {
+      name: name,
+      image:url
+    } });
     res.redirect("/admin/category");
   } catch (error) {
     console.log(error);

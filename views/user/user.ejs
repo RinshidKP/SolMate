@@ -1,85 +1,242 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <!-- zoom -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- elevateZoom -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/elevatezoom/3.0.8/jquery.elevatezoom.min.js"></script>
+<%- include("./layout/header.ejs") %>
+
+  <div class="row m-5">
+    <div class="col-lg-8 table-responsive mb-5">
+      <% if (cart ){ %>
+        <% if (cart.products.length) { %>
+          <table class="table table-light table-borderless table-hover shadow text-center mb-0">
+            <thead class="thead-dark">
+              <tr>
+                <th>Product</th>
+                <th>Size</th>
+                <th>Price / Unit</th>
+                <th>Quantity</th>
+                <th>Total</th>
+                <th>Remove</th>
+              </tr>
+            </thead>
+            <tbody class="align-middle">
+              <% for (let i=0; i < cart.products.length; i++) { %>  
+                <% const product=cart.products[i].productId; %>
+                  <% const sizes=Array.from(cart.products[i].sizes); %>
+                    <% for (const [size, quantity] of sizes) { %>
+                      <% if (quantity> 0) { %>
+                        <tr>
+                          <td class="align-middle">
+                            <img src="<%= product.image[0].url %>" alt="" style="width: 50px;">
+                            <%= product.name %>
+                          </td>
+                          <td class="align-middle">
+                            <%= size %>
+                          </td>
+                          <td class="align-middle">$ <%= product.price %>
+                          </td>
+                          <td class="align-middle">
+                            <div class="input-group quantity mx-auto" style="width: 100px;">
+                              <div class="input-group-btn">
+                                <button class="btn btn-sm btn-primary btn-minus quantity-left-minus"
+                                  <%if(quantity==1){%>disabled<%}%> data-type="minus"
+                                   onclick="changeQuantity('<%=product._id%>','<%= size %>','<%=cart._id%>',-1)">
+                                          <i class="fa fa-minus"></i>
+                                </button>
+                              </div>
+                              <input type="number" id="<%=product._id%>"
+                                class="form-control form-control-sm bg-secondary border-0 text-center"
+                                value="<%= quantity %>">
+                              <div class="input-group-btn">
+                                <button class="btn btn-sm btn-primary btn-plus quantity-right-plus"
+                                  <% if(quantity==product.sizes[size]) { %>disabled<% }%> data-type="plus"
+                                    onclick="changeQuantity('<%=product._id%>','<%= size %>','<%=cart._id%>', 1)">
+                                          <i class="fa fa-plus"></i>
+                                </button>
+                              </div>
+                            </div>
+                          </td>
+                          <td class="align-middle">$<%= product.price * quantity %>
+                          </td>
+                          <td class="align-middle"><button class="btn btn-sm btn-danger"
+                              onclick="removeItem('<%=product._id%>','<%= size %>','<%=cart._id%>','<%= product.price %>')"><i
+                                class="fa fa-times"></i></button></td>
+                              </tr>
+                              <% } %>
+                          <% } %>
+                          <%}%>
+                            <tr>
+                              <td colspan="6" class="total-bill">
+                            </tr>
+                            <tr class="border-top-2 border-bottom-2 "
+                              style="border-top: 1px solid rgb(96, 212, 197); padding: 8px;border-bottom: 1px solid rgb(96, 212, 197)">
+                              <td class="align-middle" colspan="3">
+                                <label class="total-bill-title" for="">Total</label>
+                              </td>
+                              <td class="align-middle  font-weight-bold" colspan="1">
+                                <%=cart.totalQuantity%>
+                              </td>
+                              <td class="align-middle  font-weight-bold ul" colspan="1">$ <%=cart.totalPrice%>
+                              </td>
+                              <td></td>
+
+                            </tr>
+                        
+
+                            
+            </tbody>
+          </table>
 
 
-    <script
-      src="https://kit.fontawesome.com/5caf998115.js"
-      crossorigin="anonymous"
-    ></script>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
-      crossorigin="anonymous"
-    />
-  </head>
-  <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <!-- <div class="container text-secondary">
-            <a class="navbar-brand" href="/">SolMate</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"    aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon text-dark"></span>
-            </button>
-        </div> -->
-      <div class="container">
-        <a class="navbar-brand logo mx-3" href="/user/home">SolMate</a>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
+    </div>
+
+
+    <div class="col-lg-4  ">
+      <form class="mb-30" action="">
+        <div class="input-group card-body shadow rounded  mb-5">
+          <input type="text" class="form-control border-0 p-4 border-2 border-dark" placeholder="Coupon Code">
+          <div class="input-group-append">
+            <button class="btn btn-dark ">Apply Coupon</button>
+          </div>
+        </div>
+      </form>
+
+      <div class="mb-30">
+        <div class="row">
+          <div class="col">
+            <div class="card-body shadow rounded mb-5">
+              <div class="form-check">
+                <input onchange="(Addshipping('0','<%=cart.totalPrice%>'))" class="form-check-input" type="radio"
+                  name="shippingOption" id="normalShipping" value="normal" checked>
+                <label class="form-check-label" for="normalShipping">
+                  Normal Shipping
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card-body shadow rounded mb-5">
+              <div class="form-check">
+                <input onchange="(Addshipping('40','<%=cart.totalPrice%>'))" class="form-check-input" type="radio"
+                  name="shippingOption" id="fastShipping" value="fast">
+                <label class="form-check-label" for="fastShipping">
+                  Fast Shipping
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <!-- Navbar brand -->
-        <a class="navbar-brand mt-2 mt-lg-0" href="#"> Signup </a>
-        <!-- Left links -->
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link" href="#">Cart</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#"
-              ><i class="fa-solid fa-user-hair"></i
-            ></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">profile</a>
-          </li>
-        </ul>
-        <!-- Left links -->
+
+
+
+      <div class="card-body shadow rounded ">
+
+        <div class="d-flex justify-content-center my-3">
+          <h5 class="section-title position-relative text-uppercase mb-3"><span class=" pr-3">Cart Summary</span>
+            <hr class="bg-dark">
+          </h5>
+        </div>
+        <div class=" p-30 mb-5">
+          <div class="border-bottom border-top border-secodery pb-1">
+            <div class="d-flex justify-content-between mb-3">
+              <h6>Subtotal</h6>
+              <h6>
+                <span id="subtotal" value="<%=cart.totalPrice%>">
+                  $<%=cart.totalPrice%>
+                </span>
+              </h6>
+            </div>
+            <div class="d-flex justify-content-between">
+              <h6 class="font-weight-medium">Shipping</h6>
+              <h6 class="font-weight-medium">$<span id="shippingPrice">0</span></h6>
+            </div>
+          </div>
+          <div class="pt-2">
+            <div class="d-flex justify-content-between mt-2">
+              <h5>Total</h5>
+              <h5>
+                <span id="totalCart">
+                  $<%=cart.totalPrice%>
+              </h5>
+              </span>
+            </div>
+            <button onclick="proceedToOrder()" class="btn btn-block btn-dark font-weight-bold my-3 py-3">Proceed To
+              Checkout</button>
+          </div>
+        </div>
       </div>
-    </nav>
-    <style>
-      /*set a border on the images to prevent shifting*/
-      #gallery_01 img {
-        border: 2px solid white;
-      }
-      /*Change the colour*/
-      .active img {
-        border: 2px solid #333 !important;
-      }
+    </div>
+  </div>
+  <%}else{%>
+    <h1>No Products In Cart</h1>
+    <%}%>
+      <%}%>
+        <!-- axios cdn -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.3/axios.min.js"></script>
 
-      .clearfix {
-        display: block;
-        width: 100%;
-        float: left;
-      }
+        <script>
+          var method = 'free';
+          function proceedToOrder() {
+            window.location.href = `/checkout/address?method=${method}`;
+          }
 
-      .zoom-left {
-        max-width: 412px;
-      }
-    </style>
-  </body>
-</html>
+          function Addshipping(alue, cartprice) {
+            if (alue == '40') {
+              method = 'fast'
+            } else {
+              method = 'free'
+            }
+            // console.log(method);
+            const totalCart = document.getElementById("totalCart");
+            const thisis = parseInt(cartprice)
+            totalCart.textContent = parseInt(alue) + thisis
+            const shipping = document.getElementById("shippingPrice")
+            shipping.textContent = alue;
+          }
+
+        </script>
+        <script>
+          function changeQuantity(prodctId, size, cartid, cnt) {
+
+            let count = parseInt(cnt);
+            let qty = document.getElementById(prodctId).value;
+            qty = parseInt(qty);
+
+            let result = axios({
+              url: "/cart/quantity",
+              method: "POST",
+              data: {
+                productId: prodctId,
+                size: size,
+                count: count,
+                cartId: cartid,
+              },
+            }).then((response) => {
+              if (response.data.stock) {
+                Swal.fire({
+                  icon: "error",
+                  title: "product stock unavailable",
+                  text: "Sorry , Product unavailable",
+                  showConfirmButton: false,
+                });
+                location.reload();
+              }
+              location.reload();
+              document.getElementById(prodctId).value = response.data.qty;
+              if (response.data.qty == 1) {
+                document.getElementById("minusBtn" + prodctId).disabled = true;
+              } else {
+                document.getElementById("minusBtn" + prodctId).style.visibility = "visible";
+              }
+            });
+          }
+
+          function removeItem(productId, size, cartId, price) {
+            axios.delete(`/removeItem?cartId=${cartId}&productId=${productId}&size=${size}&price=${price}`)
+              .then((result) => {
+                if (result.data.response) {
+                  location.reload();
+                }
+              })
+          }
+        </script>
+
+        <%- include("./layout/footer.ejs") %>

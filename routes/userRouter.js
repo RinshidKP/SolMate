@@ -1,30 +1,30 @@
 const express = require('express');
 const { Module } = require('module');
 const router = express.Router();
-const auth = require('../controller/authController/authController')
-const user = require('../controller/userController/userController')
-const adminMiddleware = require('../middleware/admin')
-const userMiddleware = require('../middleware/user')
-const cartController = require('../controller/userController/cartController')
-const checkout = require('../controller/userController/checkoutController')
-const order = require('../controller/userController/orderController')
+const auth = require('../controller/authController/authController');
+const user = require('../controller/userController/userController');
+const adminMiddleware = require('../middleware/admin');
+const userMiddleware = require('../middleware/user');
+const cartController = require('../controller/userController/cartController');
+const checkout = require('../controller/userController/checkoutController');
+const order = require('../controller/userController/orderController');
 //home
-router.get('/user',user.loadhome)
-router.get('/product',user.loadProduct)
-router.get('/product/shop',user.viewProduct)
+router.get('/user',user.loadhome);
+router.get('/product',user.loadProduct);
+router.get('/product/shop',user.viewProduct);
 //user setups
 router.get('/signup',userMiddleware.isLogout,auth.loadSignup);
-router.post('/signup',userMiddleware.isLogout,auth.createUser)
+router.post('/signup',userMiddleware.isLogout,auth.createUser);
 router.get('/login',userMiddleware.isLogout,auth.loadlogin);
-router.get('/logout',auth.logout)
+router.get('/logout',auth.logout);
 //forgot password
-router.get('/signin/forgot',auth.loadForgot)    
-router.post('/signin/forgot',auth.forgotPassword)
-router.post('/forgot/submit',auth.otpPasswordChange)
-router.get('/forgot/submit',auth.loadChangePassword)
-router.post('/forgot/submited',auth.changePassword)
-router.get('/otp',auth.loadOtp)
-router.post('/otp',auth.otpVerify)
+router.get('/signin/forgot',auth.loadForgot);
+router.post('/signin/forgot',auth.forgotPassword);
+router.post('/forgot/submit',auth.otpPasswordChange);
+router.get('/forgot/submit',auth.loadChangePassword);
+router.post('/forgot/submited',auth.changePassword);
+router.get('/otp',auth.loadOtp);
+router.post('/otp',auth.otpVerify);
 
 //Profile
 router.get('/user/profile',userMiddleware.isLogin,user.loadProfile)
@@ -35,6 +35,7 @@ router.get('/profile/editPassword',userMiddleware.isLogin,user.loadUserPassword)
 router.post('/profile/editPassword',user.updateUserPassword) 
 router.get('/user/order',order.loadOrder);
 router.post('/user/order/cancel',order.cancelOrder)
+router.get('/user/order/view',order.viewDetails)
 // router.get('/user/orders',orderController)
 // Address
 router.get('/user/profileAddress',userMiddleware.isLogin,user.loadUserAddress)
@@ -54,6 +55,12 @@ router.get('/checkout/address',userMiddleware.isLogin,checkout.loadCheckOutAddre
 router.post('/checkout/addAddress',checkout.addAddress)
 router.get('/checkout',checkout.checkoutProceed)
 router.post('/checkout',checkout.checkout)
+router.post('/admin/coupon/apply',checkout.applyCoupon)
+router.get('/order/success',checkout.orderSuccess)
+router.post('/create-order',checkout.payOnline)
+
+
+
 
 router.get('/index',(req,res)=>{
     res.render('user/productDetails')

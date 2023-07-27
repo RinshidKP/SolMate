@@ -7,10 +7,9 @@ const loadcart = async (req, res) => {
     const cart = await Cart.findOne({ userId: req.session.user_id })
       .populate("products.productId")
       .populate("products.sizes");
-
     const category = await Category.find();
-    const stock = await Product.find();
-
+    // const stock = await Product.find();
+    // console.log(cart.products);
     const productsArray = [];
 
      if(cart){

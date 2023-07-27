@@ -25,16 +25,132 @@
   // });
 
   $(document).ready(function() {
+  // Function to handle the slider change event and update the products
+  function handleSliderChange(event) {
+    // Prevent the default form submission behavior
+    event.preventDefault();
+
+    // Retrieve the current values of the sliders
+    const fromValue = $('#fromSlider').val();
+    const toValue = $('#toSlider').val();
+    const searchQuery = $('#searchInput').val().trim();
+    
+    // Send data to the server using AJAX GET
+    $.ajax({
+      url: '/product', // Replace with your actual controller endpoint
+      method: 'GET',
+      data: {
+        fromValue: fromValue,
+        toValue: toValue,
+        search: searchQuery
+      },
+      success: function(response) {
+        // Handle the response from the server
+        // console.log('Response:', response);
+        
+        // console.log(searchQuery);
+        // Update the product container with the new product information
+        const productContainer = $('#productContainer');
+        productContainer.empty(); // Clear the existing content
+
+        // Loop through the products in the response and add them to the container
+        response.products.forEach(function(product) {
+          const productElement = createProductElement(product);
+          productContainer.append(productElement);
+        });
+      },
+      error: function(error) {
+        console.error('Error:', error);
+      }
+    });
+  }
+
+  // Helper function to create a product element from the product data
+  function createProductElement(product) {
+    // Create a new HTML element to represent the product
+    const productElement = $('<div class="col-md-4 mb-4"><div class="card"><img src="" class="card-img-top" alt=""><div class="card-body"><h5 class="card-title"></h5><p class="card-text">&#x20B9;</p><a href="" class="fas fa-eye btn btn-dark mr-1">View</a><a href="" class="fas fa-shopping-cart btn btn-secondary">Add</a></div></div></div>');
+
+    // Populate the product element with the product information
+    productElement.find('img').attr('src', product.image[0].url);
+    productElement.find('.card-title').text(product.name);
+    productElement.find('.card-text').text(`₹${product.price}`);
+    productElement.find('.btn.btn-dark').attr('href', `/product/shop?id=${product._id}`);
+    // Update the other button's href as well, if needed.
+
+    return productElement;
+  }
+
+  // Add event listeners to the sliders and handle their changes
+  $('#fromSlider, #toSlider').on('input', handleSliderChange);
+  $('#searchForm').submit(function(event) {
+    event.preventDefault(); // Prevent default form submission
+    handleSliderChange(event); // Call the function to handle the form submission
+  });
+});
+
+//   $(document).ready(function() {
+//   // Add event listeners
+//   $('#fromSlider, #toSlider').on('input', handleSliderChange);
+
+//   // Event handler function
+//   function handleSliderChange(event) {
+//     // Retrieve the current values of the sliders
+//     const fromValue = $('#fromSlider').val();
+//     const toValue = $('#toSlider').val();
+
+//     // Perform any actions or logic based on the slider values
+//     console.log('From Slider Value:', fromValue);
+//     console.log('To Slider Value:', toValue);
+//     // Additional code goes here...
+//   }
+// });
+
+
+
+//   $(document).ready(function() {
+//   $('.zoom').mouseenter(function() {
+//     $(this).elevateZoom({
+//       zoomWindowWidth: 200, 
+//       zoomWindowHeight: 200,
+//       zoomWindowOffetx: 20,
+      
+//     });
+//   }).mouseleave(function() {
+//     $(this).removeData('elevateZoom');
+//   });
+// });
+
+  $(document).ready(function() {
   $('.zoom').mouseenter(function() {
     $(this).elevateZoom({
+      cursor: 'crosshair',
       zoomWindowWidth: 250, 
-      zoomWindowHeight: 250
+      zoomWindowHeight: 250,
+      zoomWindowOffetx: 100,
+      zoomLevel: .8,
     });
   }).mouseleave(function() {
     $(this).removeData('elevateZoom');
   });
 });
 
+  // self.zoomWindowContainer = $('<div/>').addClass('zoomWindowContainer').css({
+  //        "width": self.options.zoomWindowWidth,
+  //        "z-index": 999
+  //      });
+
+// self.zoomWindowContainer = $('<div/>').addClass('zoomWindowContainer').css({
+//   "width": self.options.zoomWindowWidth,
+//   "z-index": 999
+// });
+// const productImage = document.getElementById('productImage');
+// $('.product-image-container').append(self.zoomWindowContainer);
+// productImage.addEventListener('mouseover', function () {
+//   self.zoomWindowContainer.show();
+// });
+// productImage.addEventListener('mouseout', function () {
+//   self.zoomWindowContainer.hide();
+// });
 
 
 

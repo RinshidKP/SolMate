@@ -1,4 +1,4 @@
-const Order = require('../../models/orderSchema')
+const Order = require('../../models/orderModel')
 const loadOrder = async(req,res)=>{
     try {
         const orders = await Order.find()

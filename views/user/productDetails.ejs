@@ -1,5 +1,241 @@
 <%-include("./layout/header.ejs")%>
 
+<style>
+  /* Existing styles... */
+
+  /* Media query for small devices (up to 768px) */
+  @media (max-width: 768px) {
+    .product-detail-wrap {
+      padding: 10px;
+    }
+
+    .carousel-inner.w-75 {
+      width: 100%;
+    }
+
+    .carousel-control-prev,
+    .carousel-control-next {
+      font-size: 16px;
+    }
+
+    .product-desc {
+      padding-left: 0;
+    }
+
+    .blurb {
+      margin-top: 10px;
+    }
+
+    /* Adjust font size for smaller devices */
+    .combo-class,
+    .block-26 h3,
+    .price span {
+      font-size: 16px;
+    }
+
+    /* Center align text for smaller devices */
+    .text-retro,
+    .text-truncate {
+      text-align: center;
+    }
+  }
+
+  /* Media query for extra-small devices (up to 576px) */
+  @media (max-width: 576px) {
+    .btn-addtocart {
+      padding: 5px 10px;
+    }
+
+    .carousel-control-prev,
+    .carousel-control-next {
+      width: 25px;
+      height: 25px;
+      font-size: 14px;
+      line-height: 25px;
+    }
+
+    .prod-img img {
+      border-radius: 3px;
+    }
+
+    /* Adjust font size for extra-small devices */
+    .combo-class,
+    .block-26 h3,
+    .price span {
+      font-size: 14px;
+    }
+  }
+</style>
+
+<style>
+      body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f8f8;
+    }
+
+    .colorlib-product {
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .product-detail-wrap {
+      padding: 20px;
+    }
+
+    .product-entry {
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 10px;
+    }
+
+    .prod-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 5px;
+    }
+
+    .carousel-control-prev, .carousel-control-next {
+      width: 30px;
+      height: 30px;
+      background-color: #222;
+      color: #fff;
+      border-radius: 50%;
+      font-size: 20px;
+      line-height: 30px;
+    }
+
+    .carousel-control-prev-icon, .carousel-control-next-icon {
+      margin-top: 0;
+    }
+
+    .product-desc {
+      padding-left: 30px;
+    }
+
+    .block-26 h3 {
+      margin-bottom: 15px;
+    }
+
+    .combo-class {
+      font-size: 16px;
+    }
+
+    .price span {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .blurb {
+      margin-top: 20px;
+    }
+
+    .size-wrap {
+      margin-top: 30px;
+    }
+
+    .variant-buttons select {
+      width: 60px;
+    }
+
+    .btn-addtocart {
+      background-color: #222;
+      color: #fff;
+      border-radius: 20px;
+      padding: 10px 20px;
+    }
+
+    .btn-addtocart:hover {
+      background-color: #444;
+    }
+
+    .nav-pills .nav-link {
+      border-radius: 0;
+      color: #333;
+    }
+
+    .nav-pills .nav-link.active {
+      background-color: #222;
+      color: #fff;
+    }
+
+    .review {
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 20px;
+      margin-bottom: 20px;
+    }
+
+    .user-img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-size: cover;
+      background-position: center;
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 10px;
+    }
+
+    .head {
+      margin-bottom: 20px;
+    }
+    @media (max-width: 768px) {
+    .product-detail-wrap {
+      padding: 10px;
+    }
+
+    .carousel-inner.w-75 {
+      width: 100%;
+    }
+
+    .carousel-control-prev, .carousel-control-next {
+      font-size: 16px;
+    }
+
+    .product-desc {
+      padding-left: 0;
+    }
+
+    .blurb {
+      margin-top: 10px;
+    }
+  }
+  .zoom-container {
+  position: relative;
+}
+
+.zoom-button {
+  position: absolute;
+  top: 10px; /* Adjust the position as needed */
+  right: 10px; /* Adjust the position as needed */
+  z-index: 1; /* Set a higher z-index value to make it appear on top of the image */
+}
+
+.prod-img {
+  /* Set a z-index value lower than the button to ensure it stays behind the button */
+  z-index: 0;
+}
+.prod-img img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    border-radius: 5px;
+    /* Optional: Center the image within its container */
+    display: block;
+    margin: 0 auto;
+  }
+
+  .zoom {
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+  border: 1px solid black;
+  border-radius: 50%;
+}
+
+</style>
   <div id="page" class="w-100 mb-4">
     <div class="colorlib-product m-5">
       <div class="container-fluid">
@@ -7,13 +243,13 @@
           <div class="col-sm-8">
             <div class="owl-carousel ">
               <div id="product-carousel" class="carousel slide " data-ride="carousel">
-                <div class="carousel-inner w-75">
+                <div class="carousel-inner ">
                   <% products.image.forEach((image, index)=> { %>
 
-                    <div class=" carousel-item <%= index === 0 ? 'active' : '' %>">
-                      <div class="product-entry border">
+                    <div class=" carousel-item <%= index === 0 ? 'active' : '' %> zoom-container zoomWindowContainer">
+                      <div class="product-entry border product-image-container">
                         <a href="#" class="prod-img">
-                          <img src="<%= image %>" class="img-fluid zoom image-fluid" alt="Product Image" />
+                          <img id="productImage" src="<%= image.url %>" class="img-fluid zoom image-fluid" alt="Product Image" />
                         </a>
                       </div>
                     </div>
@@ -54,42 +290,24 @@
                     <% } %>
                       <% } %>
               </div>
-              <h3 class="text-retro">Price</h3>
+                      <h3 class="text-retro">Price</h3>
                       <p class="price combo-class">
                         <span>&#36;<%=products.price%></span>
-                        <span class="rate ">
-                          <i class="icon-star-full"></i>
-                          <i class="icon-star-full"></i>
-                          <i class="icon-star-full"></i>
-                          <i class="icon-star-full"></i>
-                          <i class="icon-star-half"></i>
-                          (74 &#9733;&#9733;&#9733;&#9733;&#9734;)
-                        </span>
                       </p>
-                      <div class="blurb">
-                        <h3>About</h3>
-                      <p>
-                        <%=products.blurb%>
-                      </p>
-                      </div>
                       <div class="size-wrap">
-                        <div class="block-26 mb-2">
-                          <h4 class="text-retro">Size</h4>
-
+                        <div class="block-26 mb-2" style="display: flex; align-items: center;">
+                          <h4 class="text-retro" style="margin-right: 10px;">Size</h4>
                           <div class="variant-buttons">
-                            <select name="variant-option" class="form-control form-control-sm" style="width: 25%;"
-                              id="variant-select">
+                            <select name="variant-option" class="form-control form-control-sm"  id="variant-select">
                               <% for (let size in products.sizes) { %>
                                 <% if (!isNaN(size) && Number(products.sizes[size]) !==0) { %>
                                   <option value="<%= size %>">
                                     <%= size %>
                                   </option>
-                                  <% } %>
-                                    <% } %>
+                                <% } %>
+                              <% } %>
                             </select>
                           </div>
-
-
                         </div>
                         <div class="block-26 mb-2 fs-5">
                           <h4>
@@ -101,36 +319,51 @@
                             </span>
 
                           </h4>
-                          
-                         
-
 
                         </div>
                       </div>
-                      <div class="input-group mb-4 mt-3">
-                        <span class="input-group-btn">
+                      <div class="input-group mb-0 mt-3">
+                        <!-- <span class="input-group-btn">
                           <button type="button" class="quantity-left-minus btn btn-dark" data-type="minus"
                             data-field="">
                             <i class="fas fa-minus"></i>
                           </button>
-                        </span>
+                        </span> -->
                         <span class="col-sm-3">
-                          <input type="number" id="quantity" name="quantity" class="form-control input-number d-block "
+                          <input type="hidden" id="quantity" name="quantity" class="form-control input-number d-block "
                             value="1" min="1" max="100" />
                         </span>
-                        <span class="input-group-btn">
+                        <!-- <span class="input-group-btn">
                           <button type="button" class="quantity-right-plus btn btn-dark d-block" data-type="plus"
                             data-field=""> 
                             <i class="fas fa-plus"></i>
                           </button>
-                        </span>
+                        </span> -->
                         <span class="ml-2">
                           <p class="addtocart">
-                            <a onclick="addToCart()" class="btn btn-dark btn-addtocart"><i
-                                class="icon-shopping-cart"></i> Add to Cart</a>
+                            <% if(session){ %>
+                            <button  onclick="addToCart()"   class="btn btn-dark btn-addtocart">
+                              <i class="icon-shopping-cart"></i> Add to Cart</button>
+                              <%}else{%>
+                                <button  onclick="changePath()"  class="btn btn-dark btn-addtocart">
+                                  <i class="icon-shopping-cart"></i> Add to Cart</button>
+                              <%}%>
                           </p>
                         </span>
                       </div>
+            </div>
+            <%if(products.stock<'10'){%>
+              <div class="fs-6 text-center text-retro text-danger" >
+                <span> hurry only <%=products.stock%> left</span>
+              </div>
+            <%}%>
+            <div class="blurb">
+              <h3>About</h3>
+            <p class="row" >
+              <span class="col-12 text-truncate">
+                <%= products.blurb %>
+              </span>
+            </p>
             </div>
           </div>
         </div>
@@ -271,8 +504,15 @@
       const selectBox = document.getElementById('variant-select');
       const selectedValue = selectBox.value;
 
-      console.log(quantity);
+      // console.log(quantity);
       window.location.href = `/cart/add?quantity=${quantity}&productId=<%= products._id%>&selectedSize=${selectedValue}`
+    }
+    function changePath() {
+      const quantity = document.getElementById("quantity").value;
+      const selectBox = document.getElementById('variant-select');
+      const selectedValue = selectBox.value;
+      oldRoute = `/cart/add?quantity=${quantity}&productId=<%= products._id%>&selectedSize=${selectedValue}`;
+      window.location.href=`/login?oldRoute=<%= products._id%>`
     }
   </script>
   <%- include("./layout/footer.ejs") %>

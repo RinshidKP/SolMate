@@ -1,10 +1,15 @@
 <%-include("./layout/header.ejs")%>
 
 <div class="col-10 m-5">
-  <div class="input-group mt-5 mb-5">
-    <input type="search" name="search" class="form-control" placeholder="Search">
-    <button type="submit" class="btn btn-dark">Search</button>
-  </div>
+
+  <form id="searchForm" method="GET">
+    <div class="input-group">
+      <input type="search" id="searchInput" name="search" class="form-control" placeholder="Search">
+      <button type="button" class="btn btn-dark" onclick="submitForm()">Search</button>
+    </div>
+  </form>
+
+
   <div class="table-scrollable d-flex justify-content-center align-items-center">
     <table class="table table-primary table-striped">
       <tr>
@@ -76,5 +81,20 @@
     </nav>
   </div>
 </div>
+
+<script>
+  function submitForm() {
+    const searchInput = document.getElementById('searchInput');
+    const searchQuery = searchInput.value.trim(); // Get the search term and remove leading/trailing spaces
+
+    if (searchQuery !== '') {
+      const actionUrl = `/admin/customer?search=${encodeURIComponent(searchQuery)}`;
+      window.location.href = actionUrl; // Redirect to the updated action URL
+    }else{
+      const actionUrl = `/admin/customer?search=${""}`;
+      window.location.href = actionUrl; // Redirect to the updated action URL
+    }
+  }
+</script>
 
 <%- include("./layout/footer.ejs") %>
