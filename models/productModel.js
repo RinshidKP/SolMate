@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const categoryModel = require('./categoryModel');
 const Schema = mongoose.Schema;
 
 const productSchema = new Schema({
@@ -84,8 +83,8 @@ const productSchema = new Schema({
         url: {
             type: String,
             required: true,
-        }
-    }],
+        }
+    }],
     created: {
         type: Date,
         default: Date.now()
