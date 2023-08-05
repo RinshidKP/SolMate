@@ -114,14 +114,14 @@
 
       <form method="get" class="mx-3 mt-3">
         <u><span class="fs-3 u" disabled>Categories</span></u>
-        <div class="">
+        <div class="" id="categoryContainer">
           <%for(cat of categories){%>
-          <div>
-            <label>
-              <!-- <input type="radio" id="cat-<%=cat._id%>" name="filter" value="<%cat._id%>" class="filter"> <%=cat.name%> -->
-              <a class="fs-5 text-decoration-none text-dark" href="/product?selectedCat=<%=cat._id%>"><%=cat.name%></a>
-            </label>
-          </div>
+            <div>
+              <label class="fs-5 text-decoration-none text-dark">
+                <input type="checkbox" checked name="selectedCat" value="<%= cat._id %>" />
+                <%= cat.name %>
+              </label>
+            </div>
           <%}%>
             </div>
             <!-- <button type="button" onclick="getSelectedCategories()" class="btn btn-light">Apply Filters</button> -->
@@ -137,11 +137,11 @@
               </div>
               <div class="card-footer form_control mt-0">
                   <div class="form_control_container ">
-                      <div class="form_control_container__time fs-6">Min</div>
+                      <div class="form_control_container__time fs-6 d-none">Min</div>
                       <input class="form_control_container__time__input" style="background-color: #447490;" type="number" id="fromInput" value="0" min="0" max="100"/>
                   </div>
                   <div class="form_control_container">
-                      <div class="form_control_container__time fs-6">Max</div>
+                      <div class="form_control_container__time fs-6 d-none">Max</div>
                       <input class="form_control_container__time__input" style="background-color: #447490;" type="number" id="toInput" value="100" min="0" max="100"/>
                   </div>
               </div>
@@ -161,7 +161,10 @@
                 <h5 class="card-title"><%= item.name %></h5>
                 <p class="card-text">&#x20B9;<%= item.price %></p>
                 <a href="/product/shop?id=<%= item._id %>" class="fas fa-eye btn btn-dark mr-1">View</a>
-                <a href="" class="fas fa-shopping-cart btn btn-secondary">Add</a>
+                <%
+                const sizesString = JSON.stringify(item.sizes);
+                %>
+                <a id="addnow" onclick="addToCart('<%= item._id %>','<%= sizesString %>')" class="fas fa-shopping-cart btn btn-secondary">Add</a>
               </div>
             </div>
           </div>
@@ -172,32 +175,49 @@
   </div>
 </div>
 <!-- Shop Product End -->
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/3.0.0/fetch.min.js"></script> -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-  //   function submitForm() {
-  //       const searchInput = document.getElementById('searchInput');
-  //       const searchQuery = searchInput.value.trim(); // Get the search term and remove leading/trailing spaces
 
-  //       if (searchQuery !== '') {
-  //         const actionUrl = `/product?search=${encodeURIComponent(searchQuery)}`;
-  //         window.location.href = actionUrl; // Redirect to the updated action URL
-  //       }else{
-  //         const actionUrl = `/product?search=${""}`;
-  //         window.location.href = actionUrl; // Redirect to the updated action URL
-  //       }
-  //     }
-  //     function controlFromInput(fromSlider, fromInput, toInput, controlSlider) {
-  //     const [from, to] = getParsed(fromInput, toInput);
-  //     fillSlider(fromInput, toInput, '#C6C6C6', '#25daa5', controlSlider);
+  const addToCart = async(productId,sizes) => {
+    const addnow = document.getElementById('addnow'); 
+    // addnow.addEventListener('click', (e) => { 
+        // e.preventDefault();
+        const sizesObject = JSON.parse(sizes);
+        // console.log(sizesObject);
 
-  //     if (from > to) {
-  //         fromSlider.value = to;
-  //         fromInput.value = to;
-  //     } else {
-  //         fromSlider.value = from;
-  //     }
-  // }
+        // const filteredSizes = Object.keys(sizesObject).filter(key => sizesObject[key] > 0);
+
+        const selectedSizes = Object.keys(sizesObject)
+        .filter(key => sizesObject[key] > 0)
+        .reduce((result, key) => {
+          result[key] = key;
+          return result;
+        }, {});
+
+        const inputOptions = new Promise((resolve) => {
+          setTimeout(() => {
+            resolve(selectedSizes)
+          }, 1000)
+        })
+
+        const { value: selectedSize } = await Swal.fire({
+          title: 'Select what you prefer.',
+          input: 'radio',
+          inputOptions: inputOptions,
+          inputValidator: (value) => {
+            if (!value) {
+              return 'choose your fit!'
+            }
+          }
+        })
+        if(selectedSize){
+          window.location.href = `/cart/add?quantity=1&productId=${productId}&selectedSize=${selectedSize}`
+
+        }
+}
+
   function resetPage() {
     window.location.href = 'http://localhost:3020/product';
   }
@@ -280,24 +300,7 @@
   toInput.oninput = () => controlToInput(toSlider, fromInput, toInput, toSlider);
 </script>
 
-<!-- observer -->
-<script>
 
-</script>
 
-<!-- <script>
-function getSelectedCategories() {
-  const selectedCat = document.querySelector('input[type="radio"]:checked');
-  if (selectedCat) {
-    const selectedCatId = selectedCat.id.split('-')[1];
-    const actionUrl = `/product?selectedCat=${selectedCatId}`;
-    window.location.href = actionUrl; // Redirect to the updated action URL
-  } else {
-    // No radio button is selected, handle the case accordingly
-    // For example, display an error message or perform a different action
-    console.log('No category selected.');
-  }
-}
-</script>   -->
 
 <%- include("./layout/footer.ejs") %>

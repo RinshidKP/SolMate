@@ -21,16 +21,16 @@ const addProduct = async (req, res) => {
     const color = req.body.color;
     const description = req.body.description;
     const category = req.body.category;
-    let size6 = req.body.size6;
-    let size7 = req.body.size7;
-    let size8 = req.body.size8;
-    let size9 = req.body.size9;
-    let size10 = req.body.size10;
-    let size11 = req.body.size11;
-    let size12 = req.body.size12;
-    let size13 = req.body.size13;
-    let size14 = req.body.size14;
-    let size15 = req.body.size15;
+    let size6 = req.body.size6 || 0;
+    let size7 = req.body.size7 || 0;
+    let size8 = req.body.size8 || 0;
+    let size9 = req.body.size9 || 0;
+    let size10 = req.body.size10 || 0;
+    let size11 = req.body.size11 || 0;
+    let size12 = req.body.size12 || 0;
+    let size13 = req.body.size13 || 0;
+    let size14 = req.body.size14 || 0;
+    let size15 = req.body.size15 || 0;
 
     price = parseInt(price);
     size6 = parseInt(size6);
@@ -44,10 +44,24 @@ const addProduct = async (req, res) => {
     size14 = parseInt(size14);
     size15 = parseInt(size15);
 
-    let stocks=size6+size7+size8+size9+size10+size11+size12+size13+size14+size15
-    const images = req.files.image;
-    const urlList = await multipleimages(images);
+  // console.log(  size6)
+  // console.log(  size7)
+  // console.log(  size8)
+  // console.log(  size9)
+  //   console.log(size10 )
+  //   console.log(size11 )
+  //   console.log(size12 )
+  //   console.log(size13 )
+  //   console.log(size14 )
+  //   console.log(size15 )
 
+    let stocks=size6+size7+size8+size9+size10+size11+size12+size13+size14+size15
+    stocks= parseInt(stocks)
+    const images = req.files;
+    // console.log(images);
+    // console.log("this is body",req.body);
+    // console.log(typeof stocks,stocks);
+    const urlList = await multipleimages(images);
     const newProducts = new Product({
       name: name,
       category: category,
@@ -70,8 +84,13 @@ const addProduct = async (req, res) => {
       stock:stocks,
       image: urlList,
     });
-    await newProducts.save();
-    res.redirect("/admin/product");
+    const data =  await newProducts.save();
+    // res.redirect("/admin/product");
+    if(data){
+      res.json({data:true})
+    }else{
+      res.json({data:false})
+    }
   } catch (error) {
     console.log(error);
   }
@@ -137,21 +156,21 @@ const updateProduct = async (req, res) => {
     const id = req.query.id;
     const name = req.body.name;
     const category = req.body.category;
-    let price = req.body.price;
+    let price = parseInt(req.body.price);
     const color = req.body.color;
     const blurb = req.body.blurb;
     const description = req.body.description;
 
-    let size6 = req.body.size6;
-    let size7 = req.body.size7;
-    let size8 = req.body.size8;
-    let size9 = req.body.size9;
-    let size10 = req.body.size10;
-    let size11 = req.body.size11;
-    let size12 = req.body.size12;
-    let size13 = req.body.size13;
-    let size14 = req.body.size14;
-    let size15 = req.body.size15;
+    let size6 = req.body.size6 || 0;
+    let size7 = req.body.size7 || 0;
+    let size8 = req.body.size8 || 0;
+    let size9 = req.body.size9 || 0;
+    let size10 = req.body.size10 || 0;
+    let size11 = req.body.size11 || 0;
+    let size12 = req.body.size12 || 0;
+    let size13 = req.body.size13 || 0;
+    let size14 = req.body.size14 || 0;
+    let size15 = req.body.size15 || 0;
 
     price = parseInt(price);
     size6 = parseInt(size6);

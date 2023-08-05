@@ -171,9 +171,9 @@
                 }
             })
             .then((result) => {
-                console.log(result.data.response);
-                if (result.data.response) {
-                    location.href = "/admin/coupon";
+                // console.log(result.data.response);
+                if (result.data.response==false) {
+                    location.href = "/admin/coupons";
                 } else {
                     let x = document.getElementById("snackbar-error");
                     x.className = "show";

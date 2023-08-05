@@ -7,8 +7,9 @@ const nocache = require("nocache");
 //Routes
 const userRouter = require("./routes/userRouter");
 const adminRouter = require("./routes/admin");
+const count = require("./middleware/count")
 
-const fileUploader = require("express-fileupload");
+// const fileUploader = require("express-fileupload");
 const session = require("express-session");
 const cloudinary = require("cloudinary").v2;
 
@@ -41,12 +42,6 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(nocache());
 app.use(
-  fileUploader({
-    useTempFiles: true,
-    limits: { fileSize: 50 * 2024 * 1024 },
-  })
-);
-app.use(
   session({
     secret: process.env.SECRET_KEY,
     resave: false,
@@ -54,6 +49,7 @@ app.use(
   })
 );
 app.use(express.static("public"));
+app.use(count.countCart)
 
 // Setting Routes
 app.use("/", userRouter);

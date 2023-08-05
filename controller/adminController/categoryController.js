@@ -6,19 +6,24 @@ const addCategory = async (req, res) => {
 
   try {
     const name = req.body.name.toLowerCase();
-    const images = req.files.image
+    const images = req.file
 
     const categoryData = await category.findOne({ name: name });
     if (categoryData) {
-        res.render("admin/category", { message: "Category Already Exits" });
+        // res.render("admin/category", { message: "Category Already Exits" });
+        res.json({data:"duplicate"})
     } else {
       const url = await multipleimages(images);
       const newCategory = new category({
         name: name,
         image:url
       });
-      await newCategory.save();
-      res.redirect("/admin/category");
+      const data =await newCategory.save();
+      if(data){
+        res.json({data:true})
+      }else{
+        res.json({data:false})
+      }
     }
   } catch (error) {
     console.log(error);

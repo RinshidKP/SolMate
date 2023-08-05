@@ -1,31 +1,27 @@
 const cloudinary = require('cloudinary').v2;
-
+const fs = require('fs');
+const { randomUUID } = require('crypto');
 const imageUpload = async (file) => {
+  
   try {
-    // console.log("this is me " + JSON.stringify(file));
-
-    const result = await cloudinary.uploader.upload(file.tempFilePath, {
-    //   public_id: file.name, // Use the original filename as the public_id
+    // console.log("IAM YOU ERROR",file);
+      const result = await cloudinary.uploader.upload( file.path, {
+      public_id: `${randomUUID()}`,
       resource_type: "auto",
       folder: "SolMate",
-      transformation:[{
-        width: 500,
-        height: 500,
-        gravity: "auto",
-        quality: 50,
-        crop: "fill",
-      }],
-      use_filename: true, 
     });
-
-    // const transformedImageUrl = cloudinary.url(result.public_id, {
-    //   width: 1280,
-    //   height: 720,
-    //   gravity: "auto",
-    //   crop: "fill",
-    // });
-    // console.log(transformedImageUrl);
-    return result
+    const myResultObj = {
+      public_id: result.public_id,
+      url: result.url,
+    }    
+    // console.log("O_o ((())))",result);
+    fs.unlink(file.path,function(err){
+      if(err){
+        console.log("something went wrong :"+ err);
+      }
+    })
+    console.log("O_o",myResultObj);
+    return myResultObj;
   } catch (error) {
     console.log(error);
   }
@@ -44,7 +40,6 @@ const multipleimages = async (files) => {
   try {
     if (Array.isArray(files) && files.length) {
       const imageUrlList = [];
-
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
         const result = await imageUpload(file);

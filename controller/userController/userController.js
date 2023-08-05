@@ -15,11 +15,17 @@ const loadhome = async (req, res) => {
       const categories = await category.find();
       const products = await Product.find({ isActive: true });
       const session = req.session.user_id;
+      let countCart= 0;
+      if(req.session.user_id){
+        countCart=res.locals.count
+      }
+      
       res.render("user/home", {
         categories: categories,
         products: products,
         session: session,
         name: req.session.user_name,
+        countCart
       });
       console.log(session);
     
@@ -35,19 +41,20 @@ const loadProduct = async (req, res) => {
     const skip = (currentPage - 1) * itemsPerPage;
     const limit = itemsPerPage;
     const productData = await Product.find().skip(skip).limit(limit);
-
     const totalProduct = await Product.countDocuments();
-
     const totalPages = Math.ceil(totalProduct / itemsPerPage);
-
     const startIndex = skip + 0;
+    let countCart= 0;
+    if(req.session.user_id){
+      countCart=res.locals.count
+    }
     const categories = await category.find();
     let search ="";
     search = req.query.search;
     const selectedCat = req.query.selectedCat;
     let minamount = 0;
     let maxamount =  100;
-    console.log(req.query);
+    // console.log(req.query);
     if(req.query.toValue||req.query.fromValue){
        minamount = req.query.fromValue;
        maxamount =  req.query.toValue;
@@ -70,7 +77,7 @@ const loadProduct = async (req, res) => {
     }
 
     
-    const session = req.session.user_id;
+    const session = req.session.user_id;    
     if (req.xhr || req.headers.accept.indexOf('json') > -1) {
       res.json({ products: filteredProducts });
     }else{
@@ -82,6 +89,7 @@ const loadProduct = async (req, res) => {
         currentPage,
         totalPages,
         startIndex,
+        countCart,
         endIndex: skip + productData.length,
       });
     }
@@ -96,12 +104,17 @@ const viewProduct = async (req, res) => {
     const categories = await category.find();
     const productData = await Product.findOne({ _id: id });
     const session = req.session.user_id;
+    let countCart= 0;
+    if(req.session.user_id){
+      countCart=res.locals.count
+    }
     // console.log(productData);
     res.render("user/productDetails", {
       session,
       name: req.session.user_name,
       products: productData,
       categories,
+      countCart
     });
   } catch (error) {
     console.log(error);
@@ -114,10 +127,16 @@ const loadProfile = async (req, res) => {
     const session = req.session.user_id;
     const userData = await User.findOne({ _id: req.session.user_id });
     console.log(userData);
+    let countCart= 0;
+    if(req.session.user_id){
+      countCart=res.locals.count
+    }
+    
     res.render("user/profile", {
       session,
       name: req.session.user_name,
       user: userData,
+      countCart
     });
   } catch (error) {
     console.log(error);
@@ -139,11 +158,16 @@ const loadEditprofile = async (req, res) => {
     const session = req.session.user_id;
     const userData = await User.findOne({ _id: req.session.user_id });
     // console.log(userData);
+    let countCart= 0;
+    if(req.session.user_id){
+      countCart=res.locals.count
+    }
     res.render("user/editProfile", {
       session,
       name: req.session.user_name,
       user: userData,
       message: null,
+      countCart
     });
   } catch (error) {
     console.log(error);
@@ -154,11 +178,16 @@ const updateEditprofile = async (req, res) => {
     const session = req.session.user_id;
     const userData = await User.findOne({ username: req.body.username });
     if (userData) {
+      let countCart= 0;
+      if(req.session.user_id){
+        countCart=res.locals.count
+      }
       res.render("user/editProfile", {
         session,
         name: req.session.user_name,
         user: userData,
         message: "Username Already Exists",
+        countCart
       });
     } else {
       await User.findByIdAndUpdate(session, {
@@ -177,12 +206,17 @@ const loadUserPassword = async (req, res) => {
     const session = req.session.user_id;
     const userData = await User.findOne({ _id: req.session.user_id });
     // console.log(userData);
+    let countCart= 0;
+    if(req.session.user_id){
+      countCart=res.locals.count
+    }
     res.render("auth/updatePassword", {
       localAction: "/profile/editPassword",
       session,
       name: req.session.user_name,
       user: userData,
       message: null,
+      countCart
     });
   } catch (error) {}
 };
@@ -222,6 +256,10 @@ const loadUserAddress = async (req, res) => {
       user: session,
       type: "secondary",
     });
+    let countCart= 0;
+    if(req.session.user_id){
+      countCart=res.locals.count
+    }
     res.render("user/profileAddress", {
       session,
       name: req.session.user_name,
@@ -229,6 +267,7 @@ const loadUserAddress = async (req, res) => {
       contact,
       main,
       secondary,
+      countCart
     });
   } catch (error) {
     console.log(error);
@@ -240,12 +279,17 @@ const loadAddAddress = async (req, res) => {
     const session = req.session.user_id;
     const type = req.query.type;
     const userData = await User.findOne({ _id: req.session.user_id });
+    let countCart= 0;
+    if(req.session.user_id){
+      countCart=res.locals.count
+    }
     res.render("user/addAddress", {
       id: session,
       session,
       name: req.session.user_name,
       user: userData,
       type,
+      countCart
     });
   } catch (error) {
     console.log(error);
@@ -285,8 +329,10 @@ const loadEditAddress = async (req, res) => {
     const session = req.session.user_id;
     const { type, id } = req.query;
     const address = await addressModel.findOne({ _id: id });
-    // console.log(address);
-    // const type = req.query.type
+    let countCart= 0;
+    if(req.session.user_id){
+      countCart=res.locals.count
+    }
     const userData = await User.findOne({ _id: req.session.user_id });
     res.render("user/editAddress", {
       session,
@@ -294,6 +340,7 @@ const loadEditAddress = async (req, res) => {
       user: userData,
       type,
       address,
+      countCart
     });
   } catch (error) {
     console.log(error);

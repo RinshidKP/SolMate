@@ -23,9 +23,9 @@ const addCoupon = async (req, res) => {
     let name = req.body.name.toUpperCase();
 
     const couponExist = await Coupon.findOne({ name: name });
-
+    console.log(couponExist);
     if (couponExist) {
-      res.json({ response: false });
+      res.json({ response: true });
     } else {
       const newCoupon = new Coupon({
         name,
@@ -34,7 +34,7 @@ const addCoupon = async (req, res) => {
         minAmount,
       });
       await newCoupon.save();
-      res.redirect("/admin/coupons");
+      res.json({ response: false });
     }
   } catch (error) {
     console.log(error);

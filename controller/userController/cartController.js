@@ -8,8 +8,10 @@ const loadcart = async (req, res) => {
       .populate("products.productId")
       .populate("products.sizes");
     const category = await Category.find();
-    // const stock = await Product.find();
-    // console.log(cart.products);
+    let countCart= 0;
+    if(req.session.user_id){
+      countCart=res.locals.count+1  
+    }
     const productsArray = [];
 
      if(cart){
@@ -24,6 +26,7 @@ const loadcart = async (req, res) => {
       session: req.session.user_id,
       name: req.session.user_name,
       category,
+      countCart,
       stock:productsArray,
     });
   } catch (error) {

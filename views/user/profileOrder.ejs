@@ -84,7 +84,7 @@
           <% if (order[i].order_status === "pending") { %>
             <a onclick="cancel('<%= order[i]._id %>')" class="btn btn-danger">Cancel</a>
           <% } else if (order[i].order_status === "delivered") { %>
-            <a class="btn btn-success px-4">Rate Order</a>
+            <a class="btn btn-danger px-4">Return</a>
           <% } else if (order[i].order_status === "pay") { %>
             <a class="btn btn-warning px-4" onclick="cod('<%= order[i]._id %>')">Pay</a>
           <% } %>

@@ -1,7 +1,7 @@
 <%-include("./layout/header.ejs")%>
 
   <div class="container">
-  <div class="row justify-content-start mt-5">
+  <div class="row justify-content-start mt-5 mb-5">
     <div class="col-lg-6 col-xl-6">
       <div class="card rounded-3">
         <div class="card-body">
@@ -49,27 +49,27 @@
                 <div class="row">
                   <div class="col">
                     <label for="size-6" class="form-label">Size 6:</label>
-                    <input type="number" id="size-6" name="size6" value="<%= stock.sizes['6'] %>"
+                    <input type="number" id="size-6" name="size6" min="0" value="<%= stock.sizes['6'] %>"
                       class="form-control mb-3" />
                   </div>
                   <div class="col">
                     <label for="size-7" class="form-label">Size 7:</label>
-                    <input type="number" id="size-7" name="size7" value="<%= stock.sizes['7'] %>"
+                    <input type="number" id="size-7" name="size7" min="0" value="<%= stock.sizes['7'] %>"
                       class="form-control mb-3" />
                   </div>
                   <div class="col">
                     <label for="size-8" class="form-label">Size 8:</label>
-                    <input type="number" id="size-8" name="size8" value="<%= stock.sizes['8'] %>"
+                    <input type="number" id="size-8" name="size8" min="0" value="<%= stock.sizes['8'] %>"
                       class="form-control mb-3" />
                   </div>
                   <div class="col">
                     <label for="size-9" class="form-label">Size 9:</label>
-                    <input type="number" id="size-9" name="size9" value="<%= stock.sizes['9'] %>"
+                    <input type="number" id="size-9" name="size9" min="0" value="<%= stock.sizes['9'] %>"
                       class="form-control mb-3" />
                   </div>
                   <div class="col">
                     <label for="size-10" class="form-label">Size 10:</label>
-                    <input type="number" id="size-10" name="size10" value="<%= stock.sizes['10'] %>"
+                    <input type="number" id="size-10" name="size10" min="0" value="<%= stock.sizes['10'] %>"
                       class="form-control mb-3" />
                   </div>
                 </div>
@@ -77,27 +77,27 @@
                 <div class="row">
                   <div class="col">
                     <label for="size-11" class="form-label">Size 11:</label>
-                    <input type="number" id="size-11" name="size11" value="<%= stock.sizes['11'] %>"
+                    <input type="number" id="size-11" name="size11" min="0" value="<%= stock.sizes['11'] %>"
                       class="form-control mb-3" />
                   </div>
                   <div class="col">
                     <label for="size-12" class="form-label">Size 12:</label>
-                    <input type="number" id="size-12" name="size12" value="<%= stock.sizes['12'] %>"
+                    <input type="number" id="size-12" name="size12" min="0" value="<%= stock.sizes['12'] %>"
                       class="form-control mb-3" />
                   </div>
                   <div class="col">
                     <label for="size-13" class="form-label">Size 13:</label>
-                    <input type="number" id="size-13" name="size13" value="<%= stock.sizes['13'] %>"
+                    <input type="number" id="size-13" name="size13" min="0" value="<%= stock.sizes['13'] %>"
                       class="form-control mb-3" />
                   </div>
                   <div class="col">
                     <label for="size-14" class="form-label">Size 14:</label>
-                    <input type="number" id="size-14" name="size14" value="<%= stock.sizes['14'] %>"
+                    <input type="number" id="size-14" name="size14" min="0" value="<%= stock.sizes['14'] %>"
                       class="form-control mb-3" />
                   </div>
                   <div class="col">
                     <label for="size-15" class="form-label">Size 15:</label>
-                    <input type="number" id="size-15" name="size15" value="<%= stock.sizes['15'] %>"
+                    <input type="number" id="size-15" name="size15" min="0" value="<%= stock.sizes['15'] %>"
                       class="form-control mb-3" />
                   </div>
                 </div>

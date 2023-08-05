@@ -17,27 +17,38 @@
 
 
 <script>
-  // $(document).ready(function() {
-  //   $('.zoom').elevateZoom({
-  //     zoomWindowWidth: 100, 
-  //     zoomWindowHeight: 100
-  //   });
-  // });
+  const container = document.getElementById('categoryContainer');
+  const checkboxes = container.querySelectorAll('input[type="checkbox"]')
 
+  
   $(document).ready(function() {
-  // Function to handle the slider change event and update the products
-  function handleSliderChange(event) {
-    // Prevent the default form submission behavior
-    event.preventDefault();
+    function handleSliderChange(event) {
+      event.preventDefault();
 
-    // Retrieve the current values of the sliders
+      const container = document.getElementById('categoryContainer');
+        const selectedValues = [];
+        const checkboxes = container.querySelectorAll('input[type="checkbox"]');
+        function handleCheckboxChange(event) {
+          const checkboxValue = event.target.value;
+          if (event.target.checked) {
+            selectedValues.push(checkboxValue);
+          } else {
+            const index = selectedValues.indexOf(checkboxValue);
+            if (index !== -1) {
+              selectedValues.splice(index, 1);
+            }
+          }
+          console.log(selectedValues);
+        }
+        checkboxes.forEach(checkbox => {
+          checkbox.addEventListener('change', handleCheckboxChange);
+        });
+      
     const fromValue = $('#fromSlider').val();
     const toValue = $('#toSlider').val();
     const searchQuery = $('#searchInput').val().trim();
-    
-    // Send data to the server using AJAX GET
     $.ajax({
-      url: '/product', // Replace with your actual controller endpoint
+      url: '/product', 
       method: 'GET',
       data: {
         fromValue: fromValue,
@@ -45,15 +56,8 @@
         search: searchQuery
       },
       success: function(response) {
-        // Handle the response from the server
-        // console.log('Response:', response);
-        
-        // console.log(searchQuery);
-        // Update the product container with the new product information
         const productContainer = $('#productContainer');
-        productContainer.empty(); // Clear the existing content
-
-        // Loop through the products in the response and add them to the container
+        productContainer.empty();
         response.products.forEach(function(product) {
           const productElement = createProductElement(product);
           productContainer.append(productElement);
@@ -88,37 +92,6 @@
   });
 });
 
-//   $(document).ready(function() {
-//   // Add event listeners
-//   $('#fromSlider, #toSlider').on('input', handleSliderChange);
-
-//   // Event handler function
-//   function handleSliderChange(event) {
-//     // Retrieve the current values of the sliders
-//     const fromValue = $('#fromSlider').val();
-//     const toValue = $('#toSlider').val();
-
-//     // Perform any actions or logic based on the slider values
-//     console.log('From Slider Value:', fromValue);
-//     console.log('To Slider Value:', toValue);
-//     // Additional code goes here...
-//   }
-// });
-
-
-
-//   $(document).ready(function() {
-//   $('.zoom').mouseenter(function() {
-//     $(this).elevateZoom({
-//       zoomWindowWidth: 200, 
-//       zoomWindowHeight: 200,
-//       zoomWindowOffetx: 20,
-      
-//     });
-//   }).mouseleave(function() {
-//     $(this).removeData('elevateZoom');
-//   });
-// });
 
   $(document).ready(function() {
   $('.zoom').mouseenter(function() {
@@ -133,26 +106,6 @@
     $(this).removeData('elevateZoom');
   });
 });
-
-  // self.zoomWindowContainer = $('<div/>').addClass('zoomWindowContainer').css({
-  //        "width": self.options.zoomWindowWidth,
-  //        "z-index": 999
-  //      });
-
-// self.zoomWindowContainer = $('<div/>').addClass('zoomWindowContainer').css({
-//   "width": self.options.zoomWindowWidth,
-//   "z-index": 999
-// });
-// const productImage = document.getElementById('productImage');
-// $('.product-image-container').append(self.zoomWindowContainer);
-// productImage.addEventListener('mouseover', function () {
-//   self.zoomWindowContainer.show();
-// });
-// productImage.addEventListener('mouseout', function () {
-//   self.zoomWindowContainer.hide();
-// });
-
-
 
   $(document).ready(function() {
   $('.variant-btn').click(function() {
@@ -223,9 +176,9 @@
 
 
   // Attach event listeners to the buttons
-  document.querySelector('.quantity-left-minus').addEventListener('click', decrementQuantity);
-  document.querySelector('.quantity-right-plus').addEventListener('click', incrementQuantity);
-  document.querySelector('.btn-addtocart').addEventListener('click', addToCart);
+  // document.querySelector('.quantity-left-minus').addEventListener('click', decrementQuantity);
+  // document.querySelector('.quantity-right-plus').addEventListener('click', incrementQuantity);
+  // document.querySelector('.btn-addtocart').addEventListener('click', addToCart);
 
 
 </script>
