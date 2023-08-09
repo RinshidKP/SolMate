@@ -1,0 +1,112 @@
+<%- include("./layout/header.ejs") %>
+
+    <div class="container-fluid">
+        <div class="row m-0 h-100">
+            <div class="m-5 col-4">
+                <div class="col-6 d-flex justify-content-center">
+                  <div class="">
+                    <div style="height: 8rem; width: 8rem; border: 0.05rem solid rgb(174, 171, 171);" class="rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="fa fa-user" style="font-size: 2.5rem;"></i>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6 d-flex flex-column align-items-center">
+                  <div class="">
+                    <div class="row"><%= name %></div>
+                    <div style="font-size: 0.75rem" class="row">
+                      <%= user.created.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) %>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6 d-flex flex-column">
+                  <div class="rounded-3 p-3" style="border: 0.05rem solid rgb(174, 171, 171); min-height: 2rem;">
+                    <a href="/user/profile" class="rounded-3 p-2 nav-link text-dark">Profile</a>
+                  </div>
+                  <div class="rounded-3 p-2" style="border: 0.05rem solid rgb(174, 171, 171); min-height: 2rem;">
+                    <a href="/user/order" class="nav-link text-dark rounded-3 p-2">Orders</a>
+                  </div>
+                  <div class="rounded-3 p-2" style="border: 0.05rem solid rgb(174, 171, 171); min-height: 2rem;">
+                  <a href="/user/profileAddress" class="nav-link text-dark rounded-3 p-2">Address</a>
+                </div>
+                  <div class="rounded-3 p-2" style="border: 0.05rem solid rgb(174, 171, 171);  background-color: #15140e; min-height: 2rem;">
+                    <a href="/profile/wallet" class="nav-link text-light rounded-3 p-2">Wallet</a>
+                  </div>
+                  <div class="rounded-3 p-2" style="border: 0.05rem solid rgb(174, 171, 171); min-height: 2rem;">
+                    <a href="/cart" class="nav-link text-dark rounded-3 p-2">Cart</a>
+                  </div>
+                </div>
+              </div>
+            
+            <div class="col-md-7  mt-4">
+                <% if(wallet !== null){ %>
+                        <div class="row my-4">
+                            <div class="col-12">
+                            <div class="card rounded" style="background-color: rgb(245, 222, 222) !important;">
+                                
+                                <div class="card-body d-flex justify-content-between py-0 pr-0">
+                                <span class="text-dark py-3">Available Balance</span>
+                                <div class="col-lg-2 col-4 bg-white py-3 border-left text-center" style="border-color: rgb(231, 171, 171) !important;">
+                                <span class="text-dark font-weight-bold">&#x20B9;<%=wallet.balance%></span>
+                                </div>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                    <% wallet.history.reverse().forEach((historyItem) => { %>
+                        <div class="row">
+                            <div class="card col-2 mb-3">
+                                <% if (historyItem.type === "add") { %>
+                                <img width="150" src="https://img.icons8.com/bubbles/200/plus.png" alt="plus"/>
+                                <% } else { %>
+                                    <img width="150" src="https://img.icons8.com/bubbles/150/minus.png" alt="minus"/>
+                                    <% } %>
+                            </div>
+                        <div class="card mb-3 col-10 p-0">
+                          <div class="card-body">
+                            <h5 class="card-title">&#x20B9;<%= historyItem.amount %> <% if (historyItem.type === "add") { %>Credited to wallet<% } else { %>Debited From Wallet<% } %></h5>
+                            
+                          </div>
+                          <div class="card-footer bg-white d-flex justify-content-between pb-0">
+                            <p>Updated Balance: &#x20B9;<%= historyItem.newBalance %></p>
+                            <p>Updated Date: <%= historyItem.updatedDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) %></p>
+                          </div>
+                        </div>
+                    </div>
+                      <% }) %>
+                <% } else {%>
+                    <div class="row mt-4">
+                        <div class="col-12">
+                          <div class="card rounded border" style="background-color: rgb(245, 222, 222) !important;">
+                            
+                            <div class="card-body d-flex justify-content-between py-0 pr-0">
+                              <span class="text-dark py-3">Available Balance</span>
+                              <div class="col-lg-2 col-4 bg-white py-3 border-left text-center" style="border-color: rgb(231, 171, 171) !important;">
+                              <span class="text-dark font-weight-bold">&#x20B9;0</span>
+                            </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                <% } %>
+
+                </div>
+            </div>
+        </div>
+        
+
+    </div>
+    </div>
+    </div>
+
+    <!-- ajax -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+    <!-- sweet alert cdn -->
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        
+
+    </script>
+
+<%- include("./layout/footer.ejs") %>

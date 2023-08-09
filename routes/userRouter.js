@@ -8,6 +8,7 @@ const userMiddleware = require('../middleware/user');
 const cartController = require('../controller/userController/cartController');
 const checkout = require('../controller/userController/checkoutController');
 const order = require('../controller/userController/orderController');
+const wallet = require('../controller/userController/walletController');
 //home
 router.get('/user',user.loadhome);
 router.get('/product',user.loadProduct);
@@ -36,7 +37,8 @@ router.post('/profile/editPassword',user.updateUserPassword)
 router.get('/user/order',order.loadOrder);
 router.post('/user/order/cancel',order.cancelOrder)
 router.get('/user/order/view',order.viewDetails)
-// router.get('/user/orders',orderController)
+router.post('/order/return',order.orderReturn)
+router.get('/profile/wallet',wallet.loadWallet)
 // Address
 router.get('/user/profileAddress',userMiddleware.isLogin,user.loadUserAddress)
 router.get('/user/profileAddress/add',userMiddleware.isLogin,user.loadAddAddress)

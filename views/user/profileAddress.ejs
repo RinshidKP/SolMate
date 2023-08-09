@@ -2,67 +2,61 @@
 
 
   <div class="row m-0 container-fluid">
-    <div class="m-5 col-4">
-      <div class="col-6 d-flex justify-content-center">
-        <div class="">
-          <div style="height: 8rem; width: 8rem; border: 0.05rem solid rgb(174, 171, 171);" class="rounded-circle d-flex align-items-center justify-content-center">
+    <div class="row m-0 container-fluid">
+      <div class="my-5 col-md-4">
+        <div class="col-6 d-flex justify-content-center">
+          <div class="border rounded-circle d-flex align-items-center justify-content-center p-3" style="border-width: 2px;">
             <i class="fa fa-user" style="font-size: 2.5rem;"></i>
           </div>
         </div>
-      </div>
-      <div class="col-6 d-flex flex-column align-items-center">
-        <div class="">
-          <div class="row"><%= name %></div>
-          <div style="font-size: 0.75rem" class="row">
-            <%= user.created.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) %>
+        <div class="col-6 d-flex flex-column align-items-center">
+          <div class="">
+            <div class="row"><%= name %></div>
+            <div class="row small">
+              <%= user.created.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) %>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 mt-4">
+          <div class="rounded-3 p-3 border">
+            <a href="/user/profile" class="btn btn-outline-dark btn-block">Profile</a>
+          </div>
+          <div class="rounded-3 p-2 mt-3 border">
+            <a href="/user/order" class="btn btn-outline-dark btn-block">Orders</a>
+          </div>
+          <div class="rounded-3 p-2 mt-3 border">
+            <a href="/user/profileAddress" class="btn btn-outline-light btn-block bg-dark">Address</a>
+          </div>
+          <div class="rounded-3 p-2 mt-3 border">
+            <a href="/profile/wallet" class="btn btn-outline-dark btn-block">Wallet</a>
+          </div>
+          <div class="rounded-3 p-2 mt-3 border">
+            <a href="/cart" class="btn btn-outline-dark btn-block">Cart</a>
           </div>
         </div>
       </div>
-      <div class="col-6 d-flex flex-column">
-        <div class="rounded-3 p-3" style="border: 0.05rem solid rgb(174, 171, 171); min-height: 2rem;">
-          <a href="/user/profile" class="rounded-3 p-2 nav-link text-dark">Profile</a>
-        </div>
-        <div class="rounded-3 p-2" style="border: 0.05rem solid rgb(174, 171, 171); min-height: 2rem;">
-          <a href="/user/order" class="nav-link text-dark rounded-3 p-2">Orders</a>
-        </div>
-        <div class="rounded-3 p-2" style="border: 0.05rem solid rgb(174, 171, 171); background-color: #15140e; min-height: 2rem;">
-        <a href="/user/profileAddress" class="nav-link text-light rounded-3 p-2">Address</a>
-      </div>
-        <div class="rounded-3 p-2" style="border: 0.05rem solid rgb(174, 171, 171); min-height: 2rem;">
-          <a href="" class="nav-link text-dark rounded-3 p-2">Wishlist</a>
-        </div>
-        <div class="rounded-3 p-2" style="border: 0.05rem solid rgb(174, 171, 171); min-height: 2rem;">
-          <a href="/cart" class="nav-link text-dark rounded-3 p-2">Cart</a>
-        </div>
-      </div>
-    </div>
 
     <div class="grid-container col-6">
       <div class="row" >
-      <div class="grid-item col-6">
+        <div class="container">
+    <div class="row">
+      <div class="col-md-6">
         <% if (contact) { %>
-        <!-- Contact Address Card -->
         <div class="card mt-4">
-          <!-- Card Header -->
-          <div class="card-header bg-light py-4">
-            <h4 class="mb-0">Contact Address</h4>
-            <p class="mb-0">We can contact you here</p>
+          <div class="card-header bg-light">
+            <h4>Contact Address</h4>
+            <p>We can contact you here</p>
           </div>
-          <!-- Card Body -->
           <div class="card-body">
-            <!-- Address Form -->
             <form>
-              <!-- Building Name -->
               <div class="form-group">
                 <label for="building">Building Name</label>
                 <input type="text" class="form-control" id="building" name="building" value="<%=contact.buildingName%>" readonly />
               </div>
-              <!-- Street -->
               <div class="form-group">
                 <label for="state">Street</label>
                 <input type="text" class="form-control" id="state" name="street" value="<%=contact.street%>" readonly />
               </div>
-              <!-- City, State, Zip -->
               <div class="form-row">
                 <div class="form-group col-md-5">
                   <label for="inputCity">City</label>
@@ -77,36 +71,33 @@
                   <input type="text" class="form-control" id="inputZip" name="zip" value="<%=contact.pincode%>" readonly />
                 </div>
               </div>
-              <!-- Country -->
               <div class="form-group">
                 <label for="country">Country</label>
                 <input type="text" class="form-control" id="country" name="country" value="<%=contact.country%>" readonly />
               </div>
-              <!-- Phone Number -->
               <div class="form-group">
-                <label for="country">Phone Number</label>
+                <label for="phone">Phone Number</label>
                 <input type="text" class="form-control" id="phone" name="phone" pattern="[0-9]" value="<%=contact.phonenumber%>" readonly />
               </div>
             </form>
-            <!-- Edit Address Button -->
-            <div class="d-flex justify-content-between align-items-center pt-2">
+            <div class="text-center mt-3">
               <a href="/user/profileAddress/edit?type=contact&id=<%=contact._id%>" class="btn btn-dark">Edit Address</a>
             </div>
           </div>
         </div>
         <% } else { %>
-        <!-- Add Contact Address Card -->
-        <div class="card mt-5 ml-5">
-          <div class="card-header bg-light py-4">
-            <h4 class="mb-0 fs-3">Contact Address</h4>
-            <p class="mb-0 fs-5">We can contact you here</p>
+        <div class="card mt-4">
+          <div class="card-header bg-light">
+            <h4 class="fs-3">Contact Address</h4>
+            <p class="fs-5">We can contact you here</p>
           </div>
-          <div class="card-body">
-            <a href="/user/profileAddress/add?type=contact" class="btn btn-dark fs-4">Add new Address</a>
+          <div class="card-body text-center">
+            <a href="/user/profileAddress/add?type=contact" class="btn btn-dark fs-4">Add New Address</a>
           </div>
         </div>
         <% } %>
       </div>
+      
       <div class="grid-item col-6 mb-4 ">
         <% if (main) { %>
         <!-- Main Shipping Address Card -->

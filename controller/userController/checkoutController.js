@@ -6,6 +6,7 @@ const Product = require('../../models/productModel')
 const Coupon = require('../../models/couponModel')
 const Wallet = require('../../models/walletModel')
 const Razorpay = require('razorpay');
+const session = require("express-session");
 
 const loadCheckOutAddress = async (req, res) => {
   try {
@@ -15,7 +16,7 @@ const loadCheckOutAddress = async (req, res) => {
 
     let countCart= 0;
     if(req.session.user_id){
-      countCart=res.locals.count+1
+      countCart=res.locals.count
     }
 
     const contactAddress = await Address.findOne({
@@ -98,7 +99,7 @@ const checkoutProceed = async (req, res) => {
     product.products.forEach((item) => {
       productList.push(item.productId)
     })
-    res.render('user/chechOutPayment',
+    res.render('user/checkOutPayment',
       {
         session,
         name: req.session.name,
@@ -136,8 +137,14 @@ const checkout = async (req, res) => {
     let order;
     if(payment=="wallet"){
       let wallet = await Wallet.findOne({ user: userId });
-          let balance = wallet.balance;
-          if(balance<totalPrice){
+      let balance = wallet.balance;
+      console.log("Initial balance:", balance);
+      if(balance<totalPrice){
+        res.json({wallet:"noprice"})
+        return;
+      }
+      console.log(couponId);
+          if(wallet){
               let newBalance = balance - totalPrice;
               let history = {
                 type: "subtract",
@@ -146,10 +153,12 @@ const checkout = async (req, res) => {
               };
               wallet.balance = newBalance;
               wallet.history.push(history);
-              await wallet.save();
+              const yes = await wallet.save();
+              // console.log(history);
+              // console.log(yes+'yesss');
+              console.log(couponId);
               if (couponId) {
-                const coupon = await Coupon.findById(couponId);
-                if (coupon) {
+                  const coupon = await Coupon.findById(couponId);
                   const discount = parseInt(coupon.discount)
                   const total = totalPrice - discount;
                   const newOrder = new Order({
@@ -165,7 +174,6 @@ const checkout = async (req, res) => {
                     order_status: "pending"
                   })
                   order = await newOrder.save()
-                }
               } else {
                 const newOrder = new Order({
                   user: userId,
@@ -181,6 +189,9 @@ const checkout = async (req, res) => {
                 })
                 order = await newOrder.save()
               }
+            }else{
+              res.json({wallet:"false"})
+              return;
             }
     }else{
     if (couponId) {
@@ -243,7 +254,7 @@ const checkout = async (req, res) => {
     }
     const orderId = order._id;
     await Cart.findOneAndDelete({ userId: userId })
-    res.json({ response: true, orderId });
+    res.json({ response: true, orderId:orderId._id });
   } catch (error) {
     console.log(error);
   }
@@ -339,7 +350,7 @@ const orderSuccess = async (req, res) => {
     ]);
     let countCart= 0;
     if(req.session.user_id){
-      countCart=res.locals.count+1
+      countCart=res.locals.count
     }
     const sizes = order.items.sizes
     const user = order.user;

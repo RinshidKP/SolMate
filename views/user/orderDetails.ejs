@@ -1,15 +1,117 @@
 <%-include("./layout/header.ejs")%>
-<div class="container-fluid d-flex gap-4" >
+<style>
+    .track-line {
+    height: 3px !important;
+    background-color: #488978;
+    opacity: 1;
+    }
+
+    .dot {
+    height: 10px;
+    width: 10px;
+    margin-left: 3px;
+    margin-right: 3px;
+    margin-top: 0px;
+    background-color: #488978;
+    border-radius: 50%;
+    display: inline-block
+    }
+
+    .big-dot {
+    height: 25px;
+    width: 25px;
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-top: 0px;
+    background-color: #488978;
+    border-radius: 50%;
+    display: inline-block;
+    }
+
+    .big-dot i {
+    font-size: 12px;
+    }
+
+    .card-stepper {
+    z-index: 0
+    }
+</style>
+
+<div id="order-track" class=" container-fluid row d-flex gap-5">
+    <section>
+
+        <div class="container py-5 h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+              <div class="col">
+                <div class="card card-stepper" style="border-radius: 10px;" >
+                  <div class="card-body p-5">
+                    
+                    <% if(order.order_status !== "cancelled" && order.order_status !== "rejected"){ %>
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div class="d-flex flex-column">
+                        <span class="lead fw-normal">Track Your Order</span>
+                        <span class="text-muted small">Order Placed on <span><%=order.order_date.toLocaleDateString('en-US', { year: 'numeric' ,
+                            month: 'numeric' , day: 'numeric' });%></span>
+                      </div>
+                      <!-- <div>
+                        <button class="btn btn-outline-primary" type="button">Track order details</button>
+                      </div> -->
+                    </div>
+                    
+                    <hr class="my-4">
         
+                    <div class="d-flex flex-row justify-content-between align-items-center align-content-center">
+                      <span class="dot"></span>
+                      <% if(order.order_status == "shipped") {%>
+                      <hr class="flex-fill track-line" ><span class="dot"></span>
+                      <hr  class="flex-fill" ><span
+                        class="d-flex justify-content-center align-items-center big-dot dot">
+                        <i class="fa fa-check text-white"></i></span>
+                      
 
+                      <%} else if(order.order_status == "delivered") {%>
+                        <hr class="flex-fill track-line" ><span class="dot"></span>
+                        <hr  class="flex-fill track-line" ><span
+                          class="d-flex justify-content-center align-items-center big-dot dot">
+                          <i class="fa fa-check text-white"></i></span>
+                        <% } %>
+
+                      
+                    </div>
+        
+                    <div class="d-flex flex-row justify-content-between align-items-center">
+                      <div class="d-flex flex-column align-items-start"><span>Order placed</span>
+                      </div>
+                      
+                      <div class="d-flex flex-column justify-content-center align-items-center"><span>Order Shipped</span></div>
+                      
+                      <div class="d-flex flex-column align-items-end"><span>Delivered</span></div>
+                    </div>
+                    <% }else{ %>
+                        <div>
+                            <div class="d-flex justify-content-center h3 text-danger font-weight-bold text-uppercase">Order <%= order.order_status  %></div>
+                        </div>
+                    <% } %>
+        
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+    </section>
+</div>
+<div class="container-fluid d-flex gap-4 row" >
+        
+    
     <div style="overflow-y: auto;" class="w-100 d-flex align-items-center align-items-center">
-
+        
         <div class="col-lg-12">
             <div class="card mt-4">
             <div class="card-header bg-light py-4 ">
                 <h4 class="mb-0">#Order Details</h4>
                 <p class="mb-0"><%= order._id %></p>
             </div>
+            
             <div class="card-body ">
 
                 <section>
@@ -97,6 +199,23 @@
                     </div>
                     <div class="card-body">
                         <% if(order.payment_method == "cod"){ %> Cash On Delivery <% } %>
+                        <% if(order.payment_method == "online"){ %> Online Payment <% } %>
+                        <% if(order.payment_method == "wallet"){ %> Wallet<% } %>
+                    </div>
+                  </div>
+                  <div class="card m-3">
+                    <div class="card-header">
+                        Return Option
+                    </div>
+                    <div class="card-body">
+                        <% if(order.order_status == "cancelled"||order.order_status == "returned"){ %> <p class="text-danger"> Order Was Cancelled </p> <% }else{%>
+                            <div class="d-flex justify-content-between">
+                                <p class="text-secondary" >You can return Order within 2 Days of Delivery</p>
+                            <% if ( order.order_status == "delivered"&&(Date.now() < new Date(new Date(order.order_date).getTime() + 2 * 24 * 60 * 60 * 1000) )){ %>
+                            <button onclick="removeOrder('<%=order._id%>')" class="btn btn-danger" >Return</button>
+                            <% } %>
+                        </div>
+                         <% } %>
                     </div>
                   </div>
                  </div>
@@ -107,4 +226,44 @@
             
                
             </div>           
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+            <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <script>
+            function removeOrder(orderId) {
+                Swal.fire({
+                icon: "warning",
+                title: "Are you sure?",
+                text: "Return Order?",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Confirm",
+                }).then((result) => {
+                if (result.isConfirmed) {
+                    
+                    $.ajax({
+                        type: "POST",
+                        url: "/order/return",
+                        data: {
+                            orderId: '<%= order._id %>'
+                        },
+                        success: function(res){
+                            if(res.success){
+                                Swal.fire("Order Return!", "Order will be returned.", "success").then((response) => {
+                                    $.get(location.href, function(data) {
+                                        $("#order-track").html($(data).find("#order-track").html());
+                                        // $("#order-return").html($(data).find("#order-return").html());
+                                    });
+                                })
+                            }
+                        }
+                        
+                    })
+                    
+                }
+                });
+            }
+            </script>
+
+
             <%- include("./layout/footer.ejs") %>

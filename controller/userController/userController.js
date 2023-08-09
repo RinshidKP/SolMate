@@ -71,7 +71,6 @@ const loadProduct = async (req, res) => {
         {price: {$lt: maxamount}},
       ]
     });
-    console.log();
     let filteredProducts = products
     if(req.query.category){
       filteredProducts = null;

@@ -147,7 +147,7 @@ body {
                   <div id="cod-card" class="cardx card mb-4" style="min-width: 15rem; max-height: 4rem;">
                     <div class="card-body" role="button">
                       <h5 class="card-title">
-                        <input id="wallet" value="Wallet" name="payment" type="radio">
+                        <input id="wallet" value="wallet" name="payment" type="radio">
                         <label for="cod">Wallet</label>
                       </h5>
                     </div>
@@ -344,8 +344,16 @@ body {
               }
             })
             .then((result)=>{
+              // console.log(result.data);
               if(result.data.response){
                 location.href=`/order/success?orderId=${result.data.orderId}`;
+              }else{
+                if(result.data.wallet == "false" || result.data.wallet == "noprice"){
+                        Swal.fire({
+                            icon: "warning",
+                            title: "you dont have enough balance",
+                        })
+                    }
               }
             })
           }

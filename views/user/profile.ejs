@@ -1,72 +1,65 @@
 <%- include("./layout/header.ejs") %>
 
-
-  <div class="row m-0">
-    <div class="col m-5">
-      <div class="col-6 d-flex justify-content-center">
-        <div class="">
-          <div style="height: 8rem; width: 8rem; border: 0.05rem solid rgb(174, 171, 171);" class="rounded-circle d-flex align-items-center justify-content-center">
-            <i class="fa fa-user" style="font-size: 2.5rem;"></i>
-          </div>
-        </div>
+<div class="row m-0">
+  <div class="col-md-4 my-5">
+    <div class="col-6 d-flex justify-content-center">
+      <div class="border rounded-circle d-flex align-items-center justify-content-center p-3" style="border-width: 2px;">
+        <i class="fa fa-user" style="font-size: 2.5rem;"></i>
       </div>
-      <div class="col-6 d-flex flex-column align-items-center">
-        <div class="">
-          <div class="row"><%= name %></div>
-          <div style="font-size: 0.75rem" class="row">
-            <%= user.created.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) %>
-          </div>
-        </div>
-      </div>
-      <div class="col-6 d-flex flex-column">
-        <div class="rounded-3 p-3" style="border: 0.05rem solid rgb(174, 171, 171); background-color: #15140e; min-height: 2rem;">
-          <a href="" class="rounded-3 p-2 nav-link text-light">Profile</a>
-        </div>
-        <div class="rounded-3 p-2" style="border: 0.05rem solid rgb(174, 171, 171); min-height: 2rem;">
-          <a href="/user/order" class="nav-link text-dark rounded-3 p-2">Orders</a>
-        </div>
-        <div class="rounded-3 p-2" style="border: 0.05rem solid rgb(174, 171, 171); min-height: 2rem;">
-          <a href="/user/profileAddress" class="nav-link text-dark rounded-3 p-2">Address</a>
-        </div>
-        <div class="rounded-3 p-2" style="border: 0.05rem solid rgb(174, 171, 171); min-height: 2rem;">
-          <a href="" class="nav-link text-dark rounded-3 p-2">Wishlist</a>
-        </div>
-        <div class="rounded-3 p-2" style="border: 0.05rem solid rgb(174, 171, 171); min-height: 2rem;">
-          <a href="/cart" class="nav-link text-dark rounded-3 p-2">Cart</a>
+    </div>
+    <div class="col-6 d-flex flex-column align-items-center">
+      <div class="mt-3">
+        <div class="row"><%= name %></div>
+        <div class="row small">
+          <%= user.created.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) %>
         </div>
       </div>
     </div>
+    <div class="col-6 mt-4">
+      <div class="rounded-3 p-3 bg-dark border">
+        <a href="" class="btn btn-outline-light btn-block">Profile</a>
+      </div>
+      <div class="rounded-3 p-2 mt-3 border">
+        <a href="/user/order" class="btn btn-outline-dark btn-block">Orders</a>
+      </div>
+      <div class="rounded-3 p-2 mt-3 border">
+        <a href="/user/profileAddress" class="btn btn-outline-dark btn-block">Address</a>
+      </div>
+      <div class="rounded-3 p-2 mt-3 border">
+        <a href="/profile/wallet" class="btn btn-outline-dark btn-block">Wallet</a>
+      </div>
+      <div class="rounded-3 p-2 mt-3 border">
+        <a href="/cart" class="btn btn-outline-dark btn-block">Cart</a>
+      </div>
+    </div>
+  </div>
 
-    <div class="col">
-      <div class="col-lg-8 my-5">
-        <div class="card my-4">
-          <div class="card-header bg-light py-5">
-            <h4 class="mb-1 fs-2">My Profile</h4>
-            <p class="mb-1 fs-5">Time for a Sharp My profile.</p>
-          </div>
-          <div class="card-body">
-            <form>
-              <div class="form-group focused m-2 fs-5 mt-4 mb-4">
-                <label class="form-control-label" for="input-username">Username</label>
-                <input type="text" id="input-username" style="box-shadow: none" class="form-control form-control-alternative bg-light fs-5 custom-input" value="<%= user.username %>" readonly />
-              </div>
-              <div class="form-group m-2 fs-5 mb-4">
-                <label class="form-control-label" for="input-email">Email address</label>
-                <input type="email" id="input-email" style="box-shadow: none" class="form-control form-control-alternative bg-light fs-5 custom-input" value="<%= user.email %>" readonly />
-              </div>
-            </form>
-            <div class="d-flex justify-content-between align-items-center pt-4">
-              <a href="/profile/edit" class="btn btn-dark p-3">Edit Profile</a>
-              <a href="/profile/editPassword" class="btn btn-dark p-3">Change Password</a>
+  <div class="col-md-6">
+    <div class="col-lg-8 my-5">
+      <div class="card my-4">
+        <div class="card-header bg-light py-4">
+          <h4 class="mb-1 fs-2">My Profile</h4>
+          <p class="mb-1 fs-5">Time for a Sharp My profile.</p>
+        </div>
+        <div class="card-body">
+          <form>
+            <div class="form-group focused fs-5">
+              <label class="form-control-label" for="input-username">Username</label>
+              <input type="text" id="input-username" class="form-control form-control-alternative fs-5" value="<%= user.username %>" readonly />
             </div>
+            <div class="form-group fs-5">
+              <label class="form-control-label" for="input-email">Email address</label>
+              <input type="email" id="input-email" class="form-control form-control-alternative fs-5" value="<%= user.email %>" readonly />
+            </div>
+          </form>
+          <div class="d-flex justify-content-between align-items-center pt-4">
+            <a href="/profile/edit" class="btn btn-dark">Edit Profile</a>
+            <a href="/profile/editPassword" class="btn btn-dark">Change Password</a>
           </div>
         </div>
       </div>
     </div>
   </div>
-
-
-
-
+</div>
 
 <%- include("./layout/footer.ejs") %>

@@ -26,7 +26,7 @@ const cancelOrder = async (req, res) => {
       if(order.payment_method=="online"||order.payment_method=="wallet"){
         const wallet = await Wallet.findOne({user: order.user});
         if(wallet){
-          let balance = wallet.balance;
+        let balance = wallet.balance;
         const newBalance = balance + order.total;
         const history = {
             type: "add",
@@ -34,12 +34,35 @@ const cancelOrder = async (req, res) => {
             newBalance: newBalance,
         }
 
+        for(const item of order.items){
+            
+          const product = await Product.findById(item.productId);
+          const sizes = item.sizes
+          for (let size of sizes.keys()) {
+
+            if (size in product.sizes) {
+              const currentSizeQuantity = product.sizes[size];
+              const qty = sizes.get(size)
+              const updatedSizeQuantity = currentSizeQuantity + qty;
+    
+              if (updatedSizeQuantity >= 0) {
+                product.sizes[size] = updatedSizeQuantity;
+                await product.save();
+                await Product.findByIdAndUpdate(item.productId, {
+                  $inc: {
+                    stock: +qty
+                  }
+                })
+              }
+            }
+          }
+        }
+        
         wallet.balance = newBalance;
         wallet.history.push(history);
         wallet.save();
         }
-        }
-
+      }
         const newOrder = await Order.findByIdAndUpdate(id, { $set: { order_status: "cancelled" } },{new:true})
         if (newOrder) {
           res.json({ status: true })
@@ -85,7 +108,7 @@ const cancelOrder = async (req, res) => {
         let wallet = await Wallet.findOne({user: order.user});
         
         if(!wallet){
-            wallet = new walletModel({
+            wallet = new Wallet({
                 user: order.user,
                 balance: order.total,
                 history: [{
@@ -97,7 +120,7 @@ const cancelOrder = async (req, res) => {
 
             await wallet.save();
 
-            order.order_status = "cancelled";
+            order.order_status = "returned";
             await order.save();
 
         }else{
@@ -119,11 +142,26 @@ const cancelOrder = async (req, res) => {
 
         for(const item of order.items){
             
-            await productModel.updateOne({_id: item.product },
-                {
-                    $inc: {quantity: item.quantity}
-                })
+          const product = await Product.findById(item.productId);
+          const sizes = item.sizes
+          for (let size of sizes.keys()) {
+
+            if (size in product.sizes) {
+              const currentSizeQuantity = product.sizes[size];
+              const qty = sizes.get(size)
+              const updatedSizeQuantity = currentSizeQuantity + qty;
     
+              if (updatedSizeQuantity >= 0) {
+                product.sizes[size] = updatedSizeQuantity;
+                await product.save();
+                await Product.findByIdAndUpdate(item.productId, {
+                  $inc: {
+                    stock: +qty
+                  }
+                })
+              }
+            }
+          }
         }
 
 
