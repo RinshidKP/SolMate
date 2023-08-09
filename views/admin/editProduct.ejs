@@ -1,159 +1,472 @@
 <%-include("./layout/header.ejs")%>
 
-  <div class="container">
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+  }
+  .not-visible {
+    display: none;
+  } 
+  /* Responsive styles */
+  .card-body {
+    text-align: center;
+  }
+  .image-area {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  .cropped-image-container {
+    margin-top: 20px;
+    text-align: center;
+  }
+  h4 {
+    margin-bottom: 10px;
+  }
+  .btn-select-image {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .alert-box {
+    margin-top: 10px;
+  }
+  .cropping-coordinates {
+    margin-top: 10px;
+    font-weight: bold;
+  }
+</style>
+
+<div class="container">
   <div class="row justify-content-start mt-5 mb-5">
     <div class="col-lg-6 col-xl-6">
       <div class="card rounded-3">
         <div class="card-body">
-          <form action="/admin/product/edit?id=<%=stock._id%>" id="form" method="post" class="px-md-2 m-4" enctype="multipart/form-data">
+          <form  id="form"  class="px-md-2 m-4" enctype="multipart/form-data">
             <div class="d-flex justify-content-start text-secondary">
               <h4>Edit Product Information</h4>
             </div>
+            <div id="alert-box"></div>
             <hr>
 
-              <div class="mb-2">
-                <label class="form-label" for="name">Product Name</label>
-                <input type="text" id="name" class="form-control" name="name" value="<%=stock.name%>"
-                  placeholder="Enter Product Name" required />
+            <div class="mb-2">
+              <label class="form-label" for="name">Product Name</label>
+              <input type="text" id="name" class="form-control" value="<%=stock.name%>" name="name" placeholder="Enter Product Name" required />
+            </div>
+
+            <div class="row mb-2">
+              <div class="col-4">
+                <div class="form-group">
+                  <label for="exampleSelect" class="form-label">Category</label>
+                  <select class="form-control" name="category" id="exampleSelect">
+                    <% category.forEach((cat)=>{ %>
+                      <option value="<%=cat._id%>" <% if(stock.category==cat._id) {%> selected <%}%>
+                          >
+                          <%= cat.name%>
+                            <%})%>
+                      </option>
+
+                  </select>
+                </div>
+              
               </div>
 
-              <div class="row mb-2">
-                <div class=" col-4">
-                  <div class=" form-group">
-                    <label for="exampleSelect" class="form-label">Category</label>
-                    <select class="form-control" name="category" id="exampleSelect">
-                      <% category.forEach((cat)=>{ %>
-                        <option value="<%=cat._id%>" <% if(stock.category==cat._id) {%> selected <%}%>
-                            >
-                            <%= cat.name%>
-                              <%})%>
-                        </option>
-
-                    </select>
-                  </div>
-                </div>
-
-                <div class="form-group col-4">
-                  <label class="form-label" for="form3Example1q">Sales price</label>
-                  <input type="number" id="" class="form-control" value="<%=stock.price%>" name="price" min="0"
-                    pattern="^\d+\.\d{2}$" placeholder="0.00" required />
-                </div>
-
-                <div class="form-group col-4">
-                  <label for="exampleSelect" class="form-label">Color</label>
-                  <input type="text" class="form-control" value="<%=stock.color%>" name="color"
-                    placeholder="red green blue" required />
-                </div>
+              <div class="form-group col-4">
+                <label class="form-label" for="form3Example1q">Sales price</label>
+                <input type="number" id="" class="form-control" value="<%=stock.price%>" name="price" min="0" pattern="^\d+\.\d{2}$" placeholder="0.00" required />
               </div>
-              <div class="col-md-12 form-group text-center">
-                <div class="row">
-                  <div class="col">
-                    <label for="size-6" class="form-label">Size 6:</label>
-                    <input type="number" id="size-6" name="size6" min="0" value="<%= stock.sizes['6'] %>"
-                      class="form-control mb-3" />
-                  </div>
-                  <div class="col">
-                    <label for="size-7" class="form-label">Size 7:</label>
-                    <input type="number" id="size-7" name="size7" min="0" value="<%= stock.sizes['7'] %>"
-                      class="form-control mb-3" />
-                  </div>
-                  <div class="col">
-                    <label for="size-8" class="form-label">Size 8:</label>
-                    <input type="number" id="size-8" name="size8" min="0" value="<%= stock.sizes['8'] %>"
-                      class="form-control mb-3" />
-                  </div>
-                  <div class="col">
-                    <label for="size-9" class="form-label">Size 9:</label>
-                    <input type="number" id="size-9" name="size9" min="0" value="<%= stock.sizes['9'] %>"
-                      class="form-control mb-3" />
-                  </div>
-                  <div class="col">
-                    <label for="size-10" class="form-label">Size 10:</label>
-                    <input type="number" id="size-10" name="size10" min="0" value="<%= stock.sizes['10'] %>"
-                      class="form-control mb-3" />
-                  </div>
-                </div>
 
-                <div class="row">
-                  <div class="col">
-                    <label for="size-11" class="form-label">Size 11:</label>
-                    <input type="number" id="size-11" name="size11" min="0" value="<%= stock.sizes['11'] %>"
-                      class="form-control mb-3" />
-                  </div>
-                  <div class="col">
-                    <label for="size-12" class="form-label">Size 12:</label>
-                    <input type="number" id="size-12" name="size12" min="0" value="<%= stock.sizes['12'] %>"
-                      class="form-control mb-3" />
-                  </div>
-                  <div class="col">
-                    <label for="size-13" class="form-label">Size 13:</label>
-                    <input type="number" id="size-13" name="size13" min="0" value="<%= stock.sizes['13'] %>"
-                      class="form-control mb-3" />
-                  </div>
-                  <div class="col">
-                    <label for="size-14" class="form-label">Size 14:</label>
-                    <input type="number" id="size-14" name="size14" min="0" value="<%= stock.sizes['14'] %>"
-                      class="form-control mb-3" />
-                  </div>
-                  <div class="col">
-                    <label for="size-15" class="form-label">Size 15:</label>
-                    <input type="number" id="size-15" name="size15" min="0" value="<%= stock.sizes['15'] %>"
-                      class="form-control mb-3" />
-                  </div>
+              <div class="form-group col-4">
+                <label for="exampleSelect" class="form-label">Color</label>
+                <input type="text" class="form-control" name="color" value="<%=stock.color%>" placeholder="red green blue" required />
+              </div>
+            </div>
+            <div class="col-md-12 form-group text-center">
+              <div class="row">
+                <div class="col">
+                  <label for="size-6" class="form-label">Size 6:</label>
+                  <input type="number" id="size-6"  value="<%= stock.sizes['6'] %>" name="size6" min="0" class="form-control mb-3" />
+                </div>
+                <div class="col">
+                  <label for="size-7" class="form-label">Size 7:</label>
+                  <input type="number" id="size-7"  value="<%= stock.sizes['7'] %>" name="size7" min="0" class="form-control mb-3" />
+                </div>
+                <div class="col">
+                  <label for="size-8" class="form-label">Size 8:</label>
+                  <input type="number" id="size-8"  value="<%= stock.sizes['8'] %>" name="size8" min="0" class="form-control mb-3" />
+                </div>
+                <div class="col">
+                  <label for="size-9" class="form-label">Size 9:</label>
+                  <input type="number" id="size-9"  value="<%= stock.sizes['9'] %>" name="size9" min="0" class="form-control mb-3" />
+                </div>
+                <div class="col">
+                  <label for="size-10" class="form-label">Size 10:</label>
+                  <input type="number" id="size-10"  value="<%= stock.sizes['10'] %>" name="size10" min="0" class="form-control mb-3" />
                 </div>
               </div>
 
-              <div class="col-md-12 form-group">
-                <label class="form-label" for="">Blurb</label>
-                <textarea name="blurb" id="" cols="30" placeholder="Write a Short Description Here"
-                  class="form-control resize-none rounded" rows="2" ><%=stock.blurb%></textarea>
-              </div>
-
-              <div class="form-group">
-                <label class="form-label" for="">Description</label>
-                <textarea name="description" id="" cols="30" placeholder="Write Product Description Here"
-                  class="form-control resize-none rounded" rows="2" ><%=stock.description%></textarea>
-              </div>
-
-              <div class="form-group">
-                <label class="form-label" for="">Upload Photos</label>
-                <input
-                  name="image"
-                  class="form-control form-control-file"
-                  type="file"
-                  multiple="multiple"
-                />
-              </div>
-
-              <div class="d-flex justify-content-center mt-2">
-                <button type="submit" style="background-color: #81a642; width: 200px"
-                  class="btn align-items-center p-2">
-                  Update Product
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-6 col-xl-6">
-      <%if(stock.image){%>
-        <div id="imageCards" class="row">
-          <% for (let i = 0; i < stock.image.length; i++) { %>
-            <div class="col-4 col-md-4 col-lg-4 col-xl-4 m-2">
-              <div class="card" style="width: 100%;">
-                <img src="<%= stock.image[i].url %>" class="card-img-top" alt="Image">
-                <div class="card-body d-flex justify-content-between">
-                  <!-- <a href="#" class="btn btn-sm btn-success fs-6">Update</a> -->
-                  <a href="/admin/product/delete/image?id=<%=stock._id%>&publicId=<%= stock.image[i].public_id %>" class="btn btn-sm btn-danger fs-<%= i < 2 ? '6' : 'md-6 fs-lg-6 fs-xl-6' %>">Delete</a>
+              <div class="row">
+                <div class="col">
+                  <label for="size-11" class="form-label">Size 11:</label>
+                  <input type="number" id="size-11"  value="<%= stock.sizes['11'] %>" name="size11" min="0" class="form-control mb-3" />
+                </div>
+                <div class="col">
+                  <label for="size-12" class="form-label">Size 12:</label>
+                  <input type="number" id="size-12"  value="<%= stock.sizes['12'] %>" name="size12" min="0" class="form-control mb-3" />
+                </div>
+                <div class="col">
+                  <label for="size-13" class="form-label">Size 13:</label>
+                  <input type="number" id="size-13"  value="<%= stock.sizes['13'] %>" name="size13" min="0" class="form-control mb-3" />
+                </div>
+                <div class="col">
+                  <label for="size-14" class="form-label">Size 14:</label>
+                  <input type="number" id="size-14"  value="<%= stock.sizes['14'] %>" name="size14" min="0" class="form-control mb-3" />
+                </div>
+                <div class="col">
+                  <label for="size-15" class="form-label">Size 15:</label>
+                  <input type="number" id="size-15"  value="<%= stock.sizes['15'] %>" name="size15" min="0" class="form-control mb-3" />
                 </div>
               </div>
             </div>
-          <% } %>
-      <% } %>
+
+            <div class="col-md-12 form-group">
+              <label class="form-label" for="">Blurb</label>
+              <textarea name="blurb" id="" cols="30" placeholder="Write a Short Description Here" class="form-control resize-none rounded" rows="2"><%=stock.blurb%></textarea>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="">Description</label>
+              <textarea name="description" id="" cols="30" placeholder="Write Product Description Here" class="form-control resize-none rounded" rows="2"><%=stock.description%></textarea>
+            </div>
+
+            <div class="d-flex justify-content-center mt-2">
+              <button id="confirm-btn" type="submit" style="background-color: #81a642; width: 200px" class="btn align-items-center p-2">
+                Update Product
+              </button>
+            </div>
+          </form>
         </div>
       </div>
-      
+    </div>
+    <div class="col-lg-6 col-xl-6">
+ 
+      <div id="imageCards" class="row">
+        <div class="col-5 col-md-5 col-lg-5 col-xl-5 ">
+          <div class="card my-2 px-2 py-2 mx-2" style="width: 100%;">
+            <img id="cropped-image0" src="<%= stock.image[0].url %>" class="card-img-top" alt="https://infinitebook.com/wp-content/uploads/woocommerce-placeholder-350x350.png">
+            <div class="card-body d-flex justify-content-between">
+              <div class="form-group">
+                <input
+                  name="image_0"
+                  class="form-control d-none"
+                  type="file"
+                  accept="image/*"
+                  onchange="uploadPhotosChanged('0')"
+                />
+                
+                
+                <button class="btn btn-success" onclick="selectImage('0')">Change</button>
+                <!-- <button id="cropped-Btn0" class="btn btn-danger d-none"><i class="fas fa-trash-alt"></i></button>
+                 -->
+                 <a href="/admin/product/delete/image?id=<%=stock._id%>&publicId=<%= stock.image[0].public_id %>" class="btn btn-danger  %>"><i class="fas fa-trash-alt"></i></a>
+
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-5 col-md-5 col-lg-5 col-xl-5 ">
+          <div class="card my-2 px-2 py-2 mx-2" style="width: 100%;">
+            <img id="cropped-image1" src="<%= stock.image[1].url %>" class="card-img-top" alt="https://infinitebook.com/wp-content/uploads/woocommerce-placeholder-350x350.png">
+            <div class="card-body d-flex justify-content-between">
+              <div class="form-group">
+                <input
+                  name="image_1"
+                  class="form-control d-none"
+                  type="file"
+                  accept="image/*"
+                  onchange="uploadPhotosChanged('1')"
+                />
+                
+                <button class="btn btn-success" onclick="selectImage('1')">Change</button>
+                <a href="/admin/product/delete/image?id=<%=stock._id%>&publicId=<%= stock.image[1].public_id %>" class="btn btn-danger  %>"><i class="fas fa-trash-alt"></i></a>
+                <!-- <button id="cropped-Btn1" class="btn btn-danger d-none"><i class="fas fa-trash-alt"></i></button> -->
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-5 col-md-5 col-lg-5 col-xl-5 ">
+          <div class="card my-2 px-2 py-2 mx-2" style="width: 100%;">
+            <img id="cropped-image2" src="<%= stock.image[2].url %>" class="card-img-top" alt="https://infinitebook.com/wp-content/uploads/woocommerce-placeholder-350x350.png">
+            <div class="card-body d-flex justify-content-between">
+              <div class="form-group">
+                <input
+                  name="image_2"
+                  class="form-control d-none"
+                  type="file"
+                  accept="image/*"
+                  onchange="uploadPhotosChanged('2')"
+                />
+                
+                <button class="btn btn-success" onclick="selectImage('2')">Change</button>
+                <a href="/admin/product/delete/image?id=<%=stock._id%>&publicId=<%= stock.image[2].public_id %>" class="btn btn-danger  %>"><i class="fas fa-trash-alt"></i></a>
+                <!-- <button id="cropped-Btn2" class="btn btn-danger d-none"><i class="fas fa-trash-alt"></i></button> -->
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-5 col-md-5 col-lg-5 col-xl-5 ">
+          <div class="card my-2 px-2 py-2 mx-2" style="width: 100%;">
+            <img id="cropped-image3" src="<%= stock.image[3].url %>" class="card-img-top" alt="https://infinitebook.com/wp-content/uploads/woocommerce-placeholder-350x350.png">
+            <div class="card-body d-flex justify-content-between">
+              <div class="form-group">
+                <input
+                  name="image_3"
+                  class="form-control d-none"
+                  type="file"
+                  accept="image/*"
+                  onchange="uploadPhotosChanged('3')"
+                />
+                
+                <button class="btn btn-success" onclick="selectImage('3')">Change</button>
+                <a href="/admin/product/delete/image?id=<%=stock._id%>&publicId=<%= stock.image[2].public_id %>" class="btn btn-danger  %>"><i class="fas fa-trash-alt"></i></a>
+                <!-- <button id="cropped-Btn3" class="btn btn-danger d-none"><i class="fas fa-trash-alt"></i></button> -->
+              </div>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    
     </div>
   </div>
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <!-- Modal content goes here -->
+      <div class="modal-header">
+        <h5 class="modal-title" id="myModalLabel">Modal Title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body " >
+        <div class=" mx-auto col-lg-6">
+        <div class="image-area mb-3 container " >
+          <div  id="cropper-container" ></div>
+        </div>
+      </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Save</button>
+        <!-- <button type="button" id="save-changes-btn" class="btn btn-primary">Save changes</button> -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.min.js"></script>
+<!-- Include Bootstrap and jQuery -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.min.js"></script>
+
+<script>
+
+  const confirmBtn = document.getElementById("confirm-btn");
+  const form = document.getElementById("form");    
+  const modal = new bootstrap.Modal(document.getElementById('myModal'));
+  const imageBox = document.getElementById("cropper-container");
+  let cropper;
+  let formData = new FormData(form);
+  let selectedImages = [];
+  let croppedImages = [];
+  const cropperInstances = [];
+
+
+  function debounce(func, delay) {
+    let timer;
+    return function (...args) {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        func.apply(this, args);
+      }, delay);
+    };
+  }
+
+  function uploadPhotosChanged(i) {   
+    const imageInput = document.querySelector(`input[name="image_${i}"]`);
+    const btnRemove = document.getElementById(`cropped-Btn${i}`);
+    const fileInput = document.querySelector(`input[name="image_${i}"]`);
+
+
+      if (fileInput.files.length>0) {
+        // If files are selected, open the modal
+        const img_data = fileInput.files[0];
+        selectedImages[i]=fileInput.files[0];
+        const url = URL.createObjectURL(img_data);
+
+        // btnRemove.classList.remove("d-none")
+
+        imageBox.innerHTML = `<img src="${url}" id="image" class="img-fluid" style="height: 600px !important;"  />`;
+        imageBox.class="container-fluid"
+        modal.show();
+      }else{
+        modal.hide()
+      }
+      var $image = $("#image");
+      
+      $image.on("load", function () {
+         cropper = new Cropper($image[0], {
+          aspectRatio: 1200 / 1486,
+          viewMode: 1,
+          strict: true,
+          zoomable: true,
+          minContainerHeight:250,
+          minContainerWidth:250,
+          minCanvasHeight:250,
+          minCanvasWidth:250,
+          minCropBoxHeight:10,
+          minCropBoxWidth:10,
+          crop: debounce(function (event) {
+            console.log("Cropping...");
+            let cropperData = cropper.getData();
+            const x = Math.round(cropperData.x);
+            const y = Math.round(cropperData.y);
+            const width = Math.round(cropperData.width);
+            const height = Math.round(cropperData.height);
+            const coordinates = `X: ${x}, Y: ${y}, Width: ${width}, Height: ${height}`;
+            
+
+            croppedCanvas = cropper.getCroppedCanvas({width: 1200, height: 1486})
+            croppedImage = document.getElementById(`cropped-image${i}`)
+            croppedImage.src = croppedCanvas.toDataURL()
+            // for(let k=0 ; k <cropperInstances.length ; k ++){
+            //   if(cropperInstances[k].name)
+            // }
+            croppedCanvas.toBlob((blob) => {
+              cropperInstances[i] = blob;
+            }, 'image/png');
+          },500),
+          ready: function () {
+            console.log("Cropper is ready to be used.");
+          },
+          plugins: [
+            'crop', // Add the 'crop' plugin for cropping functionality
+            'resize' // Add the 'resize' plugin for resizing functionality
+          ],
+          cropend: function (event) {
+            console.log("Cropping ended.");
+          },
+          resize: function (event) {
+            console.log("Resizing...");
+          }
+        });
+      });
+        
+  }
+
+  const alertBox = document.getElementById("alert-box");
   
-  <%- include("./layout/footer.ejs") %>
+  confirmBtn.addEventListener("click", async (e) => {
+          e.preventDefault()
+          let check = await checkField()
+          const blobPromises = [];
+          // console.log(cropperInstances);
+        try {
+         if (check) {
+          formData = new FormData(form);
+            
+          if(cropperInstances.length){
+            if(cropperInstances.length==4){
+              formData.append(`images`, cropperInstances[0], `cropped-image-0.png`);
+              formData.append(`images`, cropperInstances[1], `cropped-image-1.png`);
+              formData.append(`images`, cropperInstances[2], `cropped-image-2.png`);
+              formData.append(`images`, cropperInstances[3], `cropped-image-3.png`);
+            }else{
+                alertBox.innerHTML = `<div class="alert alert-danger" role="alert">
+                        Oops Choose 4 photos
+                      </div>`;
+            }
+          }
+            // console.log([...formData]);
+                
+                $.ajax({
+                      type: "POST",
+                      url: "/admin/product/edit?id=<%=stock._id%>",
+                      enctype: "multipart/form-data",
+                      data: formData,
+                      processData: false,
+                      contentType: false,
+                      success: function (response) {
+                      console.log('Upload success:', response);
+                      if(response.data==true){
+                        window.location.href = '/admin/product'
+                      }else{
+                        alertBox.innerHTML = `<div class="alert alert-danger" role="alert">
+                                Ups...something went wrong
+                              </div>`;
+                      }
+
+                      // Rest of your code...
+                    },
+                    error: function (error) {
+                      console.log('Upload error:', error);
+                      // Rest of your code...
+                    },
+                  cache: false,
+                });  
+                
+            // }
+          // }
+         }
+        }catch(error){
+            console.error("Error:", error);
+            alertBox.innerHTML = `<div class="alert alert-danger" role="alert">
+                                Ups...something went wrong
+                              </div>`;
+        }
+    } );
+function checkField(){
+  const requiredFields = ["name", "category", "price", "color"];
+  let formIsValid = true;
+
+  requiredFields.forEach((fieldName) => {
+    const field = document.querySelector(`[name="${fieldName}"]`);
+    console.log(field);
+    if (!field.value) {
+      formIsValid = false;
+      alertBox.innerHTML = `<div class="alert alert-danger" role="alert">Please fill in all required fields.</div>`;
+    }else{
+      alertBox.innerHTML = "";
+    }
+    if (!formIsValid) {
+        return false;
+    }
+  });
+
+  if (formIsValid) {
+    
+    return true;
+  }else{
+    return false;
+  }
+}
+function selectImage(i) {
+      const fileInput = document.querySelector(`input[name="image_${i}"]`);
+    fileInput.click();
+    }
+</script>
+
+<%-include("./layout/footer.ejs")%>

@@ -83,7 +83,7 @@ const loadDashboard = async (req,res)=>{
             $sort: { _id: 1 }
           }
         ])
-      console.log(cat);
+      // console.log(cat);
         const orders = await Order.find()
         .populate({ path: 'user' })
         .sort({ order_date: -1 })

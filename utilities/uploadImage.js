@@ -4,7 +4,7 @@ const { randomUUID } = require('crypto');
 const imageUpload = async (file) => {
   
   try {
-    // console.log("IAM YOU ERROR",file);
+   
       const result = await cloudinary.uploader.upload( file.path, {
       public_id: `${randomUUID()}`,
       resource_type: "auto",
@@ -14,13 +14,13 @@ const imageUpload = async (file) => {
       public_id: result.public_id,
       url: result.url,
     }    
-    // console.log("O_o ((())))",result);
+    
     fs.unlink(file.path,function(err){
       if(err){
         console.log("something went wrong :"+ err);
       }
     })
-    console.log("O_o",myResultObj);
+    // console.log("O_o",myResultObj);
     return myResultObj;
   } catch (error) {
     console.log(error);
@@ -59,5 +59,6 @@ const multipleimages = async (files) => {
 
 module.exports = {
   multipleimages,
-  deleteImage
+  deleteImage,
+  imageUpload
 };

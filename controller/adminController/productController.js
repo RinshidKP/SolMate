@@ -1,7 +1,7 @@
 const category = require("../../models/categoryModel");
 // const productModel = require("../../models/productModel");
 const Product = require("../../models/productModel");
-const {multipleimages,deleteImage} = require("../../utilities/uploadImage");
+const {multipleimages,deleteImage,imageUpload} = require("../../utilities/uploadImage");
 
 const loadAddProduct = async (req, res) => {
   try {
@@ -44,16 +44,6 @@ const addProduct = async (req, res) => {
     size14 = parseInt(size14);
     size15 = parseInt(size15);
 
-  // console.log(  size6)
-  // console.log(  size7)
-  // console.log(  size8)
-  // console.log(  size9)
-  //   console.log(size10 )
-  //   console.log(size11 )
-  //   console.log(size12 )
-  //   console.log(size13 )
-  //   console.log(size14 )
-  //   console.log(size15 )
 
     let stocks=size6+size7+size8+size9+size10+size11+size12+size13+size14+size15
     stocks= parseInt(stocks)
@@ -160,7 +150,7 @@ const updateProduct = async (req, res) => {
     const color = req.body.color;
     const blurb = req.body.blurb;
     const description = req.body.description;
-
+    
     let size6 = req.body.size6 || 0;
     let size7 = req.body.size7 || 0;
     let size8 = req.body.size8 || 0;
@@ -185,19 +175,18 @@ const updateProduct = async (req, res) => {
     size15 = parseInt(size15);
 
     let stocks=size6+size7+size8+size9+size10+size11+size12+size13+size14+size15
-    let images = false
-
-    if (req.files && req.files.image) {
-      images = Array.isArray(req.files.image) ? req.files.image : [req.files.image];
-    }
-    const urlList = await multipleimages(images);
-    if (Array.isArray(urlList) && urlList.length > 0) {
+    
+    
+    
+    if (req.files){
+      let images =req.files;
+      const urlList = await multipleimages(images);
+      console.log(urlList);
       await Product.findByIdAndUpdate(id, {
-        $push: { image: { $each: urlList }}
+        $set: { image: urlList }
       });
     }
-
-    await Product.findByIdAndUpdate(id, {
+    const data = await Product.findByIdAndUpdate(id, {
       $set: {
         name: name,
         category: category,
@@ -220,7 +209,12 @@ const updateProduct = async (req, res) => {
         description: description,
       },
     });
-    res.redirect("/admin/product");
+    // res.redirect("/admin/product");
+    if(data){
+      res.json({data:true})
+    }else{
+      res.json({data:false})
+    }
   } catch (error) {
     console.log(error);
   }

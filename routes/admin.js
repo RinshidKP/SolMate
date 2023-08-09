@@ -25,7 +25,7 @@ router.get('/product/add',admin.isLogin,product.loadAddProduct)
 router.post('/product/add',multer.uploadImages,product.addProduct)
 
 router.get('/product/edit',admin.isLogin,product.loadEditProduct);
-router.post('/product/edit',product.updateProduct);
+router.post('/product/edit',multer.uploadImages,product.updateProduct);
 router.get('/product/delete',product.deleteProduct);
 router.get('/product/delete/image',product.deleteProductImage)
 //Order Routes
@@ -41,7 +41,7 @@ router.get('/category',admin.isLogin,category.loadCategory);
 router.get('/category/add',admin.isLogin,category.loadAddCategory);
 router.get('/category/edit',admin.isLogin,category.loadEditCategory);
 router.post('/category/add',multer.uploadImage,category.addCategory);
-router.post('/category/edit',category.editCategory);
+router.post('/category/edit',multer.uploadImage,category.editCategory);
 router.get('/category/delete',category.deleteCategory);
 
 // router.get('/',admin.isLogin,user.loadCustomer)

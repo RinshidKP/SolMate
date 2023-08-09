@@ -45,16 +45,18 @@ const loadProduct = async (req, res) => {
     const totalPages = Math.ceil(totalProduct / itemsPerPage);
     const startIndex = skip + 0;
     let countCart= 0;
+
+
     if(req.session.user_id){
       countCart=res.locals.count
     }
     const categories = await category.find();
     let search ="";
     search = req.query.search;
-    const selectedCat = req.query.selectedCat;
+   
     let minamount = 0;
     let maxamount =  100;
-    // console.log(req.query);
+
     if(req.query.toValue||req.query.fromValue){
        minamount = req.query.fromValue;
        maxamount =  req.query.toValue;
@@ -69,11 +71,21 @@ const loadProduct = async (req, res) => {
         {price: {$lt: maxamount}},
       ]
     });
-
+    console.log();
     let filteredProducts = products
-    if(selectedCat){
+    if(req.query.category){
       filteredProducts = null;
-      filteredProducts = products.filter(product=>product.category===selectedCat)
+      filteredProducts = await Product.find({
+        $or: [
+          { name: { $regex: new RegExp(search, 'gi') } },
+          { color: { $regex: new RegExp(search, 'gi') } }
+        ],
+        $and: [
+          { price: { $gt: minamount } },
+          { price: { $lt: maxamount } }
+        ],
+        category: { $in: req.query.category } 
+      })
     }
 
     

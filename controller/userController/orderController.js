@@ -11,7 +11,7 @@ const loadOrder = async (req,res)=>{
       countCart=res.locals.count
     }
     const name = req.session.name
-    res.render('user/profileOrder',{session,name,order,countCart})
+    res.render('user/profileOrder',{session, name: req.session.user_name,order,countCart})
     } catch (error) {
         console.log(error);
     }
@@ -67,7 +67,7 @@ const cancelOrder = async (req, res) => {
       }
       const products = order.items;
       const address = order.address;
-      res.render('user/orderDetails',{session,name: req.session.name,countCart,order,products,address})
+      res.render('user/orderDetails',{session, name: req.session.user_name,countCart,order,products,address})
 
     } catch (error) {
       console.log(error);

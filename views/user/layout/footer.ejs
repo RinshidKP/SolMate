@@ -10,8 +10,8 @@
 
 
 
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/elevatezoom/3.0.8/jquery.elevatezoom.min.js"></script> 
 
 
@@ -20,40 +20,57 @@
   const container = document.getElementById('categoryContainer');
   const checkboxes = container.querySelectorAll('input[type="checkbox"]')
 
-  
+  const selectedValues = []
   $(document).ready(function() {
-    function handleSliderChange(event) {
-      event.preventDefault();
 
-      const container = document.getElementById('categoryContainer');
-        const selectedValues = [];
-        const checkboxes = container.querySelectorAll('input[type="checkbox"]');
-        function handleCheckboxChange(event) {
+  const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+  checkboxes.forEach(checkbox => {
+    if (checkbox) {
+      selectedValues.push(checkbox.value);
+    }
+  });
+  function handleCheckboxChange(event) {
           const checkboxValue = event.target.value;
           if (event.target.checked) {
-            selectedValues.push(checkboxValue);
+            const index = selectedValues.indexOf(checkboxValue);
+            if(index){
+              selectedValues.push(checkboxValue);
+            }
           } else {
             const index = selectedValues.indexOf(checkboxValue);
             if (index !== -1) {
               selectedValues.splice(index, 1);
             }
+
           }
+          
           console.log(selectedValues);
+          handleFilterChanges()
         }
+    function handleSliderChange(event) {
+      event.preventDefault();
+      const container = document.getElementById('categoryContainer');
+        
         checkboxes.forEach(checkbox => {
           checkbox.addEventListener('change', handleCheckboxChange);
-        });
-      
+        });         
+        handleFilterChanges()
+  }
+  function handleFilterChanges() {
     const fromValue = $('#fromSlider').val();
     const toValue = $('#toSlider').val();
     const searchQuery = $('#searchInput').val().trim();
+    const uniqueSelectedValues = new Set(selectedValues);
+    const uniqueSelectedArray = Array.from(uniqueSelectedValues);
+    console.log(uniqueSelectedArray);
     $.ajax({
-      url: '/product', 
+      url: '/product',
       method: 'GET',
       data: {
         fromValue: fromValue,
         toValue: toValue,
-        search: searchQuery
+        search: searchQuery,
+        category: uniqueSelectedArray,
       },
       success: function(response) {
         const productContainer = $('#productContainer');
@@ -66,29 +83,24 @@
       error: function(error) {
         console.error('Error:', error);
       }
-    });
+    });   
   }
 
-  // Helper function to create a product element from the product data
   function createProductElement(product) {
-    // Create a new HTML element to represent the product
     const productElement = $('<div class="col-md-4 mb-4"><div class="card"><img src="" class="card-img-top" alt=""><div class="card-body"><h5 class="card-title"></h5><p class="card-text">&#x20B9;</p><a href="" class="fas fa-eye btn btn-dark mr-1">View</a><a href="" class="fas fa-shopping-cart btn btn-secondary">Add</a></div></div></div>');
 
-    // Populate the product element with the product information
     productElement.find('img').attr('src', product.image[0].url);
     productElement.find('.card-title').text(product.name);
     productElement.find('.card-text').text(`₹${product.price}`);
     productElement.find('.btn.btn-dark').attr('href', `/product/shop?id=${product._id}`);
-    // Update the other button's href as well, if needed.
 
     return productElement;
   }
 
-  // Add event listeners to the sliders and handle their changes
   $('#fromSlider, #toSlider').on('input', handleSliderChange);
   $('#searchForm').submit(function(event) {
-    event.preventDefault(); // Prevent default form submission
-    handleSliderChange(event); // Call the function to handle the form submission
+    event.preventDefault();
+    handleSliderChange(event);
   });
 });
 
@@ -112,19 +124,15 @@
     $('.variant-btn').removeClass('active');
     $(this).addClass('active');
     
-    // Get the selected variant
     var selectedVariant = $(this).data('variant');
     
-    // Perform any further actions based on the selected variant
     console.log('Selected variant:', selectedVariant);
   });
 });
 
 </script>
-<!-- <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> -->
 
 <script>
-    // Attach event listeners to the variant buttons
     var variantButtons = document.querySelectorAll('.variant-btn');
   variantButtons.forEach(function(button) {
     button.addEventListener('click', function() {

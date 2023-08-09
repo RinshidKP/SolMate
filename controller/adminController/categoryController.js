@@ -1,6 +1,6 @@
 const category = require("../../models/categoryModel");
 const product = require("../../models/productModel");
-const {multipleimages,deleteImage} = require("../../utilities/uploadImage");
+const {multipleimages,deleteImage,imageUpload} = require("../../utilities/uploadImage");
 
 const addCategory = async (req, res) => {
 
@@ -53,13 +53,19 @@ const editCategory = async (req, res) => {
   try {
     const id = req.query.id;
     const name = req.body.name;
-    const images = req.files.image
-    const url = await multipleimages(images);
-    await category.findByIdAndUpdate(id, { $set: {
+    const images = req.file
+    const url = await imageUpload(images);
+    console.log(id);
+    const data = await category.findByIdAndUpdate(id, { $set: {
       name: name,
       image:url
     } });
-    res.redirect("/admin/category");
+    // res.redirect("/admin/category");
+    if(data){
+      res.json({data:true})
+    }else{
+      res.json({data:false})
+    }
   } catch (error) {
     console.log(error);
   }
@@ -72,7 +78,7 @@ const loadCategory = async (req, res) => {
     for (let i = 0; i < categories.length; i++) {
       productValue[i] = await product.findOne({ category: categories[i]._id});
     }
-    console.log(productValue);
+    // console.log(productValue);
     res.render("admin/category", { categories:categories , productValue });
   } catch (error) {
     console.log(error);

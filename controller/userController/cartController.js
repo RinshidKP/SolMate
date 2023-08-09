@@ -10,7 +10,7 @@ const loadcart = async (req, res) => {
     const category = await Category.find();
     let countCart= 0;
     if(req.session.user_id){
-      countCart=res.locals.count+1  
+      countCart=res.locals.count
     }
     const productsArray = [];
 
