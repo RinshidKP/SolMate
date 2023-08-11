@@ -48,7 +48,7 @@
         <div class="container-fluid">
           <div class="row">
             <div class="col-sm-7 col-md-7">
-              <div id="colorlib-logo"><a href="index.html">Footwear</a></div>
+              <div id="colorlib-logo"><a href="/user">Footwear</a></div>
             </div>
             <div class="col-sm-3 col-md-3 mt-3">
               <form  class="search-wrap">
@@ -83,12 +83,12 @@
           <div class="row">
             <div class="col-sm-12 text-left menu-1">
               <ul>
-                <li class="active"><a href="index.html">Home</a></li>
+                <li class="active"><a href="/user">Home</a></li>
                 <li class="has-dropdown">
-                  <a href="men.html">Men</a>
+                  <a href="/product">Men</a>
                 </li>
-                <li><a href="women.html">Women</a></li>
-                <li><a href="about.html">About</a></li>
+                <li><a href="/product">Women</a></li>
+                <li><a href="/about">About</a></li>
                 <li><a href="contact.html">Contact</a></li>
                 <li class="cart"><a href="/cart"><i class="icon-shopping-cart"></i> Cart [<%=countCart%>]</a></li>
               </ul>
@@ -194,7 +194,7 @@
           <%categories.forEach((category)=>{%>
           <div class="col-sm-6 text-center">
             <div class="featured">
-              <a href="/user/category?id:<%=category._id%>" class="featured-img d-flex align-items-center justify-content-center bg-image bg-image-cover" style="background-image: url('<%=category.image[0].url%>');">
+              <a href="/product/?category=<%= [category._id.toString()] %>" class="featured-img d-flex align-items-center justify-content-center bg-image bg-image-cover" style="background-image: url('<%=category.image[0].url%>');">
                 <h1 class="text-light"><%=category.name%></h1>
               </a>
               <div class="desc">
@@ -211,7 +211,7 @@
       <div class="container">
         <div class="row">
           <div class="col-sm-8 offset-sm-2 text-center colorlib-heading">
-            <h2>Best Sellers</h2>
+            <h2> Latest Products</h2>
           </div>
         </div>
         <div class="row row-pb-md">

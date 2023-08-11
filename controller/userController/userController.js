@@ -13,7 +13,9 @@ const loadhome = async (req, res) => {
   try {
     
       const categories = await category.find();
-      const products = await Product.find({ isActive: true });
+      const products = await Product.find({ isActive: true })
+      .sort({ created: -1 })
+      .limit(4);
       const session = req.session.user_id;
       let countCart= 0;
       if(req.session.user_id){
@@ -70,7 +72,8 @@ const loadProduct = async (req, res) => {
         {price: {$gt:minamount}},
         {price: {$lt: maxamount}},
       ]
-    });
+    }).skip(skip)
+      .limit(limit);;
     let filteredProducts = products
     if(req.query.category){
       filteredProducts = null;
@@ -84,17 +87,24 @@ const loadProduct = async (req, res) => {
           { price: { $lt: maxamount } }
         ],
         category: { $in: req.query.category } 
-      })
+      }).skip(skip)
+        .limit(limit);
     }
 
     
     const session = req.session.user_id;    
     if (req.xhr || req.headers.accept.indexOf('json') > -1) {
-      res.json({ products: filteredProducts });
+      res.json({ 
+        products: filteredProducts,
+        currentPage,
+        totalPages,
+        startIndex,
+        endIndex: skip + products.length,
+      });
     }else{
       res.render("user/shop", {
         session,
-        products:filteredProducts,
+        products: filteredProducts,
         categories,
         name: req.session.user_name,
         currentPage,
@@ -394,6 +404,23 @@ const deleteAddress = async (req, res) => {
   }
 };
 
+const loadAbout = (req,res)=>{
+  try {
+    const session = req.session.user_id;
+    let countCart= 0;
+    if(req.session.user_id){
+      countCart=res.locals.count
+    }
+    res.render('user/about',{
+      session,
+      countCart,
+      name:req.session.user_name,
+    })
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 module.exports = {
   loadhome,
   loadProduct,
@@ -410,4 +437,5 @@ module.exports = {
   loadEditAddress,
   saveEditAddress,
   deleteAddress,
+  loadAbout
 };

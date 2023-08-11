@@ -13,6 +13,7 @@ const wallet = require('../controller/userController/walletController');
 router.get('/user',user.loadhome);
 router.get('/product',user.loadProduct);
 router.get('/product/shop',user.viewProduct);
+router.get('/about',user.loadAbout);
 //user setups
 router.get('/signup',userMiddleware.isLogout,auth.loadSignup);
 router.post('/signup',userMiddleware.isLogout,auth.createUser);

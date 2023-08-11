@@ -1,12 +1,35 @@
 <%- include("./layout/header") %>
+<style>
+
+    .dataTables_wrapper .dataTables_filter {   
+        margin: 1rem 0;
+    }
+
+.off:hover {
+  background-color: #EEEEEE !important;
+  color: #fff !important;
+}
+.dataTables_wrapper .dataTables_filter {   
+        margin: 1rem 0;
+    }
+
+    .dataTables_wrapper .dataTables_length {
+        margin-top: 1rem;
+    }
+
+    .off:hover {
+        background-color: #EEEEEE !important;
+        color: #fff !important;
+    }
+</style>
 <div class="container-fluid d-flex gap-4 rouneded">
         
 
 
     <div style="overflow-y: auto;" class="w-100 d-flex align-items-center align-items-center">
 
-        <div class="table m-5" >
-            <table class="table table-light table-striped table-responsive" >
+        <div  class="table m-5" >
+            <table id="ordersTable" class="table table-light table-striped table-responsive" >
             <thead>
                 
                 <tr>
@@ -44,4 +67,19 @@
 
    
 </div>
+<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+<!-- <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#ordersTable').DataTable({
+            lengthMenu: [5, 10, 25, 50],
+            pageLength: 5,
+            ordering: true,
+            searching: true,
+            paging: true,
+            // Other DataTables options go here
+        });
+    });
+</script> -->
 <%- include("./layout/footer.ejs") %>

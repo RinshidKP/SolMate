@@ -31,7 +31,7 @@ const loadCheckOutAddress = async (req, res) => {
 
     res.render("user/checkOutAddress", {
       session,
-      name: req.session.name,
+      name: req.session.user_name,
       user: userData,
       contact: contactAddress,
       main: mainAddress,
@@ -102,7 +102,7 @@ const checkoutProceed = async (req, res) => {
     res.render('user/checkOutPayment',
       {
         session,
-        name: req.session.name,
+        name: req.session.user_name,
         address,
         addressId,
         cart,
@@ -118,7 +118,6 @@ const checkoutProceed = async (req, res) => {
 const checkout = async (req, res) => {
   try {
     const userId = req.session.user_id;
-    // console.log("Sorry Am Here Again");
     const cart = await Cart.findOne({ userId: userId }).populate("products.productId");
     const cartItems = cart.products;
     const {
@@ -126,7 +125,7 @@ const checkout = async (req, res) => {
       addressId,
       couponId
     } = req.body;
-    
+
     const sizes = cart.products.size;
     let value = 0
     const method = req.body.shippingOption;
@@ -143,7 +142,7 @@ const checkout = async (req, res) => {
         res.json({wallet:"noprice"})
         return;
       }
-      console.log(couponId);
+      // console.log(couponId);
           if(wallet){
               let newBalance = balance - totalPrice;
               let history = {
@@ -156,9 +155,11 @@ const checkout = async (req, res) => {
               const yes = await wallet.save();
               // console.log(history);
               // console.log(yes+'yesss');
-              console.log(couponId);
+              // console.log(couponId);
               if (couponId) {
                   const coupon = await Coupon.findById(couponId);
+                  coupon.owners.push({user:req.session.user_id , quantity:1})
+                  coupon.save()
                   const discount = parseInt(coupon.discount)
                   const total = totalPrice - discount;
                   const newOrder = new Order({
@@ -197,6 +198,8 @@ const checkout = async (req, res) => {
     if (couponId) {
       const coupon = await Coupon.findById(couponId);
       if (coupon) {
+        coupon.owners.push({user:req.session.user_id , quantity:1})
+        coupon.save()
         const discount = parseInt(coupon.discount)
         const total = totalPrice - discount;
         const newOrder = new Order({
@@ -311,22 +314,13 @@ const payOnline = async (req, res) => {
 const applyCoupon = async (req, res) => {
   try {
     const { couponName, addressId, totalPrice } = req.body;
-    const coupon = await Coupon.findOne({ name: couponName });
-
+    const coupon = await Coupon.findOne({
+       name: couponName,
+       "owners.user": { $ne: req.session.user_id } 
+      });
     if (coupon) {
 
       if (totalPrice >= coupon.minAmount) {
-  
-        // const address = await addressModel.findOne({_id: addressId})
-        // const cart = await Cart.findOne({userId: address.user});
-        // let productList = [];
-        // const product = await Cart
-        // .findOne({userId: address.user})
-        // .populate("items.productId");
-
-        // product.items.forEach((item)=>{
-        // productList.push(item.productId)
-        // })
         res.json({ response: true, coupon: coupon })
 
       } else {
@@ -356,8 +350,7 @@ const orderSuccess = async (req, res) => {
     const user = order.user;
     const address = order.address;
     const products = order.items;
-    // console.log(typeof products);
-    res.render('user/success', { order, session: req.session.user_id, name: req.session.name,countCart,user,address,products })
+    res.render('user/success', { order, session: req.session.user_id,name: req.session.user_name,countCart,user,address,products })
   } catch (error) {
     console.log(error);
   }

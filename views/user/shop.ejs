@@ -104,51 +104,60 @@
 <div class="container">
   <div class="row">
     <!-- Sidebar Start -->
-    <div class="col-md-3 fixed-sidebar mt-5 mb-5 ml-0 ">
-      <form class="mx-3 my-3" id="searchForm" method="GET">
-        <div class="input-group" style="width: fit-content;">
-          <input type="search" id="searchInput" name="search" class="form-control" placeholder="Search">
-          <button type="submit" class="btn btn-dark">Search</button>
-        </div>
-      </form>
-
-      <form method="get" class="mx-3 mt-3">
-        <u><span class="fs-3 u" disabled>Categories</span></u>
-        <div class="" id="categoryContainer">
-          <%for(cat of categories){%>
+    <div class="col-md-3 mt-5 mb-5 ml-0">
+      <div class="sticky-top">
+        <!-- Mobile Filter Button -->
+        <button class="btn btn-dark  d-md-none mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#filterCollapse" aria-expanded="false" aria-controls="filterCollapse">
+          Filters  <i class="fas fa-chevron-down"></i>
+        </button>
+      <div class="collapse d-md-block" id="filterCollapse">
+        <form class="mx-3 my-3" id="searchForm" method="GET">
+          <div class="input-group">
+            <input type="search" id="searchInput" name="search" class="form-control" placeholder="Search">
+            <button type="submit" class="btn btn-dark">Search</button>
+          </div>
+        </form>
+    
+        <form method="get" class="mx-3 mt-3">
+          <u><span class="fs-3 u" disabled>Categories</span></u>
+          <div class="" id="categoryContainer">
+            <%for(cat of categories){%>
             <div>
               <label class="fs-5 text-decoration-none text-dark">
                 <input type="checkbox" checked name="selectedCat" value="<%= cat._id %>" />
                 <%= cat.name %>
               </label>
             </div>
-          <%}%>
-            </div>
-            <!-- <button type="button" onclick="getSelectedCategories()" class="btn btn-light">Apply Filters</button> -->
-          </form>  
-          <div class="card-sm rounded " style="background-color: #447490; width:fit-content;">
-            <div class="card-header d-flex justify-content-center fs-5">
-              <p>  Price  </p>
-            </div>
-            <div class="card-body range_container mt-3 ">
-              <div class="sliders_control">
-                  <input id="fromSlider" type="range" value="0" min="0" max="100"/>
-                  <input id="toSlider" type="range" value="100" min="0" max="100"/>
-              </div>
-              <div class="card-footer form_control mt-0">
-                  <div class="form_control_container ">
-                      <div class="form_control_container__time fs-6 d-none">Min</div>
-                      <input class="form_control_container__time__input" style="background-color: #447490;" type="number" id="fromInput" value="0" min="0" max="100"/>
-                  </div>
-                  <div class="form_control_container">
-                      <div class="form_control_container__time fs-6 d-none">Max</div>
-                      <input class="form_control_container__time__input" style="background-color: #447490;" type="number" id="toInput" value="100" min="0" max="100"/>
-                  </div>
-              </div>
-                  <button class="btn btn-sm btn-secondary" onclick="resetPage()" id="clearFiltersButton">Clear Filters</button>
+            <%}%>
           </div>
+          <!-- <button type="button" onclick="getSelectedCategories()" class="btn btn-light">Apply Filters</button> -->
+        </form>
+        <div class="card-sm rounded " style="background-color: #447490; width:fit-content;">
+          <div class="card-header d-flex justify-content-center fs-5">
+            <p>Price</p>
           </div>
+          <div class="card-body range_container mt-3">
+            <div class="sliders_control">
+              <input id="fromSlider" type="range" value="0" min="0" max="100" />
+              <input id="toSlider" type="range" value="100" min="0" max="100" />
+            </div>
+            <div class="card-footer form_control mt-0">
+              <div class="form_control_container ">
+                <div class="form_control_container__time fs-6 d-none">Min</div>
+                <input class="form_control_container__time__input" style="background-color: #447490;" type="number" id="fromInput" value="0" min="0" max="100" />
+              </div>
+              <div class="form_control_container">
+                <div class="form_control_container__time fs-6 d-none">Max</div>
+                <input class="form_control_container__time__input" style="background-color: #447490;" type="number" id="toInput" value="100" min="0" max="100" />
+              </div>
+            </div>
+            <button class="btn btn-sm btn-secondary" onclick="resetPage()" id="clearFiltersButton">Clear Filters</button>
+          </div>
+        </div>
+      </div>
+      </div>
     </div>
+    
     <!-- Sidebar End -->
     <div class="col-md-9 mb-5 mt-5">
       <form id="productForm">
@@ -172,6 +181,22 @@
         </div>
       </form>
     </div>
+    <div class="col-md-12 d-flex justify-content-center mt-4">
+      <ul class="pagination">
+        <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+          <a class="page-link" href="?page=<%= currentPage - 1 %>">Previous</a>
+        </li>
+        <% for (let page = 1; page <= totalPages; page++) { %>
+          <li class="page-item <%= page === currentPage ? 'active' : '' %>">
+            <a class="page-link" href="?page=<%= page %>"><%= page %></a>
+          </li>
+        <% } %>
+        <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
+          <a class="page-link" href="?page=<%= currentPage + 1 %>">Next</a>
+        </li>
+      </ul>
+    </div>
+    
   </div>
 </div>
 <!-- Shop Product End -->

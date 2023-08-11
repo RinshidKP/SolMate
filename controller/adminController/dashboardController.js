@@ -98,7 +98,7 @@ const loadDashboard = async (req,res)=>{
     }
 }
 
-const loadSalesReport = async (req,res)=>{
+const loadSalReport = async (req,res)=>{
     try {
         let yearly = await Order.aggregate([
             {
@@ -121,7 +121,170 @@ const loadSalesReport = async (req,res)=>{
         console.log(error);
     }
 }
+//yearly
+const loadSalesReport = async (req, res)=>{
+  try {
+
+      const yearly = await Order.aggregate([
+          {
+              $match: { order_status: {$eq: "delivered"}}
+          },
+          {
+              $group: {
+                  _id: {
+                      year: {$year: "$order_date"},
+                  },
+                  items: {$sum: { $size: "$items" }},
+                  count: {$sum: 1},
+                  total: {$sum: "$total"}
+              }
+          }
+          
+      ]);
+
+      res.render('admin/dashboardSales',{yearly});
+      
+  } catch (error) {
+      console.log(error);
+  }
+}
+
+//monthly
+const monthlySaleReport = async (req, res)=>{
+  try {
+
+      const sales = await Order.aggregate([
+          {
+              $match: { order_status: {$eq: "delivered"}}
+          },
+          {
+              $group: {
+                  _id: {
+                      month: {$month: "$order_date"},
+                  },
+                  items: {$sum: { $size: "$items" }},
+                  count: {$sum: 1},
+                  total: {$sum: "$total"}
+              }
+          },
+          {$sort: {"_id.month": 1}},
+          
+      ]);
+
+      const months = [
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+          "August",
+          "September",
+          "October",
+          "November",
+          "December",
+      ];
+
+      const monthlySales = sales.map((sale)=>{
+          let oneSale = {...sale};
+          oneSale._id.month = months[oneSale._id.month - 1]
+          return oneSale;
+      })
+      
+      console.log(monthlySales);
+      res.json({ monthlySales, error: false })
+
+  } catch (error) {
+      console.log(error);
+  }
+}
+
+const dailySalesReport = async (req, res)=>{
+  try {
+
+      const dailySales = await Order.aggregate([
+          {
+              $match: { order_status: {$eq: "delivered"}}
+          },
+          {
+              $group: {
+                  _id: {
+                      Year: {$year: "$order_date"},
+                      Month: {$month: "$order_date"},
+                      Day: {$dayOfMonth: "$order_date"}
+                  },
+                  items: {$sum: { $size: "$items" }},
+                  count: {$sum: 1},
+                  total: {$sum: "$total"}
+              }
+          },
+          {
+              $sort: {"_id.Year": -1,"_id.Month": 1,"_id.Day": 1}
+          },
+          
+      ]);
+      console.log(dailySales);
+      res.json({dailySales, error: false})
+      
+  } catch (error) {
+      console.log(error);
+  }
+}
+
+const byDateSaleReport = async (req, res)=>{
+  try {
+
+      const { dateRange } = req.body;
+
+      const date = dateRange.split("-");
+      const startDate = date[0].trim();
+      const endDate = date[1].trim();
+
+      
+      const [startDay, startMonth, startYear] = startDate.split('/');
+      const [endDay, endMonth, endYear] = endDate.split('/');
+      
+      const formattedStartDate = `${startYear}-${startMonth.padStart(2, '0')}-${startDay.padStart(2, '0')}T00:00:00.000Z`;
+      const formattedEndDate = `${endYear}-${endMonth.padStart(2, '0')}-${endDay.padStart(2, '0')}T00:00:00.000Z`;
+      
+
+      const byDateSales = await orderModel.aggregate([
+          {
+              $match: {
+                  order_status: "delivered",
+                  order_date: {
+                      $gte: new Date(formattedStartDate), 
+                      $lte: new Date(formattedEndDate)
+                  }
+              }
+          },
+          {
+              $group: {
+                  _id: {
+                      Year: {$year: "$order_date"},
+                      Month: {$month: "$order_date"},
+                      Day: {$dayOfMonth: "$order_date"}
+                  },
+                  items: {$sum: { $size: "$items" }},
+                  count: {$sum: 1},
+                  total: {$sum: "$total"}
+              }
+          },
+          {
+              $sort: {"_id.Year": -1,"_id.Month": 1,"_id.Day": 1}
+          },
+      ])
+
+      res.json({byDateSales, error: false});
+      
+  } catch (error) {
+      console.log(error);
+  }
+}
 module.exports={
     loadDashboard,
-    loadSalesReport
+    loadSalesReport,
+    monthlySaleReport,
+    dailySalesReport
 }
