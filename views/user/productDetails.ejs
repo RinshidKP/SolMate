@@ -236,23 +236,24 @@
 }
 
 </style>
-  <div id="page" class="w-100 mb-4">
-    <div class="colorlib-product m-5">
-      <div class="container-fluid">
-        <div class="row row-pb-lg product-detail-wrap">
-          <div class="col-sm-8">
+<div id="page" class="w-100 mb-4">
+  <div class="colorlib-product m-5">
+    <div class="container-fluid">
+      <div class="row row-pb-lg product-detail-wrap">
+        <div class="col-md-8">
             <div class="owl-carousel ">
               <div id="product-carousel" class="carousel slide " data-ride="carousel">
                 <div class="carousel-inner ">
                   <% products.image.forEach((image, index)=> { %>
 
-                    <div class=" carousel-item <%= index === 0 ? 'active' : '' %> zoom-container zoomWindowContainer">
+                    <div class="carousel-item <%= index === 0 ? 'active' : '' %> zoom-container zoomWindowContainer">
                       <div class="product-entry border product-image-container">
                         <a href="#" class="prod-img">
-                          <img id="productImage" src="<%= image.url %>" class="img-fluid zoom image-fluid" alt="Product Image" />
+                          <img id="productImage" src="<%= image.url %>" class="img-fluid custom-carousel-image zoom image-fluid" alt="Product Image" />
                         </a>
                       </div>
                     </div>
+                    
                     <% }) %>
                 </div>
 
@@ -270,7 +271,7 @@
               </div>
             </div>
           </div>
-          <div class="col-sm-4 ">
+          <div class="col-md-4">
             <div class="product-desc">
               <div class="block-26 ">
                 <h3 class="text-retro" >Product Name</h3>
@@ -369,7 +370,7 @@
         </div>
 
         <div class="row">
-          <div class="col-sm-12">
+          <div class="col-md-12">
             <div class="row">
               <div class="col-md-12 pills">
                 <div class="bd-example bd-example-tabs">
@@ -383,7 +384,6 @@
                         aria-controls="pills-review" aria-expanded="true">Review</a>
                     </li>
                   </ul>
-
                   <div class="tab-content" id="pills-tabContent">
                     <div class="tab-pane border fade show active" id="pills-description" role="tabpanel" aria-labelledby="pills-description-tab">
                       <div class="container">

@@ -249,7 +249,7 @@ const byDateSaleReport = async (req, res)=>{
       const formattedEndDate = `${endYear}-${endMonth.padStart(2, '0')}-${endDay.padStart(2, '0')}T00:00:00.000Z`;
       
 
-      const byDateSales = await orderModel.aggregate([
+      const byDateSales = await Order.aggregate([
           {
               $match: {
                   order_status: "delivered",
@@ -286,5 +286,6 @@ module.exports={
     loadDashboard,
     loadSalesReport,
     monthlySaleReport,
-    dailySalesReport
+    dailySalesReport,
+    byDateSaleReport
 }

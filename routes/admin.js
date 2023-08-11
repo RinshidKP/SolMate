@@ -16,6 +16,7 @@ router.get('/dashboard',admin.isLogin,dashBoard.loadDashboard)
 router.get('/dashboard/report',admin.isLogin,dashBoard.loadSalesReport)
 router.post('/dashboard/report/month',admin.isLogin,dashBoard.monthlySaleReport)
 router.post('/dashboard/report/daily',admin.isLogin,dashBoard.dailySalesReport)
+router.post('/dashboard/report/date',admin.isLogin,dashBoard.byDateSaleReport)
 //Coupons
 router.get('/coupons',coupon.loadCoupon);
 router.get('/coupons/add',coupon.loadAddCoupon);

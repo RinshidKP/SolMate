@@ -92,6 +92,9 @@ const checkoutProceed = async (req, res) => {
     if (userwallet.wallet) {
       wallet = await Wallet.findById(userwallet.wallet);
     }
+    const coupons = await Coupon.find({
+      "owners.user": { $ne: req.session.user_id } 
+     });
     let countCart= 0;
     if(req.session.user_id){
       countCart=res.locals.count+1
@@ -108,7 +111,8 @@ const checkoutProceed = async (req, res) => {
         cart,
         wallet,
         productList,
-        countCart
+        countCart,
+        coupons
       })
   } catch (error) {
     console.log(error);

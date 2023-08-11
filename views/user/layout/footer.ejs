@@ -12,6 +12,17 @@
    <script>
      $(document).ready(function() {
        $('.dropdown-toggle').dropdown();
+       $('.zoom').mouseenter(function() {
+    $(this).elevateZoom({
+      cursor: 'crosshair',
+      zoomWindowWidth: 250, 
+      zoomWindowHeight: 250,
+      zoomWindowOffetx: 100,
+      zoomLevel: .8,
+    });
+  }).mouseleave(function() {
+    $(this).removeData('elevateZoom');
+  });
      });
    </script>
 
@@ -22,7 +33,6 @@
 
   const selectedValues = []
   $(document).ready(function() {
-    
   const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
   checkboxes.forEach(checkbox => {
     if (checkbox) {
@@ -101,21 +111,6 @@
   $('#searchForm').submit(function(event) {
     event.preventDefault();
     handleSliderChange(event);
-  });
-});
-
-
-  $(document).ready(function() {
-  $('.zoom').mouseenter(function() {
-    $(this).elevateZoom({
-      cursor: 'crosshair',
-      zoomWindowWidth: 250, 
-      zoomWindowHeight: 250,
-      zoomWindowOffetx: 100,
-      zoomLevel: .8,
-    });
-  }).mouseleave(function() {
-    $(this).removeData('elevateZoom');
   });
 });
 

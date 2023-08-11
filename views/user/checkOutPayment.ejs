@@ -89,6 +89,101 @@ body {
 .site-btn:hover {
   background-color: #45a049;
 }
+/* Global Styles */
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #f8f8f8;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+/* Header Styles (add your header styling here) */
+
+/* Form and Checkout Styles */
+.checkout {
+  padding: 50px 0;
+}
+
+.checkout__form h4 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.cardx {
+  border: none;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.cardx:hover {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.card-title {
+  margin-bottom: 0;
+}
+
+/* Coupon Modal Styles */
+.modal-body {
+  overflow-y: scroll;
+  max-height: 250px;
+}
+
+/* Payment Options and Shipping Methods */
+.card-body[role="button"] {
+  padding: 15px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  cursor: pointer;
+}
+
+.card-body[role="button"]:hover {
+  background-color: #f5f5f5;
+  transform: scale(1.02);
+}
+
+/* Total Order Section */
+.checkout_order_products {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.checkout_order_subtotal,
+.checkout_order_total {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.site-btn {
+  display: inline-block;
+  background-color: #4caf50;
+  color: #ffffff;
+  padding: 12px 30px;
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.site-btn:hover {
+  background-color: #45a049;
+}
+
 
 </style>
 <section class="checkout spad mt-5 mb-2">
@@ -108,6 +203,41 @@ body {
               </div>
             </div>
           </form>
+          <!-- Button trigger modal -->
+          <button type="button" class="btn btn-secondary btn-sm shadow-none " data-toggle="modal" data-target="#exampleModalCenter">
+            Availabe coupons
+        </button>
+        
+        <!-- Modal -->
+        <div class="modal fade " id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Coupons</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body" style="overflow-y: scroll;height: 250px;">
+                    <% for(coupon of coupons){ %>
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="font-weight-bold text-dark">Coupon:<span class="mx-1 text-secondary"><%= coupon.name %></span></div>
+                            <div class="font-weight-bold">Minimum Amount:<span class="mx-2 text-danger">&#8377;<%= coupon.minAmount %></span></div>
+                            <div class="font-weight-bold">Discount Amount:<span class="mx-2 text-secondary">&#8377;<%= coupon.discount %></span></div>
+                        </div>
+                    </div>
+                    <% } %>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+            </div>
+        </div>
+
+
+    </div>
         </div>
       </div>
 
@@ -146,6 +276,51 @@ body {
                   </div>
                 </div>
               </div>
+              <div class="card">
+                <div class="card-body bg-light p-30 mb-5">
+                    <div class="row">
+                        <div class="col-md-6 form-group">
+                            <label>Full Name</label>
+                            <input class="form-control" type="text" value="<%=name%>">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Building Name</label>
+                            <input class="form-control" type="text" value="<%=address.buildingName%>">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Street</label>
+                            <input class="form-control" type="text" value="<%=address.street%>">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Mobile No</label>
+                            <input class="form-control" type="text" value="<%=address.phonenumber%>">
+                        </div>
+            
+                        <div class="col-md-6 form-group">
+                            <label>Country</label>
+                            <input class="form-control" type="text" value="<%=address.country%>">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>City</label>
+                            <input class="form-control" type="text" value="<%=address.city%>">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>State</label>
+                            <input class="form-control" type="text" value="<%=address.state%>">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>ZIP Code</label>
+                            <input class="form-control" type="text" value="<%=address.pincode%>">
+                        </div>
+                        <div class="col-md-12 form-group">
+                           
+                        </div>
+                        <div class="col-md-12">
+                           
+                        </div>
+                    </div>
+                </div>
+            </div>            
             </div>
           </div>
           <input type="hidden" id="addressId" name="addressId" value="<%= addressId %>">
@@ -176,7 +351,9 @@ body {
                   </div>
                 </div>
               </div>
+              
             </div>
+            
 
             <div class="row">
               <div class="col-md-12">
