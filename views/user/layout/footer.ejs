@@ -70,12 +70,123 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-p6ts1mDUsa8Ex4R+nss9quK8hOuvFZnSM3o/z4YsHhm4m4n/qDTxjs0Vfylu9tS5" crossorigin="anonymous"></script>
 
 </body>
-    
-<footer class="bg-light py-3 down">
-    <div class="container">
-        <!-- Footer section for the profile page -->
-        <p>&copy; 2023 SolMate. All rights reserved.</p>
-        <!-- Add any additional footer elements here -->
-    </div>
+    <style>
+      /* Adjusting padding and background color for the footer */
+#colorlib-footer {
+    padding: 40px 0;
+    background-color: #f8f8f8;
+}
+
+/* Styling for the footer sections */
+.colorlib-widget h4 {
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.colorlib-widget p {
+    color: #777;
+    line-height: 1.8;
+}
+
+.colorlib-footer-links li {
+    margin-bottom: 8px;
+}
+
+.colorlib-footer-links a {
+    color: #555;
+    transition: color 0.3s ease;
+}
+
+.colorlib-footer-links a:hover {
+    color: #f26c4f;
+}
+
+/* Styling for the contact information section */
+.colorlib-footer-links li:first-child {
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+/* Styling for the copyright section */
+.copy {
+    padding-top: 20px;
+    border-top: 1px solid #ccc;
+    color: #777;
+}
+
+.copy p {
+    font-size: 14px;
+}
+
+.copy a {
+    color: #f26c4f;
+}
+
+.copy a:hover {
+    text-decoration: none;
+}
+
+/* Adding padding to top and bottom of the footer */
+.footer-col {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+/* Adding some space between columns on smaller screens */
+@media (max-width: 767px) {
+    .footer-col {
+        margin-bottom: 20px;
+    }
+}
+
+    </style>
+<footer id="colorlib-footer" role="contentinfo">
+  <div class="container">
+      <div class="row row-pb-md">
+          <div class="col-md-3 col-sm-6 footer-col colorlib-widget">
+              <h4>About Footwear</h4>
+              <p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life</p>
+          </div>
+          <div class="col-md-2 col-sm-6 footer-col colorlib-widget">
+              <h4>Useful Links</h4>
+              <ul class="colorlib-footer-links">
+                  <li><a href="/user/profile">Profile</a></li>
+                  <li><a href="/user/order">Orders</a></li>
+                  <li><a href="/cart">Cart</a></li>
+                  <li><a href="/product">Shop</a></li>
+              </ul>
+          </div>
+          <div class="col-md-3 col-sm-6 footer-col colorlib-widget">
+              <h4>Information</h4>
+              <ul class="colorlib-footer-links">
+                  <li><a href="/about">About us</a></li>
+                  <li>Our Vision <a>Revolutionizing shoe shopping with diverse, quality footwear for all styles</a></li>
+              </ul>
+          </div>
+          <div class="col-md-4 col-sm-6 footer-col">
+              <h4>Contact Information</h4>
+              <ul class="colorlib-footer-links">
+                  <li>291 South 21th Street, <br> Suite 721 New York NY 10016</li>
+                  <li><a href="tel://1234567920">+1235 2355 98</a></li>
+                  <li><a href="mailto:info@yoursite.com">info@yoursite.com</a></li>
+                  <li><a href="#">yoursite.com</a></li>
+              </ul>
+          </div>
+      </div>
+  </div>
+  <div class="copy">
+      <div class="row">
+          <div class="col-sm-12 text-center">
+              <p>
+                  <span>
+                      Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved
+                  </span>
+                  <span class="block">SolMate <a href="http://unsplash.co/" target="_blank">@Rinshid</a> </span>
+              </p>
+          </div>
+      </div>
+  </div>
 </footer>
+
 </html>

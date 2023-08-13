@@ -58,7 +58,6 @@ const createUser = async (req, res) => {
         });
         
         const otpHash = await sendOtp(newUser);
-        // res.cookie("otpHash", secret.base32, option);
         const option = {
           maxAge: 300000,
           httpOnly: true,
@@ -67,8 +66,6 @@ const createUser = async (req, res) => {
         res.cookie('otpHash', otpHash, { maxAge: 120000, httpOnly: true }); 
         const User=savedUser._id;
         res.cookie('newUser', User, { maxAge: 120000, httpOnly: true }); 
-        
-        // await mailStructure(savedUser);
         res.redirect("/otp");
       }
     }
@@ -234,7 +231,6 @@ const loginVerify = async (req, res) => {
         } else {
           if(!userData.isVerified){
             let otpHash = await sendOtp(userData)
-            // req.session.secret=otpHash;
             res.cookie('otpHash', otpHash, { maxAge: 120000, httpOnly: true }); 
             const newUser=userData._id;
             res.cookie('newUser', newUser, { maxAge: 120000, httpOnly: true }); 
@@ -249,7 +245,7 @@ const loginVerify = async (req, res) => {
               if(newRoute){
                 res.redirect(`/product/shop?id=${newRoute}`)
               } else {
-                res.redirect("/user");
+                res.redirect("/");
               }  
             }else{
               res.render('auth/login',{message:"Access Denied"})
@@ -331,12 +327,6 @@ const forgotPassword = async (req,res)=>{
 
     if(userData){
       let otpHash = await sendOtp(userData)
-      // otp = otp.toString()
-      // console.log(otp);
-      // req.session.secret = otp.secret
-      // const otpHash = await secretHash(otp)
-      // console.log(otpHash);
-      // const otpHash = await bcrypt.hash(otp, 10);
       res.cookie('otpHash', otpHash, { maxAge: 120000, httpOnly: true }); 
         res.cookie('userId',userData._id,{httpOnly:true})
         res.render('auth/otpAuth',{localAction:"/forgot/submit"});
@@ -381,52 +371,3 @@ module.exports = {
   changePassword,
   loadChangePassword
 };
-
-
-// const verifyEmail = (req, res) => {
-//   try {
-//     res.render("auth/verifyEmail", { message: null });
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
-
-// const emailVerification = async (req, res) => {
-//   try {
-//     userId = req.query.id;
-//     await userModel.findByIdAndUpdate(req.query.id, {
-//       $set: { isVerified: true },
-//     });
-//     res.redirect("/login");
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
-
-// const mailStructure = async (savedUser) => {
-//   try {
-//     const transporter = nodemailer.createTransport({
-//       host: "smtp.gmail.com",
-//       port: 587,
-//       secure: false,
-//       requireTLS:true,
-//       auth: {
-//         user: process.env.EMAIL_USER,
-//         pass: process.env.EMAIL_PASS,
-//       },
-//     });
-  
-//     var message = {
-//       from: process.env.EMAIL_USER,
-//       to: savedUser.email,
-//       subject: "Verify Your Mail",
-//       text: "Hello Dear",
-//       html: `<p>To verify your <b>SolMate</b> account <a href="http://localhost:${process.env.PORT}/signup/success/?id=${savedUser._id}">click here<a></p>`,
-//     };
-  
-//     const info = await transporter.sendMail(message);
-//     console.log("message send : ", info.messageId);
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
