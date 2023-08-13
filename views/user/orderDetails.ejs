@@ -119,8 +119,13 @@
                     
                    
                     <div class="card mx-3">
-                        <div class="card-header">
-                            Order details<br><small>Your order items</small>
+                        <div class="card-header d-flex justify-content-between">
+                            <div>
+                                Order details<br><small>Your order items</small>
+                            </div>
+                            <div>
+                                <kbd onclick="downloadBill()" class="btn btn-sm btn-secondary" >Download Reciept</kbd>
+                            </div>
                         </div>
                      <div class="card-body" style="overflow: auto;">
                         <table class="table text-center table-light ">
@@ -229,6 +234,41 @@
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
             <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
             <script>
+                function downloadBill() {
+                    console.log("hi");
+                    $.ajax({
+                        type: "POST",
+                        url: "/order/download",
+                        data: {
+                            orderId: '<%= order._id %>'
+                        },
+                        success:async function (res){
+                            if(res.pdfBuffer){
+                                const blob = await response.blob();
+                                const blobUrl = URL.createObjectURL(blob);
+
+                                const a = document.createElement('a');
+                                a.href = blobUrl;
+                                a.download = `invoice-${orderId}.pdf`; 
+                                a.style.display = 'none';
+                                document.body.appendChild(a);
+                                a.click();
+
+                                // Clean up
+                                URL.revokeObjectURL(blobUrl);
+                                document.body.removeChild(a);
+                            }else{
+                                Swal.fire("error!", "Try Again Later.", "Failed").then((response) => {
+                                    // $.get(location.href, function(data) {
+                                    //     $("#order-track").html($(data).find("#order-track").html());
+                                    //     // $("#order-return").html($(data).find("#order-return").html());
+                                    // });
+                                })                                
+                            }
+                        }
+                        
+                    })
+                }
             function removeOrder(orderId) {
                 Swal.fire({
                 icon: "warning",

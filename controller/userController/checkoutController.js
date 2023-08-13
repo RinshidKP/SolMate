@@ -129,7 +129,7 @@ const checkout = async (req, res) => {
       addressId,
       couponId
     } = req.body;
-
+    const address = await Address.findById(addressId);
     const sizes = cart.products.size;
     let value = 0
     const method = req.body.shippingOption;
@@ -168,7 +168,7 @@ const checkout = async (req, res) => {
                   const total = totalPrice - discount;
                   const newOrder = new Order({
                     user: userId,
-                    address: addressId,
+                    address: address,
                     items: cartItems,
                     quantity: value,
                     total: total,
@@ -182,7 +182,7 @@ const checkout = async (req, res) => {
               } else {
                 const newOrder = new Order({
                   user: userId,
-                  address: addressId,
+                  address: address,
                   items: cartItems,
                   quantity: value,
                   total: totalPrice,
@@ -208,7 +208,7 @@ const checkout = async (req, res) => {
         const total = totalPrice - discount;
         const newOrder = new Order({
           user: userId,
-          address: addressId,
+          address: address,
           items: cartItems,
           quantity: value,
           total: total,
@@ -223,7 +223,7 @@ const checkout = async (req, res) => {
     } else {
       const newOrder = new Order({
         user: userId,
-        address: addressId,
+        address: address,
         items: cartItems,
         quantity: value,
         total: totalPrice,

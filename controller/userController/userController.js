@@ -29,7 +29,7 @@ const loadhome = async (req, res) => {
         name: req.session.user_name,
         countCart
       });
-      console.log(session);
+      // console.log(session);
     
   } catch (error) {
     console.log(error);
@@ -39,14 +39,12 @@ const loadhome = async (req, res) => {
 const loadProduct = async (req, res) => {
   try {
     const currentPage = parseInt(req.query.page) || 1;
-    const itemsPerPage = 5;
+    const itemsPerPage = 4;
     const skip = (currentPage - 1) * itemsPerPage;
     const limit = itemsPerPage;
-    const productData = await Product.find().skip(skip).limit(limit);
-    const totalProduct = await Product.countDocuments();
-    const totalPages = Math.ceil(totalProduct / itemsPerPage);
     const startIndex = skip + 0;
     let countCart= 0;
+    const session = req.session.user_id;   
 
 
     if(req.session.user_id){
@@ -63,7 +61,8 @@ const loadProduct = async (req, res) => {
        minamount = req.query.fromValue;
        maxamount =  req.query.toValue;
     }
-    let products = await Product.find({
+    // const productData = await Product.find().skip(skip).limit(limit);
+    let query = {
       $or: [
         { name: { $regex: new RegExp(search, 'gi') } },
         { color: { $regex: new RegExp(search, 'gi') } }
@@ -72,46 +71,56 @@ const loadProduct = async (req, res) => {
         {price: {$gt:minamount}},
         {price: {$lt: maxamount}},
       ]
-    }).skip(skip)
-      .limit(limit);;
-    let filteredProducts = products
-    if(req.query.category){
-      filteredProducts = null;
-      filteredProducts = await Product.find({
-        $or: [
-          { name: { $regex: new RegExp(search, 'gi') } },
-          { color: { $regex: new RegExp(search, 'gi') } }
-        ],
-        $and: [
-          { price: { $gt: minamount } },
-          { price: { $lt: maxamount } }
-        ],
-        category: { $in: req.query.category } 
-      }).skip(skip)
-        .limit(limit);
     }
 
+
+    // let filteredProducts = products
+    if(req.query.category){
+      query.category = { $in: req.query.category };
+      // filteredProducts = null;
+      // filteredProducts = await Product.find({
+      //   $or: [
+      //     { name: { $regex: new RegExp(search, 'gi') } },
+      //     { color: { $regex: new RegExp(search, 'gi') } }
+      //   ],
+      //   $and: [
+      //     { price: { $gt: minamount } },
+      //     { price: { $lt: maxamount } }
+      //   ],
+    //     category: { $in: req.query.category } 
+    //   }).skip(skip)
+    //     .limit(limit);
+    }
+    let products = await Product.find(query).skip(skip)
+      .limit(limit);
+
+      const totalProduct = await Product.countDocuments(query);
+      const totalPages = Math.ceil(totalProduct / itemsPerPage);
+      console.log(totalProduct);
+      console.log(totalPages);
     
-    const session = req.session.user_id;    
+    
     if (req.xhr || req.headers.accept.indexOf('json') > -1) {
       res.json({ 
-        products: filteredProducts,
+        products: products,
+        pagination: {
         currentPage,
         totalPages,
         startIndex,
-        endIndex: skip + products.length,
+        endIndex: skip + totalProduct.length,
+        }
       });
     }else{
       res.render("user/shop", {
         session,
-        products: filteredProducts,
+        products: products,
         categories,
         name: req.session.user_name,
         currentPage,
         totalPages,
         startIndex,
         countCart,
-        endIndex: skip + productData.length,
+        endIndex: skip + totalProduct.length,
       });
     }
   } catch (error) {

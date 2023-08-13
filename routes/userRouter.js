@@ -39,6 +39,7 @@ router.get('/user/order',order.loadOrder);
 router.post('/user/order/cancel',order.cancelOrder)
 router.get('/user/order/view',order.viewDetails)
 router.post('/order/return',order.orderReturn)
+router.post('/order/download',order.orderDownload)
 router.get('/profile/wallet',wallet.loadWallet)
 // Address
 router.get('/user/profileAddress',userMiddleware.isLogin,user.loadUserAddress)

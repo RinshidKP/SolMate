@@ -1,6 +1,12 @@
 const Order = require('../../models/orderModel');
 const Product = require('../../models/productModel');
 const Wallet = require('../../models/walletModel')
+
+const fs = require("fs");
+const path = require('path')
+const puppeteer = require("puppeteer");
+const ejs = require("ejs");
+
 const loadOrder = async (req,res)=>{
     try {
     const session = req.session.user_id;
@@ -177,9 +183,44 @@ const cancelOrder = async (req, res) => {
     }
 }
 
+const orderDownload =async (req,res)=>{
+  try {
+    const orderId = req.body.orderId
+    const order = await Order.findById(orderId);
+    const filePath = path.join(__dirname, "..", "..", "views/user/bill.ejs");
+    // const data = fs.readFileSync(filePath, "utf8");
+
+    ejs.renderFile(filePath, { order }, (err, invoiceHtml) => {
+      if (err) {
+          console.error("Error rendering EJS template:", err);
+          return res.status(500).send("Error rendering invoice template.");
+      }
+
+      // Launch Puppeteer in the new Headless mode
+      (async () => {
+          const browser = await puppeteer.launch({ headless: "new" });
+          const page = await browser.newPage();
+          await page.setContent(invoiceHtml);
+          const pdfBuffer = await page.pdf();
+          await browser.close();
+
+          // Set response headers to force download
+          res.setHeader("Content-Type", "application/pdf");
+          res.setHeader("Content-Disposition", `attachment; filename="invoice-${orderId}.pdf"`);
+
+          // Send the PDF to the client
+          res.send(pdfBuffer);
+      })();
+  });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 module.exports={
     loadOrder,
     cancelOrder,
     viewDetails,
-    orderReturn
+    orderReturn,
+    orderDownload
 }

@@ -1,7 +1,7 @@
 const Order = require('../../models/orderModel')
 const loadOrder = async(req,res)=>{
     try {
-        const orders = await Order.find()
+        const orders = await Order.find().sort({order_date:-1});
         const users = await Order.find().populate("user");
         res.render('admin/order',{orders,users})
     } catch (error) {
