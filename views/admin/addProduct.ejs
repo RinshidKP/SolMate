@@ -269,6 +269,7 @@
 <!-- Include Bootstrap and jQuery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.20/dist/sweetalert2.all.min.js"></script>
 
 <script>
 
@@ -381,7 +382,16 @@
             formData.append(`images`, cropperInstances[2], `cropped-image-2.png`);
             formData.append(`images`, cropperInstances[3], `cropped-image-3.png`);
             // console.log([...formData]);
-                
+                       // Show loading alert
+                      Swal.fire({
+                        title: 'Adding Product...',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        onBeforeOpen: () => {
+                          Swal.showLoading();
+                        }
+                      });
+
                 $.ajax({
                       type: "POST",
                       url: "/admin/product/add",
@@ -392,8 +402,20 @@
                       success: function (response) {
                       console.log('Upload success:', response);
                       if(response.data==true){
+                        Swal.fire({
+                          icon: 'success',
+                          title: 'Product Added Successfully!',
+                          showConfirmButton: false,
+                          timer: 1500
+                        });
                         window.location.href = '/admin/product'
                       }else{
+                        Swal.fire({
+                          icon: 'error',
+                          title: 'Error',
+                          text: 'Failed to add product. Please try again later.'
+                        });
+
                         alertBox.innerHTML = `<div class="alert alert-danger" role="alert">
                                 Ups...something went wrong
                               </div>`;
