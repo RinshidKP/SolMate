@@ -10,7 +10,7 @@ const checkout = require('../controller/userController/checkoutController');
 const order = require('../controller/userController/orderController');
 const wallet = require('../controller/userController/walletController');
 //home
-router.get('/user',user.loadhome);
+router.get('/',user.loadhome);
 router.get('/product',user.loadProduct);
 router.get('/product/shop',user.viewProduct);
 router.get('/about',user.loadAbout);

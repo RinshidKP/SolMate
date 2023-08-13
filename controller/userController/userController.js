@@ -29,7 +29,7 @@ const loadhome = async (req, res) => {
         name: req.session.user_name,
         countCart
       });
-      // console.log(session);
+      
     
   } catch (error) {
     console.log(error);
