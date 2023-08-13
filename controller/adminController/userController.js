@@ -13,7 +13,7 @@ const logout =(req,res)=>{
 const loadCustomer = async (req, res) => {
     try {
       const currentPage = parseInt(req.query.page) || 1; // Get the current page from the query parameter
-      const itemsPerPage = 10; // Adjust the number of items per page as needed
+      const itemsPerPage = 1000; // Adjust the number of items per page as needed
   
       // Calculate the skip and limit values based on the current page and items per page
       const skip = (currentPage - 1) * itemsPerPage;
@@ -21,14 +21,15 @@ const loadCustomer = async (req, res) => {
       let search = "";
       search=req.query.search;
       // Retrieve the paginated user data from the database
-      const userData = await User.find({ isAdmin: false,$or: [
+      let query = { isAdmin: false,$or: [
         { name: { $regex: new RegExp(search, 'gi') } },
         { email: { $regex: new RegExp(search, 'gi') } }
-      ] })
+      ] }
+      const userData = await User.find(query)
         .skip(skip)
         .limit(limit);
   
-      const totalUsers = await User.countDocuments({ isAdmin: false }); // Get the total number of users
+      const totalUsers = await User.countDocuments(query); // Get the total number of users
   
       const totalPages = Math.ceil(totalUsers / itemsPerPage); // Calculate the total number of pages
   
