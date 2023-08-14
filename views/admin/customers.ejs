@@ -1,7 +1,6 @@
-<%-include("./layout/header.ejs")%>
+<%- include("./layout/header.ejs") %>
 
 <div class="col-10 m-5">
-
   <form id="searchForm" method="GET">
     <div class="input-group">
       <input type="search" id="searchInput" name="search" class="form-control" placeholder="Search">
@@ -11,7 +10,7 @@
 
 
   <div class=" d-flex justify-content-center align-items-center" style="overflow-x:auto;">
-    <table  class="table table-light table-striped table-responsive" >
+    <table class="table table-light table-striped table-responsive">
       <tr>
         <th>sl.no</th>
         <th>username</th>
@@ -20,36 +19,39 @@
         <th>status</th>
         <th>Allow/Deny</th>
       </tr>
-
-      <% for (let i = startIndex; i < endIndex && i < user.length; i++) { %>
-        <form method="post" action="/admin/customer/edit?id=<%= user[i]._id %>">
+      <form method="post"> <!-- Form encapsulates the table -->
+        <% user.slice(0, endIndex).forEach((currentUser, i) => { %>
           <tr>
-            <td><%= i + 1 %></td>
-            <td><%= user[i].username %></td>
+            <td><%= startIndex + i + 1 %></td>
+            <td><%= currentUser.username %></td>
             <td>
-              <%= user[i].created.toLocaleDateString('en-US', {
+              <%= currentUser.created.toLocaleDateString('en-US', {
                 month: 'long',
                 day: 'numeric',
                 year: 'numeric'
               }) %>
             </td>
-            <td><%= user[i].email %></td>
-            <td class="text-<% if (user[i].isAccess) { %>success<% } else { %>danger<% } %>">
-              <% if (user[i].isAccess) { %>Allowed<% } else { %>Disabled<% } %>
+            <td><%= currentUser.email %></td>
+            <td class="text-<% if (currentUser.isAccess) { %>success<% } else { %>danger<% } %>">
+              <% if (currentUser.isAccess) { %>Allowed<% } else { %>Disabled<% } %>
             </td>
-            <input type="hidden" name="isAccess" value="<% if (user[i].isAccess) { %>false<% } else { %>true<% } %>">
             <td>
-              <button type="submit" class="btn btn-<% if (user[i].isAccess) { %>danger<% } else { %>success<% } %>">
-                <% if (user[i].isAccess) { %>Deny<% } else { %>Allow<% } %>
-              </button>
+              <form method="post">
+                <input type="hidden" name="isAccess" value="<% if (currentUser.isAccess) { %>false<% } else { %>true<% } %>">
+                <button type="submit" class="btn btn-<% if (currentUser.isAccess) { %>danger<% } else { %>success<% } %>">
+                  <% if (currentUser.isAccess) { %>Deny<% } else { %>Allow<% } %>
+                </button>
+              </form>
             </td>
           </tr>
-        </form>
-      <% } %>
+        <% }); %>
+        
+      </form>
     </table>
   </div>
 
-  <div class="col-12 pb-1" >
+  <!-- Pagination navigation -->
+  <div class="col-12 pb-1">
     <nav aria-label="Page navigation">
       <ul class="pagination justify-content-center">
         <% if (totalPages > 1) { %>
@@ -58,7 +60,7 @@
               <a class="page-link" href="/admin/customer?page=<%= currentPage - 1 %>">&laquo; Previous</a>
             </li>
           <% } %>
-        
+
           <% for (let i = 1; i <= totalPages; i++) { %>
             <% if (i === currentPage) { %>
               <li class="page-item active">
@@ -70,7 +72,7 @@
               </li>
             <% } %>
           <% } %>
-        
+
           <% if (currentPage < totalPages) { %>
             <li class="page-item">
               <a class="page-link" href="/admin/customer?page=<%= currentPage + 1 %>">Next &raquo;</a>
@@ -90,9 +92,14 @@
     if (searchQuery !== '') {
       const actionUrl = `/admin/customer?search=${encodeURIComponent(searchQuery)}`;
       window.location.href = actionUrl; // Redirect to the updated action URL
-    }else{
+    } else {
       const actionUrl = `/admin/customer?search=${""}`;
-      window.location.href = actionUrl; // Redirect to the updated action URL
+      const currentPage = parseInt("<%= currentPage %>"); // Pass the currentPage from EJS
+      if (currentPage > 1) {
+        actionUrl += `&page=${currentPage}`;
+      }
+
+      window.location.href = actionUrl;
     }
   }
 </script>

@@ -357,6 +357,7 @@ const orderSuccess = async (req, res) => {
     res.render('user/success', { order, session: req.session.user_id,name: req.session.user_name,countCart,user,address,products })
   } catch (error) {
     console.log(error);
+    res.render('error/404')
   }
 }
 

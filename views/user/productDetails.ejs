@@ -235,6 +235,12 @@
   border-radius: 50%;
 }
 
+.image-contained {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+}
 </style>
 <div id="page" class="w-100 mb-4">
   <div class="colorlib-product m-5">
@@ -247,9 +253,9 @@
                   <% products.image.forEach((image, index)=> { %>
 
                     <div class="carousel-item <%= index === 0 ? 'active' : '' %> zoom-container zoomWindowContainer">
-                      <div class="product-entry border product-image-container">
+                      <div class="product-entry border  product-image-container">
                         <a href="#" class="prod-img">
-                          <img id="productImage" src="<%= image.url %>" class="img-fluid custom-carousel-image zoom image-fluid" alt="Product Image" />
+                          <img id="productImage" src="<%= image.url %>" class="img-fluid custom-carousel-image zoom image-fluid image-contained" alt="Product Image" />
                         </a>
                       </div>
                     </div>
@@ -379,10 +385,7 @@
                       <a class="nav-link active" id="pills-description-tab" data-toggle="pill" href="#pills-description"
                         role="tab" aria-controls="pills-description" aria-expanded="true">Description</a>
                     </li>
-                    <li class="nav-item">
-                      <a class="nav-link" id="pills-review-tab" data-toggle="pill" href="#pills-review" role="tab"
-                        aria-controls="pills-review" aria-expanded="true">Review</a>
-                    </li>
+                    
                   </ul>
                   <div class="tab-content" id="pills-tabContent">
                     <div class="tab-pane border fade show active" id="pills-description" role="tabpanel" aria-labelledby="pills-description-tab">
@@ -396,86 +399,7 @@
                     </div>
                   </div>
 
-                    <div class="tab-pane border fade" id="pills-review" role="tabpanel"
-                      aria-labelledby="pills-review-tab">
-                      <div class="row">
-                        <div class="col-md-12">
-                          <h3 class="head">23 Reviews</h3>
-                          <div class="review">
-                            <div class="user-img" style="background-image: url(images/person1.jpg)"></div>
-                            <div class="desc">
-                              <h4>
-                                <span class="text-left">Jacob Webb</span>
-                                <span class="text-right">14 March 2018</span>
-                              </h4>
-                              <p class="star">
-                                <span>
-                                  <i class="icon-star-full"></i>
-                                  <i class="icon-star-full"></i>
-                                  <i class="icon-star-full"></i>
-                                  <i class="icon-star-half"></i>
-                                  <i class="icon-star-empty"></i>
-                                </span>
-                                <span class="text-right"><a href="#" class="reply"><i class="icon-reply"></i></a></span>
-                              </p>
-                              <p>
-                                When she reached the first hills of the Italic
-                                Mountains, she had a last view back on the skyline
-                                of her hometown Bookmarksgrov
-                              </p>
-                            </div>
-                          </div>
-                          <div class="review">
-                            <div class="user-img" style="background-image: url(images/person2.jpg)"></div>
-                            <div class="desc">
-                              <h4>
-                                <span class="text-left">Jacob Webb</span>
-                                <span class="text-right">14 March 2018</span>
-                              </h4>
-                              <p class="star">
-                                <span>
-                                  <i class="icon-star-full"></i>
-                                  <i class="icon-star-full"></i>
-                                  <i class="icon-star-full"></i>
-                                  <i class="icon-star-half"></i>
-                                  <i class="icon-star-empty"></i>
-                                </span>
-                                <span class="text-right"><a href="#" class="reply"><i class="icon-reply"></i></a></span>
-                              </p>
-                              <p>
-                                When she reached the first hills of the Italic
-                                Mountains, she had a last view back on the skyline
-                                of her hometown Bookmarksgrov
-                              </p>
-                            </div>
-                          </div>
-                          <div class="review">
-                            <div class="user-img" style="background-image: url(images/person3.jpg)"></div>
-                            <div class="desc">
-                              <h4>
-                                <span class="text-left">Jacob Webb</span>
-                                <span class="text-right">14 March 2018</span>
-                              </h4>
-                              <p class="star">
-                                <span>
-                                  <i class="icon-star-full"></i>
-                                  <i class="icon-star-full"></i>
-                                  <i class="icon-star-full"></i>
-                                  <i class="icon-star-half"></i>
-                                  <i class="icon-star-empty"></i>
-                                </span>
-                                <span class="text-right"><a href="#" class="reply"><i class="icon-reply"></i></a></span>
-                              </p>
-                              <p>
-                                When she reached the first hills of the Italic
-                                Mountains, she had a last view back on the skyline
-                                of her hometown Bookmarksgrov
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                    
                   </div>
                 </div>
               </div>

@@ -13,8 +13,8 @@ const logout =(req,res)=>{
 const loadCustomer = async (req, res) => {
     try {
       const currentPage = parseInt(req.query.page) || 1; // Get the current page from the query parameter
-      const itemsPerPage = 1000; // Adjust the number of items per page as needed
-  
+      const itemsPerPage = 6; // Adjust the number of items per page as needed
+      console.log(req.querypage);
       // Calculate the skip and limit values based on the current page and items per page
       const skip = (currentPage - 1) * itemsPerPage;
       const limit = itemsPerPage;
@@ -30,10 +30,9 @@ const loadCustomer = async (req, res) => {
         .limit(limit);
   
       const totalUsers = await User.countDocuments(query); // Get the total number of users
-  
       const totalPages = Math.ceil(totalUsers / itemsPerPage); // Calculate the total number of pages
   
-      const startIndex = skip + 0; // Calculate the start index for displaying sl.no
+      const startIndex = skip + 0; 
   
       res.render("admin/customers", {
         user: userData,

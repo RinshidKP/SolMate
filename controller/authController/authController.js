@@ -1,7 +1,6 @@
 
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
-// const speakeasy = require("speakeasy");
 const userModel = require("../../models/userModel");
 
 const secretHash = async (password) => {
@@ -10,6 +9,7 @@ const secretHash = async (password) => {
     return hashpassword;
   } catch (error) {
     console.log(error);
+    res.render('error/404')
   }
 };
 
@@ -19,17 +19,20 @@ const loadSignup = (req, res) => {
     res.render("auth/signup", { message: null });
   } catch (error) {
     console.error(error);
+    res.render('error/404')
+    res.render('error/404')
   }
 };
+
 const loadlogin = (req, res) => {
   try {
     const oldRoute = req.query.oldRoute;
     res.render("auth/login", { message: null,oldRoute });
   } catch (error) {
     console.log(error);
+    res.render('error/404')
   }
 };
-
 
 const createUser = async (req, res) => {
   try {
@@ -71,6 +74,7 @@ const createUser = async (req, res) => {
     }
   } catch (error) {
     console.error(error);
+    res.render('error/404')
   }
 };
 
@@ -88,6 +92,7 @@ const otpVerify = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
+    res.render('error/404')
   }
 };
 
@@ -99,10 +104,10 @@ const otpGenerate = async () => {
             OTP += digits[Math.floor(Math.random() * 10)];
         }
         const secret = await secretHash(OTP);
-        // console.log(secret);
         return {secret, OTP}
   } catch (error) {
     console.error(error);
+    res.render('error/404')
   }
   };
 
@@ -213,6 +218,7 @@ try {
   return otpCode.secret;
 } catch (error) {
     console.log(error);
+    res.render('error/404')
 }
 };
 
@@ -260,6 +266,7 @@ const loginVerify = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
+    res.render('error/404')
   }
 };
 
@@ -271,6 +278,7 @@ const logout=(req,res)=>{
 
   } catch (error) {
       console.log(error);
+      res.render('error/404')
   }
 }
 
@@ -279,6 +287,7 @@ const loadOtp = (req,res)=>{
     res.render('auth/otpAuth',{localAction:"/otp"})
   } catch (error) {
     console.log(error);
+    res.render('error/404')
   }
 }
 
@@ -287,6 +296,7 @@ const loadForgot = async (req,res)=>{
     res.render('auth/forgotPassword',{message:null})
   } catch (error) {
     console.log(error);
+    res.render('error/404')
   }
 }
 
@@ -295,6 +305,7 @@ const loadChangePassword = async (req,res)=>{
     res.render('auth/updatePassword',{localAction:"/forgot/submited",message:null})
   } catch (error) {
     console.log(error);
+    res.render('error/404')
   }
 }
 
@@ -317,6 +328,7 @@ const otpPasswordChange = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
+    res.render('error/404')
   }
 };
 
@@ -335,6 +347,7 @@ const forgotPassword = async (req,res)=>{
     }
   } catch (error) {
     console.log(error);
+    res.render('error/404')
   }
 }
 
@@ -353,6 +366,7 @@ const changePassword = async (req,res)=>{
   } catch (error) {
     console.log(error);
     res.status(500).send('Internal server error');
+    res.render('error/404')
   }
 }
 
