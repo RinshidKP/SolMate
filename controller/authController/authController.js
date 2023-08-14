@@ -9,7 +9,6 @@ const secretHash = async (password) => {
     return hashpassword;
   } catch (error) {
     console.log(error);
-    res.render('error/404')
   }
 };
 
@@ -19,7 +18,6 @@ const loadSignup = (req, res) => {
     res.render("auth/signup", { message: null });
   } catch (error) {
     console.error(error);
-    res.render('error/404')
     res.render('error/404')
   }
 };
@@ -107,7 +105,6 @@ const otpGenerate = async () => {
         return {secret, OTP}
   } catch (error) {
     console.error(error);
-    res.render('error/404')
   }
   };
 
@@ -218,7 +215,6 @@ try {
   return otpCode.secret;
 } catch (error) {
     console.log(error);
-    res.render('error/404')
 }
 };
 
@@ -365,7 +361,6 @@ const changePassword = async (req,res)=>{
 
   } catch (error) {
     console.log(error);
-    res.status(500).send('Internal server error');
     res.render('error/404')
   }
 }
