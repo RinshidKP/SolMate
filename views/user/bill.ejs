@@ -4,6 +4,8 @@
     <title>Order Invoice</title>
     <!-- Add the Bootstrap CSS link -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css" integrity="sha256-2XFplPlrFClt0bIdPgpz8H7ojnk10H69xRqd9+uTShA=" crossorigin="anonymous" />
+
 </head>
 <style>
     .custom-monospace-font {
@@ -81,6 +83,9 @@
                         <!-- Order total -->
                         <div class="text-end">
                             <h5>Total Amount: ₹<%= order.total%></h5>
+                        </div>
+                        <div>
+                            <a href="javascript:window.print()" class="btn btn-success me-1"><i class="fa fa-print"></i></a>
                         </div>
                     </div>
                 </div>
