@@ -244,7 +244,10 @@
 }
 
   function resetPage() {
-    window.location.href = 'http://localhost:3020/product';
+    // window.location.href = 'http://localhost:3020/product';
+    const newUrl = document.URL;
+    window.location.href = newUrl;
+
   }
 
   function controlToInput(toSlider, fromInput, toInput, controlSlider) {
@@ -352,8 +355,6 @@
             }
 
           }
-          
-          // console.log(selectedValues);
           handleFilterChanges()
         }
     function handleSliderChange(event) {
@@ -444,7 +445,6 @@
     
     var selectedVariant = $(this).data('variant');
     
-    console.log('Selected variant:', selectedVariant);
   });
 });
 
