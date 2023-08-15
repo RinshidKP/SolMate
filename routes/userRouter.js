@@ -31,25 +31,25 @@ router.post('/forgot/submited',auth.changePassword);
 router.post('/otp',auth.otpVerify);
 
 //Profile
-router.get('/user/profile',userMiddleware.isLogin,user.loadProfile)
-router.get('/profile/edit',userMiddleware.isLogin,user.loadEditprofile)
-router.get('/profile/editPassword',userMiddleware.isLogin,user.loadUserPassword)
-router.get('/user/order',order.loadOrder);
-router.get('/user/order/view',order.viewDetails)
-router.get('/profile/wallet',wallet.loadWallet)
-router.post('/login',auth.loginVerify)
-router.post('/profile/edit',user.updateEditprofile)
-router.post('/profile/editPassword',user.updateUserPassword) 
-router.post('/user/order/cancel',order.cancelOrder)
-router.post('/order/return',order.orderReturn)
-router.post('/order/download',order.orderDownload)
+router.get('/user/profile',userMiddleware.isLogin,user.loadProfile);
+router.get('/profile/edit',userMiddleware.isLogin,user.loadEditprofile);
+router.get('/profile/editPassword',userMiddleware.isLogin,user.loadUserPassword);
+router.get('/user/order',userMiddleware.isLogin,order.loadOrder);
+router.get('/user/order/view',userMiddleware.isLogin,order.viewDetails);
+router.get('/profile/wallet',userMiddleware.isLogin,wallet.loadWallet);
+router.get('/order/download',userMiddleware.isLogin,order.orderDownload);
+router.post('/login',auth.loginVerify);
+router.post('/profile/edit',user.updateEditprofile);
+router.post('/profile/editPassword',user.updateUserPassword) ;
+router.post('/user/order/cancel',order.cancelOrder);
+router.post('/order/return',order.orderReturn);
 // Address
-router.get('/user/profileAddress',userMiddleware.isLogin,user.loadUserAddress)
-router.get('/user/profileAddress/add',userMiddleware.isLogin,user.loadAddAddress)
-router.get('/user/profileAddress/edit',userMiddleware.isLogin,user.loadEditAddress)
-router.post('/user/profileAddress/add',user.saveAddress)    
-router.post('/user/profileAddress/edit',user.saveEditAddress)
-router.delete('/address/delete',user.deleteAddress)
+router.get('/user/profileAddress',userMiddleware.isLogin,user.loadUserAddress);
+router.get('/user/profileAddress/add',userMiddleware.isLogin,user.loadAddAddress);
+router.get('/user/profileAddress/edit',userMiddleware.isLogin,user.loadEditAddress);
+router.post('/user/profileAddress/add',user.saveAddress)    ;
+router.post('/user/profileAddress/edit',user.saveEditAddress);
+router.delete('/address/delete',user.deleteAddress);
 //  Cart
 router.get('/cart/add',userMiddleware.isLogin,cartController.addToCart);
 router.get('/cart',userMiddleware.isLogin,cartController.loadcart);
@@ -57,12 +57,12 @@ router.post('/cart/quantity',userMiddleware.isLogin,cartController.quantityChang
 router.delete('/removeItem',cartController.removeFromCart);
 
 //checkout
-router.get('/checkout/address',userMiddleware.isLogin,checkout.loadCheckOutAddress)
-router.get('/checkout',userMiddleware.isLogin,checkout.checkoutProceed)
-router.get('/order/success',userMiddleware.isLogin,checkout.orderSuccess)
-router.post('/checkout/addAddress',checkout.addAddress)
-router.post('/checkout',checkout.checkout)
-router.post('/admin/coupon/apply',checkout.applyCoupon)
-router.post('/create-order',checkout.payOnline)
+router.get('/checkout/address',userMiddleware.isLogin,checkout.loadCheckOutAddress);
+router.get('/checkout',userMiddleware.isLogin,checkout.checkoutProceed);
+router.get('/order/success',userMiddleware.isLogin,checkout.orderSuccess);
+router.post('/checkout/addAddress',checkout.addAddress);
+router.post('/checkout',checkout.checkout);
+router.post('/admin/coupon/apply',checkout.applyCoupon);
+router.post('/create-order',checkout.payOnline);
 
 module.exports=router

@@ -186,11 +186,12 @@ const cancelOrder = async (req, res) => {
 
 const orderDownload =async (req,res)=>{
   try {
-    const orderId = req.body.orderId
-    const order = await Order.findById(orderId);
+    const orderId = req.query.orderId
+    const order = await Order.findById(orderId).populate([
+      { path: "user" },
+      { path: "items.productId" },
+    ]);
     const filePath = path.join(__dirname, "..", "..", "views/user/bill.ejs");
-    // const data = fs.readFileSync(filePath, "utf8");
-
     ejs.renderFile(filePath, { order }, (err, invoiceHtml) => {
       if (err) {
           console.error("Error rendering EJS template:", err);
@@ -211,6 +212,7 @@ const orderDownload =async (req,res)=>{
 
           // Send the PDF to the client
           res.send(pdfBuffer);
+
       })();
   });
   } catch (error) {

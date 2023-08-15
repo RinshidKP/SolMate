@@ -123,9 +123,11 @@
                             <div>
                                 Order details<br><small>Your order items</small>
                             </div>
-                            <div>
-                                <kbd onclick="downloadBill()" class="btn btn-sm btn-secondary" >Download Reciept</kbd>
-                            </div>
+                            <%if(order.payment_method == "online"||order.payment_method == "wallet"||order.order_status == "delivered"){%>
+                                <div>
+                                    <a class="btn btn-block btn-secondary" href="/order/download?orderId=<%= order._id %>" class="btn btn-sm btn-secondary" >Download Reciept</a>
+                                </div>
+                            <%}%>
                         </div>
                      <div class="card-body" style="overflow: auto;">
                         <table class="table text-center table-light ">
