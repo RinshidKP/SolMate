@@ -39,7 +39,7 @@
                   <i class="fa fa-minus"></i>
                 </button>
               </div>
-              <input type="number" id="<%=product._id%>" class="form-control form-control-sm bg-secondary border-0 text-center" value="<%= quantity %>">
+              <input type="number" id="<%=product._id%>" disabled class="form-control form-control-sm bg-secondary border-0 text-center" value="<%= quantity %>">
               <div class="input-group-btn">
                 <button class="btn btn-sm btn-primary btn-plus quantity-right-plus" <% if(quantity==product.sizes[size]) { %>disabled<% }%> data-type="plus" onclick="changeQuantity('<%=product._id%>','<%= size %>','<%=cart._id%>', 1)">
                   <i class="fa fa-plus"></i>
