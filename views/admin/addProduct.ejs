@@ -269,6 +269,7 @@
 <!-- Include Bootstrap and jQuery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.20/dist/sweetalert2.min.css">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.20/dist/sweetalert2.all.min.js"></script>
 
 <script>
@@ -329,7 +330,7 @@
           minCropBoxHeight:10,
           minCropBoxWidth:10,
           crop: debounce(function (event) {
-            console.log("Cropping...");
+            // console.log("Cropping...");
             let cropperData = cropper.getData();
             const x = Math.round(cropperData.x);
             const y = Math.round(cropperData.y);
@@ -349,17 +350,17 @@
             }, 'image/png');
           },500),
           ready: function () {
-            console.log("Cropper is ready to be used.");
+            // console.log("Cropper is ready to be used.");
           },
           plugins: [
             'crop', // Add the 'crop' plugin for cropping functionality
             'resize' // Add the 'resize' plugin for resizing functionality
           ],
           cropend: function (event) {
-            console.log("Cropping ended.");
+            // console.log("Cropping ended.");
           },
           resize: function (event) {
-            console.log("Resizing...");
+            // console.log("Resizing...");
           }
         });
       });
@@ -400,7 +401,7 @@
                       processData: false,
                       contentType: false,
                       success: function (response) {
-                      console.log('Upload success:', response);
+                      // console.log('Upload success:', response);
                       if(response.data==true){
                         Swal.fire({
                           icon: 'success',
@@ -430,22 +431,22 @@
                 });
          }
         }catch(error){
-            console.error("Error:", error);
+            // console.error("Error:", error);
             alertBox.innerHTML = `<div class="alert alert-danger" role="alert">
                                 Ups...something went wrong
                               </div>`;
         }
     } );
 function checkField(){
-  const requiredFields = ["name", "category", "price", "color"];
+  const requiredFields = ["name", "category", "price", "color","blurb","description"];
   let formIsValid = true;
 
   requiredFields.forEach((fieldName) => {
     const field = document.querySelector(`[name="${fieldName}"]`);
-    console.log(field);
+    // console.log(field);
     if (!field.value) {
       formIsValid = false;
-      alertBox.innerHTML = `<div class="alert alert-danger" role="alert">Please fill in all required fields.</div>`;
+      alertBox.innerHTML = `<div class="alert alert-danger" role="alert">Please fill in all ${fieldName} field.</div>`;
     }else{
       alertBox.innerHTML = "";
     }
