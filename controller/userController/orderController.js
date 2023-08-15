@@ -192,28 +192,6 @@ const orderDownload = async (req, res) => {
       { path: "items.productId" },
     ]);
     res.render('user/bill',{order})
-    // const path = require("path");
-    // const ejs = require("ejs");
-    // const puppeteer = require("puppeteer");
-
-    // const filePath = path.join(__dirname, "..", "..", "views/user/bill.ejs");
-    // const invoiceHtml = await ejs.renderFile(filePath, { order });
-
-    // const generatePDF = async () => {
-    //   const browser = await puppeteer.launch({ headless: true });
-    //   const page = await browser.newPage();
-    //   await page.setContent(invoiceHtml);
-    //   const pdfBuffer = await page.pdf();
-    //   await browser.close();
-    //   return pdfBuffer;
-    // };
-
-    // const pdfBuffer = await generatePDF();
-
-    // res.setHeader("Content-Type", "application/pdf");
-    // res.setHeader("Content-Disposition", `attachment; filename="invoice-${orderId}.pdf"`);
-
-    // res.send(pdfBuffer);
   } catch (error) {
     console.error("Error generating PDF:", error);
     res.render("error/500");
