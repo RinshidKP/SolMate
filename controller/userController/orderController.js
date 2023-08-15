@@ -184,42 +184,48 @@ const cancelOrder = async (req, res) => {
     }
 }
 
-const orderDownload =async (req,res)=>{
+const orderDownload = async (req, res) => {
   try {
-    const orderId = req.query.orderId
+    const orderId = req.query.orderId;
     const order = await Order.findById(orderId).populate([
       { path: "user" },
       { path: "items.productId" },
     ]);
+
+    // Import necessary modules
+    const path = require("path");
+    const ejs = require("ejs");
+    const puppeteer = require("puppeteer");
+
+    // Load the EJS template
     const filePath = path.join(__dirname, "..", "..", "views/user/bill.ejs");
-    ejs.renderFile(filePath, { order }, (err, invoiceHtml) => {
-      if (err) {
-          console.error("Error rendering EJS template:", err);
-          return res.status(500).send("Error rendering invoice template.");
-      }
+    const invoiceHtml = await ejs.renderFile(filePath, { order });
 
-      // Launch Puppeteer in the new Headless mode
-      (async () => {
-          const browser = await puppeteer.launch({ headless: "new" });
-          const page = await browser.newPage();
-          await page.setContent(invoiceHtml);
-          const pdfBuffer = await page.pdf();
-          await browser.close();
+    // Function to generate PDF using Puppeteer
+    const generatePDF = async () => {
+      const browser = await puppeteer.launch({ headless: true });
+      const page = await browser.newPage();
+      await page.setContent(invoiceHtml);
+      const pdfBuffer = await page.pdf();
+      await browser.close();
+      return pdfBuffer;
+    };
 
-          // Set response headers to force download
-          res.setHeader("Content-Type", "application/pdf");
-          res.setHeader("Content-Disposition", `attachment; filename="invoice-${orderId}.pdf"`);
+    // Generate the PDF using Promise
+    const pdfBuffer = await generatePDF();
 
-          // Send the PDF to the client
-          res.send(pdfBuffer);
+    // Set response headers to force download
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", `attachment; filename="invoice-${orderId}.pdf"`);
 
-      })();
-  });
+    // Send the PDF to the client
+    res.send(pdfBuffer);
   } catch (error) {
-    console.log(error);
-    res.render('error/404')
+    console.error("Error generating PDF:", error);
+    res.render("error/500"); // Respond with an appropriate error page
   }
-}
+};
+
 
 module.exports={
     loadOrder,
