@@ -61,14 +61,13 @@
             <div class="col-sm-2 col-md-2 d-flex justify-content-end align-items-center">
               <% if (session) { %>
               <div class="navbar-nav">
-                <div class="nav-item dropdown btn  btn-block form-group">
-                  <button class="btn text-dark btn-block px-5" data-toggle="dropdown"><%=name%></button>
-                  <div class="dropdown-menu   border-1  ">
+                <div class="nav-item dropdown btn btn-block form-group">
+                  <button class="btn text-dark btn-block px-2 px-sm-3" data-toggle="dropdown"><%=name%></button>
+                  <div class="dropdown-menu border-1">
                     <a class="dropdown-item" href="/user/profile">Account Details</a>
                     <button class="btn btn-sm border-0 btn-secondary btn-block">
-                      <a href="/logout" class="dropdown-item text-light text-center bg-secondary">logout</a>
+                      <a href="/logout" class="dropdown-item text-light text-center bg-secondary">Logout</a>
                     </button>
-
                   </div>
                 </div>
               </div>
@@ -77,8 +76,8 @@
                 <button class="btn btn-primary">Log In / Register</button>
               </a>
               <% } %>
-
             </div>
+            
           </div>
           <div class="row">
             <div class="col-sm-12 text-left menu-1">

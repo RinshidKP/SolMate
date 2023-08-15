@@ -105,14 +105,14 @@
                                alt="..." class="img-fluid" width="60vw">
                         </a>
                       </td>
-                      <td class="text-center">
+                      <td class="text-center"> product
                         <a href="#" class="text-dark font-weight-bold">
                           <%=products[i].productId.name %>
                         </a>
                       </td>
-                      <td class="text-center"><%=products[i].productId.price %></td>
-                      <td class="text-center"><%= size %></td>
-                      <td class="text-center"><span><%=quantity %></span></td>
+                      <td class="text-center">$ <%=products[i].productId.price %></td>
+                      <td class="text-center">Size: <%= size %></td>
+                      <td class="text-center">Qty: <span><%=quantity %></span></td>
                       <td class="product-subtotal text-start">
                         <span>$<%=(quantity * products[i].productId.price).toFixed(2) %></span>
                       </td>
