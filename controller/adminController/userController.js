@@ -2,12 +2,11 @@ const User = require('../../models/userModel')
 
 const logout =(req,res)=>{
     try {
-        
         req.session.admin_id = null;
         res.redirect('/login');
-  
     } catch (error) {
         console.log(error);
+        res.render('error/404')
     }
   }
 const loadCustomer = async (req, res) => {
@@ -43,7 +42,7 @@ const loadCustomer = async (req, res) => {
       });
     } catch (error) {
       console.log(error);
-      // Handle error appropriately (e.g., display an error page or redirect to an error route)
+      res.render('error/404')
     }
   };
 
@@ -54,6 +53,7 @@ const loadCustomer = async (req, res) => {
       res.render("admin/editCustomer", { message: null, user: userData });
     } catch (error) {
       console.log(error);
+      res.render('error/404')
     }
   };
 
@@ -65,6 +65,7 @@ const loadCustomer = async (req, res) => {
       res.redirect("/admin/customer");
     } catch (error) {
       console.log(error);
+      res.render('error/404')
     }
   };
 

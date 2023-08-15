@@ -33,6 +33,7 @@ const loadhome = async (req, res) => {
     
   } catch (error) {
     console.log(error);
+    res.render('error/404')
   }
 };
 
@@ -61,7 +62,6 @@ const loadProduct = async (req, res) => {
        minamount = req.query.fromValue;
        maxamount =  req.query.toValue;
     }
-    // const productData = await Product.find().skip(skip).limit(limit);
     let query = {
       $or: [
         { name: { $regex: new RegExp(search, 'gi') } },
@@ -74,22 +74,8 @@ const loadProduct = async (req, res) => {
     }
 
 
-    // let filteredProducts = products
     if(req.query.category){
       query.category = { $in: req.query.category };
-      // filteredProducts = null;
-      // filteredProducts = await Product.find({
-      //   $or: [
-      //     { name: { $regex: new RegExp(search, 'gi') } },
-      //     { color: { $regex: new RegExp(search, 'gi') } }
-      //   ],
-      //   $and: [
-      //     { price: { $gt: minamount } },
-      //     { price: { $lt: maxamount } }
-      //   ],
-    //     category: { $in: req.query.category } 
-    //   }).skip(skip)
-    //     .limit(limit);
     }
     let products = await Product.find(query).skip(skip)
       .limit(limit);
@@ -125,6 +111,7 @@ const loadProduct = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
+    res.render('error/404')
   }
 };
 
@@ -148,6 +135,7 @@ const viewProduct = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+    res.render('error/404')
   }
 };
 
@@ -170,16 +158,22 @@ const loadProfile = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+    res.render('error/404')
   }
 };
 
 const confirmMail = async (req, res) => {
-  const email = req.body.email;
-  const userData = await userModel.findOne({ email: email });
-  if (userData) {
-    res.render("/otp");
-  } else {
-    res.render("auth/forgotPassword", { message: "Incorrect Email Address" });
+  try {
+    const email = req.body.email;
+    const userData = await userModel.findOne({ email: email });
+    if (userData) {
+      res.render("/otp");
+    } else {
+      res.render("auth/forgotPassword", { message: "Incorrect Email Address" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.render('error/404')
   }
 };
 
@@ -201,6 +195,7 @@ const loadEditprofile = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+    res.render('error/404')
   }
 };
 const updateEditprofile = async (req, res) => {
@@ -228,6 +223,7 @@ const updateEditprofile = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
+    res.render('error/404')
   }
 };
 
@@ -248,7 +244,10 @@ const loadUserPassword = async (req, res) => {
       message: null,
       countCart
     });
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+    res.render('error/404')
+  }
 };
 const updateUserPassword = async (req, res) => {
   try {
@@ -270,6 +269,7 @@ const updateUserPassword = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
+    res.render('error/404')
   }
 };
 
@@ -301,6 +301,7 @@ const loadUserAddress = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+    res.render('error/404')
   }
 };
 
@@ -323,6 +324,7 @@ const loadAddAddress = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+    res.render('error/404')
   }
 };
 const saveAddress = async (req, res) => {
@@ -351,6 +353,7 @@ const saveAddress = async (req, res) => {
     res.redirect("/user/profileAddress");
   } catch (error) {
     console.log(error);
+    res.render('error/404')
   }
 };
 
@@ -374,6 +377,7 @@ const loadEditAddress = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+    res.render('error/404')
   }
 };
 
@@ -400,6 +404,7 @@ const saveEditAddress = async (req, res) => {
     res.redirect("/user/profileAddress");
   } catch (error) {
     console.log(error);
+    res.render('error/404')
   }
 };
 
@@ -410,6 +415,7 @@ const deleteAddress = async (req, res) => {
     res.json({ response: true });
   } catch (error) {
     console.log(error);
+    res.render('error/404')
   }
 };
 
@@ -427,6 +433,7 @@ const loadAbout = (req,res)=>{
     })
   } catch (error) {
     console.log(error);
+    res.render('error/404')
   }
 }
 

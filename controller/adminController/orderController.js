@@ -6,11 +6,13 @@ const loadOrder = async(req,res)=>{
         res.render('admin/order',{orders,users})
     } catch (error) {
         console.log(error);
+        res.render('error/404')
     }
 }
 
 const statusChange = async (req, res)=>{
-    const {
+    try {
+      const {
         id,
         status
     } = req.body;
@@ -22,6 +24,10 @@ const statusChange = async (req, res)=>{
     const order = await Order.findOne({_id: id});
 
     res.json({data: order})
+    } catch (error) {
+      console.log(error);
+      res.render('error/404')
+    }
 }
 
 const viewOrder = async (req, res) => {
@@ -43,6 +49,7 @@ const viewOrder = async (req, res) => {
       });
     } catch (err) {
       res.send(err);
+      res.render('error/404')
     }
   };
 

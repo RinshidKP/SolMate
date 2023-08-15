@@ -1,5 +1,4 @@
 const category = require("../../models/categoryModel");
-// const productModel = require("../../models/productModel");
 const Product = require("../../models/productModel");
 const {multipleimages,deleteImage,imageUpload} = require("../../utilities/uploadImage");
 
@@ -10,6 +9,7 @@ const loadAddProduct = async (req, res) => {
     res.render("admin/addProduct", { message: null, category: categories });
   } catch (error) {
     console.log(error);
+    res.render('error/404')
   }
 };
 
@@ -48,9 +48,6 @@ const addProduct = async (req, res) => {
     let stocks=size6+size7+size8+size9+size10+size11+size12+size13+size14+size15
     stocks= parseInt(stocks)
     const images = req.files;
-    // console.log(images);
-    // console.log("this is body",req.body);
-    // console.log(typeof stocks,stocks);
     const urlList = await multipleimages(images);
     const newProducts = new Product({
       name: name,
@@ -75,7 +72,6 @@ const addProduct = async (req, res) => {
       image: urlList,
     });
     const data =  await newProducts.save();
-    // res.redirect("/admin/product");
     if(data){
       res.json({data:true})
     }else{
@@ -83,6 +79,7 @@ const addProduct = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
+    res.render('error/404')
   }
 };
 
@@ -99,17 +96,6 @@ const loadProduct = async (req, res) => {
     const productData = await Product.find()
       .skip(skip)
       .limit(limit);
-    
-      // const productData = await Product
-      // .find({
-      //   isAdmin: false,
-      //   $or: [
-      //     { email: { $regex: new RegExp(search, "i") } },
-      //     { username: { $regex: new RegExp(search, "i") } },
-      //   ],
-      // })
-      // .skip(skip)
-      // .limit(limit);
 
     const totalProduct = await Product.countDocuments(); 
 
@@ -127,6 +113,7 @@ const loadProduct = async (req, res) => {
       endIndex: skip + productData.length,});
   } catch (error) {
     console.log(error);
+    res.render('error/404')
   }
 };
 
@@ -138,6 +125,7 @@ const loadEditProduct = async (req, res) => {
     res.render("admin/editProduct.ejs", { stock: stock, category: categories });
   } catch (error) {
     console.log(error);
+    res.render('error/404')
   }
 };
 
@@ -217,6 +205,7 @@ const updateProduct = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
+    res.render('error/404')
   }
 };
 const deleteProduct = async (req, res) => {
@@ -233,6 +222,7 @@ const deleteProduct = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
+    res.render('error/404')
   }
 };
 
@@ -248,6 +238,7 @@ const deleteProductImage = async (req,res)=>{
       res.redirect('/admin/product')
   } catch (error) {
     console.log(error)
+    res.render('error/404')
   }
 }
 

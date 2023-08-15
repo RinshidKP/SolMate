@@ -31,6 +31,7 @@ const loadcart = async (req, res) => {
     });
   } catch (error) {
     console.log(error.message);
+    res.render('error/404')
   }
 };
 const addToCart = async (req, res) => {
@@ -106,6 +107,7 @@ const addToCart = async (req, res) => {
     res.redirect("/cart");
   } catch (error) {
     console.error(error);
+    res.render('error/404')
   }
 };
 
@@ -149,7 +151,7 @@ const quantityChange = async (req, res) => {
     res.status(200).json({ message: "Quantity changed successfully" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "An error occurred" });
+    res.render('error/404')
   }
 };
 
@@ -203,6 +205,7 @@ const removeFromCart = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+    res.render('error/404')
   }
 };
 

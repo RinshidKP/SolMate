@@ -23,6 +23,7 @@ const loadWallet = async (req, res)=>{
         
     } catch (error) {
         console.log(error);
+        res.render('error/404')
     }
 }
 

@@ -20,6 +20,7 @@ const loadOrder = async (req,res)=>{
     res.render('user/profileOrder',{session, name: req.session.user_name,order,countCart})
     } catch (error) {
         console.log(error);
+        res.render('error/404')
     }
 }
 
@@ -78,6 +79,7 @@ const cancelOrder = async (req, res) => {
   
       } catch (err) {
       res.send(err)
+      res.render('error/404')
     }
   }
 
@@ -100,6 +102,7 @@ const cancelOrder = async (req, res) => {
 
     } catch (error) {
       console.log(error);
+      res.render('error/404')
     }
   }
 
@@ -180,6 +183,7 @@ const cancelOrder = async (req, res) => {
         
     } catch (error) {
         console.log(error);
+        res.render('error/404')
     }
 }
 
@@ -214,6 +218,7 @@ const orderDownload =async (req,res)=>{
   });
   } catch (error) {
     console.log(error);
+    res.render('error/404')
   }
 }
 

@@ -27,6 +27,7 @@ const addCategory = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
+    res.render('error/404')
   }
   
 };
@@ -36,6 +37,7 @@ const loadAddCategory = (req, res) => {
     res.render("admin/addCategory", { message: null });
   } catch (error) {
     console.log(error);
+    res.render('error/404')
   }
 };
 
@@ -46,6 +48,7 @@ const loadEditCategory = async (req, res) => {
     res.render("admin/editCategory", { category: categoryData });
   } catch (error) {
     console.log(error);
+    res.render('error/404')
   }
 };
 
@@ -68,6 +71,7 @@ const editCategory = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
+    res.render('error/404')
   }
 };
 
@@ -82,6 +86,7 @@ const loadCategory = async (req, res) => {
     res.render("admin/category", { categories:categories , productValue });
   } catch (error) {
     console.log(error);
+    res.render('error/404')
   }
 };
 
@@ -92,6 +97,7 @@ const deleteCategory = async (req, res) => {
     res.redirect("/admin/category");
   } catch (error) {
     console.log(error);
+    res.render('error/404')
   }
 };
 

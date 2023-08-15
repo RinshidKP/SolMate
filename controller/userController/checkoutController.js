@@ -6,7 +6,6 @@ const Product = require('../../models/productModel')
 const Coupon = require('../../models/couponModel')
 const Wallet = require('../../models/walletModel')
 const Razorpay = require('razorpay');
-const session = require("express-session");
 
 const loadCheckOutAddress = async (req, res) => {
   try {
@@ -41,6 +40,7 @@ const loadCheckOutAddress = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+    res.render('error/404')
   }
 };
 
@@ -76,6 +76,7 @@ const addAddress = async (req, res) => {
     res.redirect("/checkout/address")
   } catch (error) {
     console.log(error);
+    res.render('error/404')
   }
 }
 
@@ -116,6 +117,7 @@ const checkoutProceed = async (req, res) => {
       })
   } catch (error) {
     console.log(error);
+    res.render('error/404')
   }
 }
 
@@ -264,6 +266,7 @@ const checkout = async (req, res) => {
     res.json({ response: true, orderId:orderId._id });
   } catch (error) {
     console.log(error);
+    res.render('error/404')
   }
 
 }
@@ -311,7 +314,7 @@ const payOnline = async (req, res) => {
     })
   } catch (error) {
     console.log(error);
-    res.status(500).json({error: "something went wrong"});
+    res.render('error/404')
   }
 }
 
@@ -335,6 +338,7 @@ const applyCoupon = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
+    res.render('error/404')
   }
 }
 

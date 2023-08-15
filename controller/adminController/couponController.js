@@ -6,6 +6,7 @@ const loadCoupon = async (req, res) => {
     res.render("admin/coupon", { coupons });
   } catch (error) {
     console.log(error);
+    res.render('error/404')
   }
 };
 
@@ -14,6 +15,7 @@ const loadAddCoupon = (req, res) => {
     res.render("admin/addCoupon");
   } catch (error) {
     console.log(error);
+    res.render('error/404')
   }
 };
 
@@ -38,6 +40,7 @@ const addCoupon = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
+    res.render('error/404')
   }
 };
 
@@ -49,6 +52,7 @@ const loadEditCoupon = async (req, res) => {
     res.render("admin/editCoupon", { coupon,expDate });
   } catch (error) {
     console.log(error);
+    res.render('error/404')
   }
 };
 

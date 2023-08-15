@@ -95,32 +95,11 @@ const loadDashboard = async (req,res)=>{
         res.render('admin/dashBoard', { daily , category:cat, user, orders, userCount, orderCount});
     } catch (error) {
         console.log(error);
+        res.render('error/404')
     }
 }
 
-const loadSalReport = async (req,res)=>{
-    try {
-        let yearly = await Order.aggregate([
-            {
-                $match: { order_status: { $eq: "delivered" } },
-            },
-            {
-                $group: {
-                    _id: {
-                        year: { $year: "$delivery_date" },
-                    },
-                    items: { $sum: { $size: "$items" } },
-                    total: { $sum: "$total" },
-                    count: { $sum: 1 },
-                },
-            },
-        ]);
-            // console.log(yearly);
-        res.render('admin/dashboardSales',{yearly})
-    } catch (error) {
-        console.log(error);
-    }
-}
+
 //yearly
 const loadSalesReport = async (req, res)=>{
   try {
@@ -146,6 +125,7 @@ const loadSalesReport = async (req, res)=>{
       
   } catch (error) {
       console.log(error);
+      res.render('error/404')
   }
 }
 
@@ -197,6 +177,7 @@ const monthlySaleReport = async (req, res)=>{
 
   } catch (error) {
       console.log(error);
+      res.render('error/404')
   }
 }
 
@@ -229,6 +210,7 @@ const dailySalesReport = async (req, res)=>{
       
   } catch (error) {
       console.log(error);
+      res.render('error/404')
   }
 }
 
@@ -280,6 +262,7 @@ const byDateSaleReport = async (req, res)=>{
       
   } catch (error) {
       console.log(error);
+      res.render('error/404')
   }
 }
 module.exports={
