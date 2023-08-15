@@ -30,7 +30,7 @@ const loadcart = async (req, res) => {
       stock:productsArray,
     });
   } catch (error) {
-    console.log(error.message);
+    console.log(error);
     res.render('error/404')
   }
 };

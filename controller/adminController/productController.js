@@ -169,7 +169,6 @@ const updateProduct = async (req, res) => {
     if (req.files){
       let images =req.files;
       const urlList = await multipleimages(images);
-      console.log(urlList);
       await Product.findByIdAndUpdate(id, {
         $set: { image: urlList }
       });
@@ -212,7 +211,6 @@ const deleteProduct = async (req, res) => {
   try {
     const { id, active } = req.query;
 
-    // console.log(id);
     if (active == "true") {
       await Product.findByIdAndUpdate(id, { $set: { isActive: false } });
       res.redirect("/admin/product");
@@ -229,7 +227,6 @@ const deleteProduct = async (req, res) => {
 const deleteProductImage = async (req,res)=>{
   try {
     const {id,publicId}=req.query;
-    console.log(publicId);
     await Product.updateOne(
     { _id:id,"image.public_id": publicId},
       { $pull:{"image": { public_id : publicId}} },

@@ -82,8 +82,6 @@ const loadProduct = async (req, res) => {
 
       const totalProduct = await Product.countDocuments(query);
       const totalPages = Math.ceil(totalProduct / itemsPerPage);
-      console.log(totalProduct);
-      console.log(totalPages);
     
     
     if (req.xhr || req.headers.accept.indexOf('json') > -1) {
@@ -125,7 +123,6 @@ const viewProduct = async (req, res) => {
     if(req.session.user_id){
       countCart=res.locals.count
     }
-    // console.log(productData);
     res.render("user/productDetails", {
       session,
       name: req.session.user_name,
@@ -144,7 +141,7 @@ const loadProfile = async (req, res) => {
   try {
     const session = req.session.user_id;
     const userData = await User.findOne({ _id: req.session.user_id });
-    console.log(userData);
+
     let countCart= 0;
     if(req.session.user_id){
       countCart=res.locals.count
@@ -181,7 +178,6 @@ const loadEditprofile = async (req, res) => {
   try {
     const session = req.session.user_id;
     const userData = await User.findOne({ _id: req.session.user_id });
-    // console.log(userData);
     let countCart= 0;
     if(req.session.user_id){
       countCart=res.locals.count
@@ -231,7 +227,6 @@ const loadUserPassword = async (req, res) => {
   try {
     const session = req.session.user_id;
     const userData = await User.findOne({ _id: req.session.user_id });
-    // console.log(userData);
     let countCart= 0;
     if(req.session.user_id){
       countCart=res.locals.count
@@ -255,7 +250,6 @@ const updateUserPassword = async (req, res) => {
     const userData = await User.findOne({ username: req.body.username });
     const password = req.body.password;
     const cpassword = req.body.cpassword;
-    console.log(password);
     const sPass = await auth.secretHash(password);
     if (password === cpassword) {
       await User.findByIdAndUpdate(session, {
@@ -329,7 +323,6 @@ const loadAddAddress = async (req, res) => {
 };
 const saveAddress = async (req, res) => {
   try {
-    // const session = req.session.user_id;
     const userData = await User.findOne({ _id: req.session.user_id });
     const { buildingName, street, city, state, country, type } = req.body;
 
@@ -349,7 +342,6 @@ const saveAddress = async (req, res) => {
     });
 
     await newAddress.save();
-    // console.log(newAddress);
     res.redirect("/user/profileAddress");
   } catch (error) {
     console.log(error);
@@ -384,7 +376,6 @@ const loadEditAddress = async (req, res) => {
 const saveEditAddress = async (req, res) => {
   try {
     const addressId = req.query.addressId;
-    // console.log('uju',addressId);
     const { buildingName, street, city, state, country } = req.body;
     let pincode = parseInt(req.body.pincode);
     let phonenumber = parseInt(req.body.number);
@@ -400,7 +391,6 @@ const saveEditAddress = async (req, res) => {
         country: country,
       }
     );
-    console.log(addressModel);
     res.redirect("/user/profileAddress");
   } catch (error) {
     console.log(error);

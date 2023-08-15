@@ -11,7 +11,6 @@ const loadOrder = async (req,res)=>{
     try {
     const session = req.session.user_id;
     const order = await Order.find({user:session}).sort({order_date:-1}).exec()
-    // console.log(order);
     let countCart= 0;
     if(req.session.user_id){
       countCart=res.locals.count
@@ -27,9 +26,7 @@ const loadOrder = async (req,res)=>{
 const cancelOrder = async (req, res) => {
     try {
       const id = req.body.id
-      console.log(id)
       const order = await Order.findById(id)
-      // console.log("original order:", order)
       if(order.payment_method=="online"||order.payment_method=="wallet"){
         const wallet = await Wallet.findOne({user: order.user});
         if(wallet){

@@ -25,7 +25,6 @@ const addCoupon = async (req, res) => {
     let name = req.body.name.toUpperCase();
 
     const couponExist = await Coupon.findOne({ name: name });
-    // console.log(couponExist);
     if (couponExist) {
       res.json({ response: true });
     } else {

@@ -34,7 +34,6 @@ const loadlogin = (req, res) => {
 
 const createUser = async (req, res) => {
   try {
-    console.log(req.body);
     const name = req.body.fname;
     const username = req.body.username;
     const email = req.body.email;
@@ -80,7 +79,6 @@ const otpVerify = async (req, res) => {
   try {
     const otpHash = req.cookies.otpHash;
     const validateOtp = await bcrypt.compare(req.body.otp,otpHash)
-    console.log(validateOtp);
     
     if(validateOtp){
        await userModel.findByIdAndUpdate(req.cookies.newUser,{isVerified:true})
@@ -122,7 +120,6 @@ try {
   });
 
   const otpCode = await otpGenerate();
-  // console.log(otpCode.secret);
 
   const info = await transporter.sendMail({
     from: process.env.EMAIL_USER,
@@ -241,8 +238,6 @@ const loginVerify = async (req, res) => {
             if (userData.isAccess) {   
               req.session.user_id=userData._id
               req.session.user_name=userData.name
-              // console.log(req.session);
-              console.log("am old route "+req.body.oldRoute);
               const newRoute = req.body.oldRoute
               if(newRoute){
                 res.redirect(`/product/shop?id=${newRoute}`)
@@ -308,14 +303,11 @@ const loadChangePassword = async (req,res)=>{
 const otpPasswordChange = async (req, res) => {
   try {
     const otpHash = req.cookies.otpHash;
-    // otpSecret=otpSecret
+
     const otp = req.body.otp
-    // otp = otp.toString()
-    // console.log( otpSecret);
-    // console.log(typeof otp);
+
     
     const validateOtp = await bcrypt.compare(otp,otpHash)
-    console.log(validateOtp);
     
     if(validateOtp){
       res.redirect("/forgot/submit");
@@ -351,7 +343,6 @@ const forgotPassword = async (req,res)=>{
 const changePassword = async (req,res)=>{
   try {
     const password = req.body.password
-    console.log(password);
     const userId = req.cookies['userId']
     const sPass = await secretHash(password)
     await userModel.findByIdAndUpdate(userId,{$set:{

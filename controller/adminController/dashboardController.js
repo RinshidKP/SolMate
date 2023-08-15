@@ -83,7 +83,6 @@ const loadDashboard = async (req,res)=>{
             $sort: { _id: 1 }
           }
         ])
-      // console.log(cat);
         const orders = await Order.find()
         .populate({ path: 'user' })
         .sort({ order_date: -1 })
@@ -171,8 +170,6 @@ const monthlySaleReport = async (req, res)=>{
           oneSale._id.month = months[oneSale._id.month - 1]
           return oneSale;
       })
-      
-      console.log(monthlySales);
       res.json({ monthlySales, error: false })
 
   } catch (error) {
@@ -205,7 +202,6 @@ const dailySalesReport = async (req, res)=>{
           },
           
       ]);
-      console.log(dailySales);
       res.json({dailySales, error: false})
       
   } catch (error) {

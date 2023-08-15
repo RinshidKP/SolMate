@@ -143,12 +143,10 @@ const checkout = async (req, res) => {
     if(payment=="wallet"){
       let wallet = await Wallet.findOne({ user: userId });
       let balance = wallet.balance;
-      console.log("Initial balance:", balance);
       if(balance<totalPrice){
         res.json({wallet:"noprice"})
         return;
       }
-      // console.log(couponId);
           if(wallet){
               let newBalance = balance - totalPrice;
               let history = {
@@ -159,9 +157,7 @@ const checkout = async (req, res) => {
               wallet.balance = newBalance;
               wallet.history.push(history);
               const yes = await wallet.save();
-              // console.log(history);
-              // console.log(yes+'yesss');
-              // console.log(couponId);
+
               if (couponId) {
                   const coupon = await Coupon.findById(couponId);
                   coupon.owners.push({user:req.session.user_id , quantity:1})
