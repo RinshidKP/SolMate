@@ -76,7 +76,7 @@
             <% for (let i = 0; i < 4; i++) { %>
                 <tr>
                   <td><%= i+1 %></td>
-                  <td><%= orders[i].order_date.toLocaleDateString() %></td>
+                  <td><%= orders[i]?.order_date?.toLocaleDateString() %></td>
                   <td><%= orders[i].user.username %></td>
                   <td><%= orders[i].order_status %></td>
                 </tr>

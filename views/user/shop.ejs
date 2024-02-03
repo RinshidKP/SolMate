@@ -173,7 +173,7 @@
                 <%
                 const sizesString = JSON.stringify(item.sizes);
                 %>
-                <a id="addnow" onclick="addToCart('<%= item._id %>','<%= sizesString %>')" class="fas fa-shopping-cart btn btn-secondary">Add</a>
+                <a id=" w" onclick="addToCart('<%= item._id %>','<%= sizesString %>')" class="fas fa-shopping-cart btn btn-secondary">Add</a>
               </div>
             </div>
           </div>
@@ -206,13 +206,10 @@
 <script>
 
   const addToCart = async(productId,sizes) => {
-    const addnow = document.getElementById('addnow'); 
+    // const addnow = document.getElementById('addnow'); 
     // addnow.addEventListener('click', (e) => { 
         // e.preventDefault();
         const sizesObject = JSON.parse(sizes);
-        // console.log(sizesObject);
-
-        // const filteredSizes = Object.keys(sizesObject).filter(key => sizesObject[key] > 0);
 
         const selectedSizes = Object.keys(sizesObject)
         .filter(key => sizesObject[key] > 0)
