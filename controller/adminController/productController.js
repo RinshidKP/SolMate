@@ -48,6 +48,7 @@ const addProduct = async (req, res) => {
     let stocks=size6+size7+size8+size9+size10+size11+size12+size13+size14+size15
     stocks= parseInt(stocks)
     const images = req.files;
+    console.log(images)
     const urlList = await multipleimages(images);
     const newProducts = new Product({
       name: name,
