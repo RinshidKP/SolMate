@@ -175,7 +175,7 @@
                 <button class="btn btn-success" onclick="selectImage('0')">Change</button>
                 <!-- <button id="cropped-Btn0" class="btn btn-danger d-none"><i class="fas fa-trash-alt"></i></button>
                  -->
-                 <a href="/admin/product/delete/image?id=<%=stock._id%>&publicId=<%= stock.image[0].public_id %>" class="btn btn-danger  %>"><i class="fas fa-trash-alt"></i></a>
+                 <a href="/admin/product/delete/image?id=<%=stock?._id%>&publicId=<%= stock.image[0]?.public_id %>" class="btn btn-danger  %>"><i class="fas fa-trash-alt"></i></a>
 
               </div>
             </div>
@@ -184,7 +184,7 @@
         
         <div class="col-5 col-md-5 col-lg-5 col-xl-5 ">
           <div class="card my-2 px-2 py-2 mx-2" style="width: 100%;">
-            <img id="cropped-image1" src="<%= stock.image[1].url %>" class="card-img-top" alt="https://infinitebook.com/wp-content/uploads/woocommerce-placeholder-350x350.png">
+            <img id="cropped-image1" src="<%= stock.image[1]?.url %>" class="card-img-top" alt="https://infinitebook.com/wp-content/uploads/woocommerce-placeholder-350x350.png">
             <div class="card-body d-flex justify-content-between">
               <div class="form-group">
                 <input
@@ -196,7 +196,7 @@
                 />
                 
                 <button class="btn btn-success" onclick="selectImage('1')">Change</button>
-                <a href="/admin/product/delete/image?id=<%=stock._id%>&publicId=<%= stock.image[1].public_id %>" class="btn btn-danger  %>"><i class="fas fa-trash-alt"></i></a>
+                <a href="/admin/product/delete/image?id=<%=stock?._id%>&publicId=<%= stock.image[1]?.public_id %>" class="btn btn-danger  %>"><i class="fas fa-trash-alt"></i></a>
                 <!-- <button id="cropped-Btn1" class="btn btn-danger d-none"><i class="fas fa-trash-alt"></i></button> -->
               </div>
             </div>
@@ -205,7 +205,7 @@
         
         <div class="col-5 col-md-5 col-lg-5 col-xl-5 ">
           <div class="card my-2 px-2 py-2 mx-2" style="width: 100%;">
-            <img id="cropped-image2" src="<%= stock.image[2].url %>" class="card-img-top" alt="https://infinitebook.com/wp-content/uploads/woocommerce-placeholder-350x350.png">
+            <img id="cropped-image2" src="<%= stock.image[2]?.url %>" class="card-img-top" alt="https://infinitebook.com/wp-content/uploads/woocommerce-placeholder-350x350.png">
             <div class="card-body d-flex justify-content-between">
               <div class="form-group">
                 <input
@@ -217,7 +217,7 @@
                 />
                 
                 <button class="btn btn-success" onclick="selectImage('2')">Change</button>
-                <a href="/admin/product/delete/image?id=<%=stock._id%>&publicId=<%= stock.image[2].public_id %>" class="btn btn-danger  %>"><i class="fas fa-trash-alt"></i></a>
+                <a href="/admin/product/delete/image?id=<%=stock?._id%>&publicId=<%= stock?.image[2]?.public_id %>" class="btn btn-danger  %>"><i class="fas fa-trash-alt"></i></a>
                 <!-- <button id="cropped-Btn2" class="btn btn-danger d-none"><i class="fas fa-trash-alt"></i></button> -->
               </div>
             </div>
@@ -226,7 +226,7 @@
         
         <div class="col-5 col-md-5 col-lg-5 col-xl-5 ">
           <div class="card my-2 px-2 py-2 mx-2" style="width: 100%;">
-            <img id="cropped-image3" src="<%= stock.image[3].url %>" class="card-img-top" alt="https://infinitebook.com/wp-content/uploads/woocommerce-placeholder-350x350.png">
+            <img id="cropped-image3" src="<%= stock?.image[3]?.url %>" class="card-img-top" alt="https://infinitebook.com/wp-content/uploads/woocommerce-placeholder-350x350.png">
             <div class="card-body d-flex justify-content-between">
               <div class="form-group">
                 <input
@@ -238,7 +238,7 @@
                 />
                 
                 <button class="btn btn-success" onclick="selectImage('3')">Change</button>
-                <a href="/admin/product/delete/image?id=<%=stock._id%>&publicId=<%= stock.image[2].public_id %>" class="btn btn-danger  %>"><i class="fas fa-trash-alt"></i></a>
+                <a href="/admin/product/delete/image?id=<%=stock?._id%>&publicId=<%= stock?.image[2]?.public_id %>" class="btn btn-danger  %>"><i class="fas fa-trash-alt"></i></a>
                 <!-- <button id="cropped-Btn3" class="btn btn-danger d-none"><i class="fas fa-trash-alt"></i></button> -->
               </div>
             </div>
