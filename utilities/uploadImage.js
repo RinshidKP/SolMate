@@ -20,7 +20,7 @@ const imageUpload = async (file) => {
         console.log("something went wrong :"+ err);
       }
     })
-    // console.log("O_o",myResultObj);
+    console.log("O_o",myResultObj);
     return myResultObj;
   } catch (error) {
     console.log(error);
