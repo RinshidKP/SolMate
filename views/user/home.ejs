@@ -195,7 +195,7 @@
           <%products.forEach((product) =>{%>
           <div class="col-lg-3 mb-4 text-center">
             <div class="product-entry border">
-              <a href="#" class="prod-img">
+              <a href="/product/shop?id=<%= product._id %>" class="prod-img">
                 <img src="<%=product.image[0]?.url%>" onerror="this.onerror=null; this.src='images/loader.gif';" class="img-fluid max-height-100" alt="url(images\loader.gif);">
               </a>
               <div class="desc">
